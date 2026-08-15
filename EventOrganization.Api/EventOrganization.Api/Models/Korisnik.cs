@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EventOrganization.Api.Enums;
 
 namespace EventOrganization.Api.Models;
 
@@ -17,7 +18,7 @@ public partial class Korisnik
 
     public string Email { get; set; } = null!;
 
-    public string TipKorisnika { get; set; } = null!;
+    public TipKorisnika? TipKorisnika { get; set; } 
 
     public decimal UlogaId { get; set; }
 

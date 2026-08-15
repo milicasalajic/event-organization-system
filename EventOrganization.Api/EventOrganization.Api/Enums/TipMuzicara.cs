@@ -1,9 +1,11 @@
-﻿namespace EventOrganization.Api.Enums;
+﻿namespace EventOrganization.Api.Enums
 
-public enum TipMuzicara
 {
-    BEND,
-    DJ,
-    ORKESTAR,
-    TRUBACI
+    public enum TipMuzicara
+    {
+        BEND,
+        DJ,
+        ORKESTAR,
+        TRUBACI 
+    }
 }
