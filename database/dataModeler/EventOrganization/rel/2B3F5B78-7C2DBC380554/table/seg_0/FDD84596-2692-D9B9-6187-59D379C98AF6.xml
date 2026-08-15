@@ -1,0 +1,62 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FDD84596-2692-D9B9-6187-59D379C98AF6" name="Muzicki_izvodjac">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>79E85BE1-6248-1463-C8B6-75E118AD7AFE</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="tip_muzicara" id="1BFCB92F-0F95-31E1-EA3B-2AD0E231751E">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>13B2E187-8968-4666-0660-8ACC7F419362</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>31A3262F-9CE8-2A58-9EFB-B2495AA7C507</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="usluga_id" id="CB2EFE0D-9614-8014-15DC-37F4C69582CD">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>5737ADE7-9FA4-CC3D-2A7F-F70DD9B12929</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="BD1A1EEC-BAF4-4262-EED9-333C548A1F6A" referredColumn="56F04A73-16D3-85C4-A255-69E6C7BA6C8F"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="4CDF93DD-3646-659D-C0B9-FF1B9F092626" name="Muzicki_izvodjac_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>80082A5A-450F-A720-0241-533EB3B72747</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CB2EFE0D-9614-8014-15DC-37F4C69582CD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="06AA0C9A-BFEF-1F45-A594-1CA3894A70C6" name="M_Usluga_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>6D57F7D0-E4E3-2610-CA76-49BB28272277</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CB2EFE0D-9614-8014-15DC-37F4C69582CD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

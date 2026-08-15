@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="A09E4E55-3DED-58FD-EE76-1CDE79ABBE10" containerWithKeyObject="03F60900-B327-E622-ECC7-F9BBAB1193EE" localFKIndex="FDBDBFCD-BF87-23A6-A226-E3EE8272EE2B" name="Paket_Sala_Paket_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>2CF74DCF-5195-1A93-1721-23AA9A06421B</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<referredTableLongName>Paket</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>5C3B9BF3-01BD-84BC-668D-1841D9B526CC</referredTableID>
+<keyObject>9B2F4F28-575D-102E-37F6-E4D6DCB19625</keyObject>
+<referredKeyID>9B2F4F28-575D-102E-37F6-E4D6DCB19625</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>paket_id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

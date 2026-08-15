@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Obuhvata" directorySegmentName="seg_0" id="DF314647-4D7B-65F1-FEDF-F0EB7B3AC08E">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:30:42 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<sourcePk>5628BDF6-A6CB-8FB8-A6E1-B8CA7695524F</sourcePk>
+<targetPk>80082A5A-450F-A720-0241-533EB3B72747</targetPk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>F5832F80-59BD-26DF-87F2-D3EBFB3A984A</sourceEntity>
+<targetCardinalityString>1</targetCardinalityString>
+<targetEntity>2E42C4B2-D0FB-2CD4-6E48-A0E0A85C7C08</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

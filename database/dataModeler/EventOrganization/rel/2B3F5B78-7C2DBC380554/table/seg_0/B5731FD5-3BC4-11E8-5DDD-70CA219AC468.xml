@@ -1,0 +1,114 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="B5731FD5-3BC4-11E8-5DDD-70CA219AC468" name="Cenovnik">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>3C8A836E-5D24-14CE-DE94-9AC8855CFDDD</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="cenovnik_id" id="503A9C14-8B46-AD28-6D0D-44224E911548">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>C21E4A9B-3BE6-24DF-8EA3-124F69E5FC64</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="iznos" id="A3994B1B-420E-8E58-B0F5-C7E3705913AD">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>4B880B3A-AD31-AC5E-CC53-8E14BF2EC3D4</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>5</dataTypePrecision>
+<ownDataTypeParameters>,5,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="datum_izmene" id="F38C360E-1CF4-16C0-E12F-A256566D392B">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>67A400E3-8840-525D-83DC-AED8ADCFDB81</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="sala_id" id="6EFE0567-7484-85A5-F656-97E7F2683503">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>AA8CD05B-4D86-391B-E4B7-6902B9976371</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="F8DE7BDF-773A-699A-8A80-DA09A425BB9E" referredColumn="89E9AF3C-5E2A-093D-64B6-9CE717D82FE1"/>
+</associations>
+</Column>
+<Column name="usluga_id" id="D94D190E-F491-1AF0-71D5-CAFA2C30554F">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>4DABAFA9-E816-865A-B386-B869BC14DB4A</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="20B635D3-A9C6-6D31-90D3-37048A57F527" referredColumn="56F04A73-16D3-85C4-A255-69E6C7BA6C8F"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="728D31F7-8B97-C547-A04C-4151AE809C29" name="Cenovnik_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>4792945E-FD3C-F0A7-436E-8DF12AA010E8</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="503A9C14-8B46-AD28-6D0D-44224E911548"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C50AA35C-78E2-6A63-9D8C-95653F10340B" name="C_Sala_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>1C1B802A-BD02-2EE8-51C0-2FDC8F79D743</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6EFE0567-7484-85A5-F656-97E7F2683503"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D19C8E30-03AD-9E14-8AF1-0DE16605F681" name="C_Usluga_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:23 UTC</createdTime>
+<generatorID>A43ABD25-B721-EA20-2319-BC32896FA13D</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D94D190E-F491-1AF0-71D5-CAFA2C30554F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

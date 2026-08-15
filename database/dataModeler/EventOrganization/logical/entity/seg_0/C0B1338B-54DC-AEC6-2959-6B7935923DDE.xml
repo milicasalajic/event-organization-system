@@ -1,0 +1,34 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C0B1338B-54DC-AEC6-2959-6B7935923DDE" name="Ketering_firma">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:22:40 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<hierarchicalParent>2E42C4B2-D0FB-2CD4-6E48-A0E0A85C7C08</hierarchicalParent>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="opis" id="BCC70530-5DEB-CF07-9327-1FE0303125CF">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:23:16 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>512</dataTypeSize>
+<ownDataTypeParameters>512,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

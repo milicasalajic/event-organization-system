@@ -1,0 +1,96 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F35B6A5A-AA3C-C74D-7E0E-35635253C977" name="Sala">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>5F1A16CB-6043-CB28-8E16-AA87D80E5DCB</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="sala_id" id="89E9AF3C-5E2A-093D-64B6-9CE717D82FE1">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>5D82F331-C737-6FD3-1968-5C1689ABD028</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="rbr_s" id="5F53C671-DE1E-2C32-4F7E-59D75B1A4E86">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>555D0987-E968-373C-5B50-DA3FA5E331C4</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="kapacitet" id="BDA9B770-E6C8-BFCA-383C-E359CE80BA22">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>68C742B3-4DBA-4E52-659B-FD7586F9CEFF</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="status" id="4102E49B-5B5C-A571-51E2-897ABFD5A036">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>71798683-AEBE-FA74-0781-B45C740851B9</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>79BC903C-BEFC-3F2B-B42F-BC3440389ECD</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="restoran_id" id="15305318-B574-73A5-A18D-662A7538D76D">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>B101BDA6-5969-C1DD-866F-627457314AC2</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="236B7CA6-229C-463F-2E20-7EA68A8B9D42" referredColumn="23416F85-79C9-EFFD-16D4-EFFBC2839AA3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="510965F9-761F-79A6-50A0-65CF62816D6B" name="Sala_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>5AE0D1D6-A0A1-2EF8-DDAB-87F9EC329253</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="89E9AF3C-5E2A-093D-64B6-9CE717D82FE1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CD4D3D6F-4FB0-31D4-AF46-6EF89E58E26D" name="Sala_Restoran_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>7855A76B-C672-FC5E-692C-525B39A1B261</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="15305318-B574-73A5-A18D-662A7538D76D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E3F4C514-BC43-A139-31B4-5717B47E8CFA" name="Paket_Sala">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="sala_id" id="ACD2633C-248B-0EBA-4143-A7649977CD83">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="94628584-8E3E-CEAE-6AF3-8812A6517C3B" referredColumn="89E9AF3C-5E2A-093D-64B6-9CE717D82FE1"/>
+</associations>
+</Column>
+<Column name="paket_id" id="E99C9274-3785-79DE-F029-A0C271507663">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B48FC9F4-DA34-BAEE-6C40-60470C7E348F" referredColumn="1A3D0DE1-1D99-0580-B9E0-B3B507020BCD"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A934B878-D9E9-4F7B-12EB-06E8130EF816" name="Paket_Sala_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="ACD2633C-248B-0EBA-4143-A7649977CD83"/>
+<colUsage columnID="E99C9274-3785-79DE-F029-A0C271507663"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="9080041D-40D7-E1CE-24DF-022853558B33" name="PS_Sala_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>2CF74DCF-5195-1A93-1721-23AA9A06421B</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="ACD2633C-248B-0EBA-4143-A7649977CD83"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7FEC87A0-2A8C-D9F0-5E25-9DAED7C7C3A8" name="PS_Paket_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>2CF74DCF-5195-1A93-1721-23AA9A06421B</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E99C9274-3785-79DE-F029-A0C271507663"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

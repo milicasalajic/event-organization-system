@@ -1,0 +1,170 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1CFD9926-9B20-C85A-8807-F48C525366D2" name="Rezervacija">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>593D8B49-DB95-A2A8-080A-79A919515BC9</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="rezervacija_id" id="FD65CFB8-14E1-8681-993E-FFBB3AECCB5F">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>C24B6FA4-54AF-5974-7143-C0F14D234E30</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="br_gostiju" id="3E0C34FE-3853-7D27-CA4B-4D0A905FDCB7">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>D8BFD0AF-6DD3-9C2B-A377-2D3C02540812</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="opis" id="A3778073-5C43-A56C-A10F-A4A2855A2B9A">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>1EE7F432-DEA2-D211-10D0-A53F01096224</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>512</dataTypeSize>
+<ownDataTypeParameters>512,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="napomena" id="B9301ECC-EDD2-1CD9-1D76-86080D9AC022">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>8982F783-784F-2208-535E-C35FCD9FB5E8</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>512</dataTypeSize>
+<ownDataTypeParameters>512,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="vreme_pocetka" id="36CB191D-1FDE-718F-9D6E-8831B7A5EF07">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>E7C826DD-A033-992D-2CB0-0B722C15A057</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="vreme_zavrsetka" id="222C7FD3-CC54-CD6A-FA27-89970A96BF87">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>1F44362D-6829-1CFC-C0FB-3FC404825981</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="vreme_kreiranja" id="9ECD1C2E-0C9E-56EF-3EFE-AB6B5F48BEE4">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>965B4F39-BB6D-67D7-75C4-D5C07C16FB9D</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="status_rez" id="A8E6A46C-0A74-289C-836F-8AE349F07CD0">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>D5D8DE1A-4FBB-67D8-81F0-5DF9FEABA133</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>D7CC7D7D-939D-A6BB-66F7-E1711ABC405A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Klijent_korisnik_id" id="829DA4D3-E0B5-9636-DBFC-285D490AA4AB">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>D8A07CC5-8C82-2084-3C72-4D529F6589A3</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E10F0184-8D48-DD90-2A98-C837070D5EFB" referredColumn="E908FE06-25CF-5921-CC6D-9D86A0C24735"/>
+</associations>
+</Column>
+<Column name="Paket_paket_id" id="D251F0D2-304F-D5C3-8DFF-3D64B2C2CF87">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>21E23C3A-89CD-4092-09B7-1CF2A107C84D</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0A6B1606-85C4-89E0-39F0-85677077E654" referredColumn="8BA732AF-A5BF-E193-8059-1DED098A59C0"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="2801AD1B-9383-EE06-9D22-D19A120C4BDD" name="Rezervacija_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>B9A39987-D1EA-4C61-8A63-8B324E2EF480</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="FD65CFB8-14E1-8681-993E-FFBB3AECCB5F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="809BD071-3BF1-09AA-B668-5135B86D2D07" name="Rezervacija_Klijent_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>25DAF420-2D82-9562-E4CB-393DB7C1C639</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="829DA4D3-E0B5-9636-DBFC-285D490AA4AB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6E610607-14F0-08B8-9897-8B80D8A2A0C5" name="Rezervacija_Paket_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>D7A4E150-4BB8-CC91-2F4F-041F42EEF307</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D251F0D2-304F-D5C3-8DFF-3D64B2C2CF87"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

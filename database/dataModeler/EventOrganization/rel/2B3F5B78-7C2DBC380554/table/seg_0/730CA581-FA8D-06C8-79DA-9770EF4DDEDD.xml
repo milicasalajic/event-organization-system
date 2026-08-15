@@ -1,0 +1,64 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="730CA581-FA8D-06C8-79DA-9770EF4DDEDD" name="Ketering_firma">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>C0B1338B-54DC-AEC6-2959-6B7935923DDE</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="opis" id="D188DC79-E7D6-6764-9C3A-1F0D4E95B6D2">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>BCC70530-5DEB-CF07-9327-1FE0303125CF</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>512</dataTypeSize>
+<ownDataTypeParameters>512,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="usluga_id" id="CDBB2D0C-234D-6A3A-1FB9-BAFFB2EDECA3">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>5737ADE7-9FA4-CC3D-2A7F-F70DD9B12929</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D3847204-DDF2-7BA2-7E97-A8957304DE64" referredColumn="56F04A73-16D3-85C4-A255-69E6C7BA6C8F"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="E33306F3-4D4F-C2F4-1F40-D8AC4F5B159E" name="Ketering_firma_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>80082A5A-450F-A720-0241-533EB3B72747</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CDBB2D0C-234D-6A3A-1FB9-BAFFB2EDECA3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="832F76F3-2982-E9D7-4378-93C0C6D4AEDD" name="K_Usluga_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>6C1BFEDE-1D13-BD14-6EA2-14B5F82F25FF</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CDBB2D0C-234D-6A3A-1FB9-BAFFB2EDECA3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

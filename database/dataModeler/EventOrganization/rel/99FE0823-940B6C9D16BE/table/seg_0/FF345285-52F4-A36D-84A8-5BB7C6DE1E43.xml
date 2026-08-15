@@ -1,0 +1,51 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FF345285-52F4-A36D-84A8-5BB7C6DE1E43" name="Klijent">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>4A06B646-0396-8BC6-B6A5-875C0AF82D03</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="korisnik_id" id="E908FE06-25CF-5921-CC6D-9D86A0C24735">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>B8EE5FC7-C477-C7D9-6754-F8FBCBEA3927</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B23F05BC-C9B4-E338-5DFA-6C6CDE9594DE" referredColumn="757F5432-E60F-5747-3D7D-D780C92872C0"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="5C838F4E-812D-1DA2-2EF5-D077083436E4" name="Klijent_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>9EA0B475-20B0-3312-4AD9-8ED484FC8D7A</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E908FE06-25CF-5921-CC6D-9D86A0C24735"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="11854B1A-411D-4327-5296-D558C65BF1A1" name="Klijent_Korisnik_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>359872DC-1695-FCBD-0B27-BA3D766746E4</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E908FE06-25CF-5921-CC6D-9D86A0C24735"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

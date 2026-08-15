@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="7C042EF9-533E-4385-1AF8-CCEBBF450352" containerWithKeyObject="5C3B9BF3-01BD-84BC-668D-1841D9B526CC" localFKIndex="7E7EDCA5-AB4C-8C9F-222F-B4AF19D8C470" name="Paket_Restoran_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>49875863-7CF3-A8A1-D7B8-F7AA0F0C1FA3</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<referredTableLongName>Restoran</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>F0E9AF51-326A-285A-BC88-EE9CB24ABF32</referredTableID>
+<keyObject>13C132EB-3604-0232-09B7-D6EC39963641</keyObject>
+<referredKeyID>13C132EB-3604-0232-09B7-D6EC39963641</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>restoran_id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

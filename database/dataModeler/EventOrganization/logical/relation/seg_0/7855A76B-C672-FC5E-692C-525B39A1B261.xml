@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Raspolaze" directorySegmentName="seg_0" id="7855A76B-C672-FC5E-692C-525B39A1B261">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:15:32 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<sourcePk>6A59DE02-2464-B93B-31D7-799D06B64ED6</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>9ACAEEB3-2D0C-CEA7-7D17-4F25E5396371</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>5F1A16CB-6043-CB28-8E16-AA87D80E5DCB</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

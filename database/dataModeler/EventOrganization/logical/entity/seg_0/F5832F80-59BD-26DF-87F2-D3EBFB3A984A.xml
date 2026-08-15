@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F5832F80-59BD-26DF-87F2-D3EBFB3A984A" name="Stavka_rezervacije">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 08:57:46 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="stavka_id" id="18BA9B5A-1A04-47A3-7040-572B7FC79092">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 08:57:58 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="tip_stavke" id="3EF0C811-CAE7-B77A-23E4-2B4D93716A3D">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 08:58:24 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>76B92ABE-64D0-E144-E315-77C93D3B6F9F</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="rezervacija_id" id="8641123F-07C8-0C10-70F3-38E2E1A1BD86">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:21:35 UTC</createdTime>
+<generatorID>A239407D-44EC-C6E2-3475-C2B11ED8A3DB</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<referedAttribute>C24B6FA4-54AF-5974-7143-C0F14D234E30</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="usluga_id" id="5B83CC15-81B8-BC85-8791-38927BC4EBAE">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:31:00 UTC</createdTime>
+<generatorID>DF314647-4D7B-65F1-FEDF-F0EB7B3AC08E</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<referedAttribute>5737ADE7-9FA4-CC3D-2A7F-F70DD9B12929</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="5628BDF6-A6CB-8FB8-A6E1-B8CA7695524F" name="Stavka_rezervacije PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 08:58:23 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>18BA9B5A-1A04-47A3-7040-572B7FC79092</attributeRef>
+<attributeRef>8641123F-07C8-0C10-70F3-38E2E1A1BD86</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

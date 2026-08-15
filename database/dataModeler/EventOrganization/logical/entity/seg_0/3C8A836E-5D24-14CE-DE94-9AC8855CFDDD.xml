@@ -1,0 +1,100 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="3C8A836E-5D24-14CE-DE94-9AC8855CFDDD" name="Cenovnik">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:34:05 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="cenovnik_id" id="C21E4A9B-3BE6-24DF-8EA3-124F69E5FC64">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:34:18 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="iznos" id="4B880B3A-AD31-AC5E-CC53-8E14BF2EC3D4">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:34:29 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>5</dataTypePrecision>
+<ownDataTypeParameters>,5,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="datum_izmene" id="67A400E3-8840-525D-83DC-AED8ADCFDB81">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:35:31 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="sala_id" id="AA8CD05B-4D86-391B-E4B7-6902B9976371">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:26:03 UTC</createdTime>
+<generatorID>1C1B802A-BD02-2EE8-51C0-2FDC8F79D743</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>5D82F331-C737-6FD3-1968-5C1689ABD028</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="usluga_id" id="4DABAFA9-E816-865A-B386-B869BC14DB4A">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:28:23 UTC</createdTime>
+<generatorID>A43ABD25-B721-EA20-2319-BC32896FA13D</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>5737ADE7-9FA4-CC3D-2A7F-F70DD9B12929</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="4792945E-FD3C-F0A7-436E-8DF12AA010E8" name="Cenovnik PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 08:45:37 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>C21E4A9B-3BE6-24DF-8EA3-124F69E5FC64</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

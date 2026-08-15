@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="D3847204-DDF2-7BA2-7E97-A8957304DE64" containerWithKeyObject="730CA581-FA8D-06C8-79DA-9770EF4DDEDD" localFKIndex="832F76F3-2982-E9D7-4378-93C0C6D4AEDD" name="K_Usluga_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>6C1BFEDE-1D13-BD14-6EA2-14B5F82F25FF</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<referredTableLongName>Usluga</referredTableLongName>
+<arc>78723DA5-DD6E-8EFA-EB0A-81E91F098DFF</arc>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>235DA6C0-1F0D-326A-07AB-625AF03ACFFE</referredTableID>
+<keyObject>164F0EB7-0064-AA15-7205-8B71F3DBB441</keyObject>
+<referredKeyID>164F0EB7-0064-AA15-7205-8B71F3DBB441</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>usluga_id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<discriminatorValue>KETERING</discriminatorValue>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

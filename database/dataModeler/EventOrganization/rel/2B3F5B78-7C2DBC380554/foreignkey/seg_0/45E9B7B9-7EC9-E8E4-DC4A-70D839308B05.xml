@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="45E9B7B9-7EC9-E8E4-DC4A-70D839308B05" containerWithKeyObject="2B085C24-DC86-D036-8718-7F3EC3F6E0CF" localFKIndex="A8F70A40-12BE-384D-AF5F-B913BF504A40" name="D_Usluga_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>6F30832F-7BE4-E3D0-0B7B-876FB1216315</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<referredTableLongName>Usluga</referredTableLongName>
+<arc>78723DA5-DD6E-8EFA-EB0A-81E91F098DFF</arc>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>235DA6C0-1F0D-326A-07AB-625AF03ACFFE</referredTableID>
+<keyObject>164F0EB7-0064-AA15-7205-8B71F3DBB441</keyObject>
+<referredKeyID>164F0EB7-0064-AA15-7205-8B71F3DBB441</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>usluga_id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<discriminatorValue>DEKORATER</discriminatorValue>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

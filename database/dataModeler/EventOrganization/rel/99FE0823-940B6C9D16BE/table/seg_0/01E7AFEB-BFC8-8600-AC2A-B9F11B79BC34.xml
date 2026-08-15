@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="01E7AFEB-BFC8-8600-AC2A-B9F11B79BC34" name="Rezervacija_TipDogadjaja">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Tip_dogadjaja_tip_dogadjaja_id" id="C16EAE07-1E55-FEE9-4CE7-36F5805E7C7B">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="BDEE00FF-7FC2-59B0-5A92-378A40F3D95B" referredColumn="D36A46D6-65D1-7D11-80CB-8021991AFC13"/>
+</associations>
+</Column>
+<Column name="Rezervacija_rezervacija_id" id="88DC367A-4AE9-E642-294B-7BA7988E2C45">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="1D7E65C6-ED10-A7FE-A4B5-12DE1A86AD09" referredColumn="FD65CFB8-14E1-8681-993E-FFBB3AECCB5F"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="43E3E61C-B86C-E407-3941-62C4D7AA8D6B" name="Rezervacija_TipDogadjaja_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C16EAE07-1E55-FEE9-4CE7-36F5805E7C7B"/>
+<colUsage columnID="88DC367A-4AE9-E642-294B-7BA7988E2C45"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="1D3E8F82-9163-58F5-2A45-9E20D7F24639" name="Rezervacija_TipDogadjaja_Tip_dogadjaja_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>E5995E4B-DAF1-97CD-08AD-5C1E1874BC1C</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C16EAE07-1E55-FEE9-4CE7-36F5805E7C7B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BAB5C1F3-EEB0-2CD6-984C-067EB73B1A48" name="Rezervacija_TipDogadjaja_Rezervacija_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>E5995E4B-DAF1-97CD-08AD-5C1E1874BC1C</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="88DC367A-4AE9-E642-294B-7BA7988E2C45"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

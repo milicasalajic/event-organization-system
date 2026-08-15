@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Sadrzi2" directorySegmentName="seg_0" id="A43ABD25-B721-EA20-2319-BC32896FA13D">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:27:42 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<targetPk>80082A5A-450F-A720-0241-533EB3B72747</targetPk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>3C8A836E-5D24-14CE-DE94-9AC8855CFDDD</sourceEntity>
+<targetCardinalityString>1</targetCardinalityString>
+<targetEntity>2E42C4B2-D0FB-2CD4-6E48-A0E0A85C7C08</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

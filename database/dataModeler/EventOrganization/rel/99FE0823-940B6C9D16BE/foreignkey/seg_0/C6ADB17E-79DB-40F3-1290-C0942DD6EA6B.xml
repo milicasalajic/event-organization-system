@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="C6ADB17E-79DB-40F3-1290-C0942DD6EA6B" containerWithKeyObject="14735CD2-9061-494D-CE99-65CF7734332F" localFKIndex="71799949-0797-A4C1-466C-38958601E856" name="Radnik_Restoran_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>CE66AD82-2EBE-BBF8-4F93-900CD89DFE8B</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<referredTableLongName>Restoran</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>F0E9AF51-326A-285A-BC88-EE9CB24ABF32</referredTableID>
+<keyObject>13C132EB-3604-0232-09B7-D6EC39963641</keyObject>
+<referredKeyID>13C132EB-3604-0232-09B7-D6EC39963641</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>restoran_id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

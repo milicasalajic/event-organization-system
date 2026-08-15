@@ -1,0 +1,46 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A8676F11-A0E6-F797-35DA-8AC5AB16F1FC" name="Radnik">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:13:15 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<hierarchicalParent>2803E1F2-C957-082B-E214-A974E81B9B90</hierarchicalParent>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="tip_radnika" id="635B0B21-4EA9-F612-5AA7-56CE6049826C">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:13:27 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>9BF5F8BD-DABF-E3C6-34A5-7DE7CF072DCA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="restoran_id" id="0890E7C8-D299-F749-1FA3-812949810FD0">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:13:01 UTC</createdTime>
+<generatorID>CE66AD82-2EBE-BBF8-4F93-900CD89DFE8B</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<referedAttribute>7C1982F4-6A8A-E6B5-FE74-B2D8F4A52805</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

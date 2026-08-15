@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8275AFD8-374D-EA46-548D-BF24017BC4FF" name="Radnik">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>A8676F11-A0E6-F797-35DA-8AC5AB16F1FC</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="korisnik_id" id="093CDE70-EE0E-769C-F183-AC9ECFA568DF">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>B8EE5FC7-C477-C7D9-6754-F8FBCBEA3927</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="EB4EE265-E776-93A5-88A4-0C19BEB3F21B" referredColumn="E6617D28-B678-FDFD-EFF9-C444D0078AF6"/>
+</associations>
+</Column>
+<Column name="tip_radnika" id="F5BE6567-6A36-4BC3-AD8F-1CBF62A41584">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>635B0B21-4EA9-F612-5AA7-56CE6049826C</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>9BF5F8BD-DABF-E3C6-34A5-7DE7CF072DCA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="restoran_id" id="F3A374EE-E7AF-1E23-B26C-812106C04559">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>0890E7C8-D299-F749-1FA3-812949810FD0</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="F8142637-0BA1-A4D5-A83C-0E6F9E45D131" referredColumn="23416F85-79C9-EFFD-16D4-EFFBC2839AA3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="15DC428C-D7C4-1D32-2D0E-F11959877783" name="Radnik_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>9EA0B475-20B0-3312-4AD9-8ED484FC8D7A</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="093CDE70-EE0E-769C-F183-AC9ECFA568DF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B0CDA9D5-420B-3B01-5F81-BCDAF4B03C59" name="Radnik_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>6D99DC71-21E0-ABBA-476D-8AF32CE12D43</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="093CDE70-EE0E-769C-F183-AC9ECFA568DF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="39D1E5AF-CDFE-3CB9-BE31-971F6A560E0A" name="R_Restoran_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<generatorID>CE66AD82-2EBE-BBF8-4F93-900CD89DFE8B</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F3A374EE-E7AF-1E23-B26C-812106C04559"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

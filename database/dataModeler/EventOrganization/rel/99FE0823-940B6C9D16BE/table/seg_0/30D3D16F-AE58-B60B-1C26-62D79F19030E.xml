@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="30D3D16F-AE58-B60B-1C26-62D79F19030E" name="Fotograf">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>09C26926-7AAC-492C-28B4-D6AED50DC833</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="cena_foto" id="B340A28F-14AB-8335-D1FC-E637E25464B5">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>2BD38B5B-78CA-733C-4E7F-81693D8106B0</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>4</dataTypePrecision>
+<ownDataTypeParameters>,4,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="usluga_id" id="444153F8-E562-FF8A-4509-B577A9EA9C91">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>5737ADE7-9FA4-CC3D-2A7F-F70DD9B12929</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="4504FAA0-5DAC-1BFE-1CE8-D83B32EE0F48" referredColumn="CEC99C04-9217-C7C1-B307-7A06A8022FD8"/>
+</associations>
+</Column>
+<Column name="tip_foto" id="3DDEC1DE-BA3D-6587-92A4-9104B64640FE">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>A30DCB9D-5FD4-5A7A-869A-CAAF6C94CADF</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>632ED277-A838-2A4E-BEC4-713F7572DE8B</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="83016B99-D50D-5CE7-809D-2E9336245651" name="Fotograf_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>80082A5A-450F-A720-0241-533EB3B72747</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="444153F8-E562-FF8A-4509-B577A9EA9C91"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C1E330F4-C5DD-780B-A1CF-D6E415B25CFB" name="Fotograf_Usluga_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>7116C1F3-19A6-05E2-0CD6-B5C5C06D1FC7</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="444153F8-E562-FF8A-4509-B577A9EA9C91"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

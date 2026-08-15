@@ -1,0 +1,64 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="AB135B29-EDCD-98A5-ABED-B89D675DBC1D" name="Dekoraterska_firma">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>69D816A6-646C-BDC4-CE0C-F59548F3A7D9</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="opis" id="8DB1270A-8919-65D7-18FC-B3198B61506B">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>96A1FDC5-D8A9-F139-99B9-5B2A779D0EBC</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>512</dataTypeSize>
+<ownDataTypeParameters>512,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="usluga_id" id="3C6B59D7-B912-8187-165E-7BEB8118FB9A">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>5737ADE7-9FA4-CC3D-2A7F-F70DD9B12929</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="90C8141D-EC9B-8AAD-E212-DD228DC3F466" referredColumn="CEC99C04-9217-C7C1-B307-7A06A8022FD8"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="8D3B54A9-BD0C-899A-8FB5-DE0A0BE11FC6" name="Dekoraterska_firma_PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>80082A5A-450F-A720-0241-533EB3B72747</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3C6B59D7-B912-8187-165E-7BEB8118FB9A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="591E4148-A296-CD79-C3BC-27F7DD2DEF88" name="Dekoraterska_firma_Usluga_FK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 11:41:44 UTC</createdTime>
+<generatorID>6F30832F-7BE4-E3D0-0B7B-876FB1216315</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3C6B59D7-B912-8187-165E-7BEB8118FB9A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

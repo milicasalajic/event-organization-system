@@ -1,0 +1,148 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2803E1F2-C957-082B-E214-A974E81B9B90" name="Korisnik">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:01:33 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<discriminatorAttributeID>33A55507-5269-95BA-E934-FFA45C5625E5</discriminatorAttributeID>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="korisnik_id" id="B8EE5FC7-C477-C7D9-6754-F8FBCBEA3927">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:02:13 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="lozinka" id="3B5FB2CC-635A-B82B-CE81-1D9881F3B685">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:02:27 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128</dataTypeSize>
+<ownDataTypeParameters>128,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ime" id="111BE46E-3604-1F7C-B78C-EEBCAF821A00">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:03:04 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>35</dataTypeSize>
+<ownDataTypeParameters>35,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="prezime" id="B7FAA2D7-4797-06EB-F38A-FB9222C2E0B0">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:03:26 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>35</dataTypeSize>
+<ownDataTypeParameters>35,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="telefon" id="65BF2EC8-179A-5631-8DC6-12D03A4695C8">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:03:43 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="email" id="99F483B3-4C50-EDBF-3056-7D6A4C797090">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:04:51 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128</dataTypeSize>
+<ownDataTypeParameters>128,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="tip_korisnika" id="33A55507-5269-95BA-E934-FFA45C5625E5">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:15:11 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>EEC1A162-6C3A-963C-0CA6-646F2F52F112</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="uloga_id" id="5CBCD4CB-AF48-03BE-D28E-9C6974DEF46C">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 10:23:15 UTC</createdTime>
+<generatorID>19B71579-6377-FA7B-9ED7-CC6CB8AB0363</generatorID>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="true"/>
+</engineerTo>
+<referedAttribute>6DECFDF5-EA5F-886B-B4AC-0DCBF5AA4EE3</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9EA0B475-20B0-3312-4AD9-8ED484FC8D7A" name="Korisnik PK">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-01 09:02:26 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<engineerTo>
+<item key="2B3F5B78-E273-AEDE-ED13-7C2DBC380554" value="true"/>
+<item key="96218A5C-8A0C-0D31-FF23-E71D2DF0D25D" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>B8EE5FC7-C477-C7D9-6754-F8FBCBEA3927</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

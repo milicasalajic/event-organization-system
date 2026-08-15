@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="EventOrganization" id="3E190357-233B-B014-B26C-D3B9F7BB215A" version="3.5">
+<createdBy>Milica</createdBy>
+<createdTime>2026-07-31 16:37:27 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>3E190357-233B-B014-B26C-D3B9F7BB215A</designId>
+</OSDM_Design>

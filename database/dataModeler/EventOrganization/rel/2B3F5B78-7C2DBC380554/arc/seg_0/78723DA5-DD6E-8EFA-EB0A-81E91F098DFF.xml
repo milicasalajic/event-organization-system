@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKArc class="oracle.dbtools.crest.model.design.relational.FKArc" directorySegmentName="seg_0" id="78723DA5-DD6E-8EFA-EB0A-81E91F098DFF" name="FKArc_2">
+<createdBy>Milica</createdBy>
+<createdTime>2026-08-14 09:41:13 UTC</createdTime>
+<ownerDesignName>EventOrganization</ownerDesignName>
+<mandatory>true</mandatory>
+<reverseArc>true</reverseArc>
+<table>235DA6C0-1F0D-326A-07AB-625AF03ACFFE</table>
+<discriminatorColumn>661235BD-3CA9-A329-86D7-013AB64A3BD5</discriminatorColumn>
+<fkeys>
+<fkeyID>D3847204-DDF2-7BA2-7E97-A8957304DE64</fkeyID>
+<fkeyID>BD1A1EEC-BAF4-4262-EED9-333C548A1F6A</fkeyID>
+<fkeyID>45E9B7B9-7EC9-E8E4-DC4A-70D839308B05</fkeyID>
+<fkeyID>46F35C67-0076-4FB7-F6A9-B7E6B9351917</fkeyID>
+</fkeys>
+</FKArc>
