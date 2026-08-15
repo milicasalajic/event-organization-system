@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./EventOrganization.Api/EventOrganization.Api
+      dockerfile: Dockerfile
+    container_name: event-organization-backend
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__EventOrganization: ${DB_CONNECTION_STRING}
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: EventOrganization.Api
+      Jwt__Audience: EventOrganization.Client
+
+  frontend:
+    build:
+      context: ./EventOrganization.Api/frontend
+      dockerfile: Dockerfile
+    container_name: event-organization-frontend
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
