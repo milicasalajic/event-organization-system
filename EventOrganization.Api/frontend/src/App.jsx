@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.jsx';
 import RestoraniPage from './pages/RestoraniPage.jsx';
 import MojRestoranPage from './pages/MojRestoranPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import RestoranDetaljiPage from './pages/RestoranDetaljiPage.jsx';
 
 function App() {
     return (
@@ -48,6 +49,16 @@ function App() {
             <Route
                 path="*"
                 element={<Navigate to="/" replace />}
+            />
+            <Route
+                path="/restorani/:restoranId"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={['ADMINISTRATOR', 'KLIJENT']}
+                    >
+                        <RestoranDetaljiPage />
+                    </ProtectedRoute>
+                }
             />
         </Routes>
     );

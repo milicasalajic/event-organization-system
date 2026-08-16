@@ -30,4 +30,14 @@ public class RestoranRepository
             .Select(r => r.Restoran)
             .FirstOrDefaultAsync(cancellationToken);
     }
+    public Task<Restoran?> GetById(
+    decimal restoranId,
+    CancellationToken cancellationToken = default)
+    {
+        return _context.Restorani
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                r => r.RestoranId == restoranId,
+                cancellationToken);
+    }
 }

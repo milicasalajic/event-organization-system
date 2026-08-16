@@ -53,4 +53,21 @@ public class RestoranController : ControllerBase
 
         return Ok(restoran);
     }
+    [Authorize(Roles = "ADMINISTRATOR,KLIJENT")]
+    [HttpGet("{restoranId}")]
+    public async Task<ActionResult<RestoranDto>> GetById(
+    decimal restoranId,
+    CancellationToken cancellationToken)
+    {
+        var restoran = await _restoranService.GetById(
+            restoranId,
+            cancellationToken);
+
+        if (restoran is null)
+        {
+            return NotFound("Restoran nije pronađen.");
+        }
+
+        return Ok(restoran);
+    }
 }

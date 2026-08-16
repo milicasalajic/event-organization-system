@@ -1,4 +1,5 @@
 using EventOrganization.Api.DTOs.Restorani;
+using EventOrganization.Api.Models;
 using EventOrganization.Api.Repositories;
 
 namespace EventOrganization.Api.Services;
@@ -43,14 +44,32 @@ public class RestoranService
             return null;
         }
 
+        return MapToDto(restoran);
+    }
+    private static RestoranDto MapToDto(Restoran restoran)
+    {
         return new RestoranDto
         {
             RestoranId = restoran.RestoranId,
             Naziv = restoran.Naziv,
             Adresa = restoran.Adresa,
             Grad = restoran.Grad,
-            Telefon = restoran.Telefon,
-        
+            Telefon = restoran.Telefon
         };
+    }
+    public async Task<RestoranDto?> GetById(
+    decimal restoranId,
+    CancellationToken cancellationToken = default)
+    {
+        var restoran = await _restoranRepository.GetById(
+            restoranId,
+            cancellationToken);
+
+        if (restoran is null)
+        {
+            return null;
+        }
+
+        return MapToDto(restoran);
     }
 }
