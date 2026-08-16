@@ -23,6 +23,8 @@ builder.Services.AddScoped<RestoranRepository>();
 builder.Services.AddScoped<RestoranService>();
 builder.Services.AddScoped<PaketRepository>();
 builder.Services.AddScoped<PaketService>();
+builder.Services.AddScoped<SalaRepository>();
+builder.Services.AddScoped<SalaService>();
 
 builder.Services.AddCors(options =>
 {

@@ -2,6 +2,7 @@
 import { useParams } from 'react-router-dom';
 import { getRestoranById } from '../api/restoranApi';
 import { getPaketiByRestoranId } from '../api/paketApi';
+import { getSaleByPaketId } from '../api/salaApi';
 import './RestoranDetaljiPage.css';
 
 function RestoranDetaljiPage() {
@@ -15,6 +16,11 @@ function RestoranDetaljiPage() {
     const [prikaziPakete, setPrikaziPakete] = useState(false);
     const [paketiLoading, setPaketiLoading] = useState(false);
     const [paketiError, setPaketiError] = useState('');
+
+    const [salePoPaketu, setSalePoPaketu] = useState({});
+    const [prikazaneSale, setPrikazaneSale] = useState({});
+    const [saleLoading, setSaleLoading] = useState({});
+    const [saleError, setSaleError] = useState({});
 
     useEffect(() => {
         async function loadRestoran() {
@@ -52,6 +58,56 @@ function RestoranDetaljiPage() {
         }
 
         setPrikaziPakete(true);
+    }
+
+    async function handleSaleClick(paketId) {
+        if (prikazaneSale[paketId]) {
+            setPrikazaneSale((prev) => ({
+                ...prev,
+                [paketId]: false,
+            }));
+
+            return;
+        }
+
+        if (salePoPaketu[paketId] === undefined) {
+            setSaleLoading((prev) => ({
+                ...prev,
+                [paketId]: true,
+            }));
+
+            setSaleError((prev) => ({
+                ...prev,
+                [paketId]: '',
+            }));
+
+            try {
+                const result = await getSaleByPaketId(
+                    restoranId,
+                    paketId,
+                );
+
+                setSalePoPaketu((prev) => ({
+                    ...prev,
+                    [paketId]: result,
+                }));
+            } catch (error) {
+                setSaleError((prev) => ({
+                    ...prev,
+                    [paketId]: error.message,
+                }));
+            } finally {
+                setSaleLoading((prev) => ({
+                    ...prev,
+                    [paketId]: false,
+                }));
+            }
+        }
+
+        setPrikazaneSale((prev) => ({
+            ...prev,
+            [paketId]: true,
+        }));
     }
 
     if (isLoading) {
@@ -168,6 +224,77 @@ function RestoranDetaljiPage() {
                                                     Za ovaj paket trenutno nema dodatnog opisa.
                                                 </p>
                                             )}
+
+                                            <button
+                                                className="sale-toggle"
+                                                type="button"
+                                                onClick={() =>
+                                                    handleSaleClick(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                            >
+                                                {prikazaneSale[paket.paketId]
+                                                    ? 'Sakrij sale'
+                                                    : 'Vidi sale'}
+
+                                                <span
+                                                    className={
+                                                        prikazaneSale[paket.paketId]
+                                                            ? 'sale-strelica otvorena'
+                                                            : 'sale-strelica'
+                                                    }
+                                                >
+                                                    ↓
+                                                </span>
+                                            </button>
+
+                                            {saleLoading[paket.paketId] && (
+                                                <p className="sale-loading">
+                                                    Učitavanje sala...
+                                                </p>
+                                            )}
+
+                                            {saleError[paket.paketId] && (
+                                                <p className="sale-error">
+                                                    {saleError[paket.paketId]}
+                                                </p>
+                                            )}
+
+                                            {prikazaneSale[paket.paketId] &&
+                                                !saleLoading[paket.paketId] &&
+                                                !saleError[paket.paketId] && (
+                                                    <div className="sale-sekcija">
+                                                        {salePoPaketu[paket.paketId]
+                                                            ?.length === 0 ? (
+                                                            <p className="sale-empty">
+                                                                Ovaj paket nema sale u ponudi.
+                                                            </p>
+                                                        ) : (
+                                                            <div className="sale-lista">
+                                                                {salePoPaketu[
+                                                                    paket.paketId
+                                                                ]?.map((sala) => (
+                                                                    <div
+                                                                        className="sala-card"
+                                                                        key={sala.salaId}
+                                                                    >
+                                                                        <h4>
+                                                                            Sala {sala.rbrS}
+                                                                        </h4>
+
+                                                                        <p>
+                                                                            <strong>
+                                                                                Kapacitet:
+                                                                            </strong>{' '}
+                                                                            {sala.kapacitet}
+                                                                        </p>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
                                         </div>
                                     ))}
                                 </div>

@@ -213,3 +213,88 @@
         padding: 20px;
     }
 }
+.sale-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 18px;
+    padding: 11px 14px;
+    color: #3f5c4a;
+    background-color: #f8f5f0;
+    border: 1px solid #ddd5c8;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+    .sale-toggle:hover {
+        background-color: #f2ede5;
+        border-color: #c8a96b;
+    }
+
+.sale-strelica {
+    display: inline-block;
+    transition: transform 0.25s ease;
+}
+
+    .sale-strelica.otvorena {
+        transform: rotate(180deg);
+    }
+
+.sale-sekcija {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #eee8df;
+}
+
+.sale-lista {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.sala-card {
+    padding: 16px 18px;
+    background-color: #faf8f4;
+    border: 1px solid #e7e0d6;
+    border-radius: 7px;
+}
+
+    .sala-card h4 {
+        margin: 0 0 8px;
+        color: #3f5c4a;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .sala-card p {
+        margin: 0;
+        color: #625e58;
+        font-size: 13px;
+    }
+
+    .sala-card strong {
+        color: #3f3934;
+    }
+
+.sale-loading,
+.sale-empty {
+    margin: 15px 0 0;
+    color: #77736d;
+    font-size: 13px;
+}
+
+.sale-error {
+    margin: 15px 0 0;
+    color: #a94442;
+    font-size: 13px;
+}
+
+@media (max-width: 650px) {
+    .sale-lista {
+        grid-template-columns: 1fr;
+    }
+}
