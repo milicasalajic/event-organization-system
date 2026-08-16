@@ -30,4 +30,27 @@ public class RestoranService
             })
             .ToList();
     }
+    public async Task<RestoranDto?> GetMojRestoran(
+    decimal korisnikId,
+    CancellationToken cancellationToken = default)
+    {
+        var restoran = await _restoranRepository.GetByKorisnikId(
+            korisnikId,
+            cancellationToken);
+
+        if (restoran is null)
+        {
+            return null;
+        }
+
+        return new RestoranDto
+        {
+            RestoranId = restoran.RestoranId,
+            Naziv = restoran.Naziv,
+            Adresa = restoran.Adresa,
+            Grad = restoran.Grad,
+            Telefon = restoran.Telefon,
+        
+        };
+    }
 }

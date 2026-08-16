@@ -1,3 +1,4 @@
+﻿using System.Security.Claims;
 using EventOrganization.Api.DTOs.Restorani;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -26,5 +27,30 @@ public class RestoranController : ControllerBase
             cancellationToken);
 
         return Ok(restorani);
+    }
+    [Authorize(Roles = "MENADZER,OPERATER")]
+    [HttpGet("moj")]
+    public async Task<ActionResult<RestoranDto>> GetMojRestoran(
+    CancellationToken cancellationToken)
+    {
+        var korisnikIdClaim = User.FindFirst(
+            ClaimTypes.NameIdentifier)?.Value;
+
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
+        {
+            return Unauthorized();
+        }
+
+        var restoran = await _restoranService.GetMojRestoran(
+            korisnikId,
+            cancellationToken);
+
+        if (restoran is null)
+        {
+            return NotFound(
+                "Restoran za prijavljenog korisnika nije pronađen.");
+        }
+
+        return Ok(restoran);
     }
 }

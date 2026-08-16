@@ -24,3 +24,40 @@ export async function getAllRestorani() {
 
     return response.json();
 }
+export async function getMojRestoran() {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(
+        `${API_URL}/api/Restoran/moj`,
+        {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    );
+
+    if (response.status === 401) {
+        throw new Error('Niste prijavljeni.');
+    }
+
+    if (response.status === 403) {
+        throw new Error(
+            'Nemate dozvolu za pregled ovog restorana.',
+        );
+    }
+
+    if (response.status === 404) {
+        throw new Error(
+            'Restoran za prijavljenog korisnika nije pronađen.',
+        );
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            'Došlo je do greške prilikom učitavanja restorana.',
+        );
+    }
+
+    return response.json();
+}

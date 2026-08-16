@@ -20,4 +20,14 @@ public class RestoranRepository
             .AsNoTracking()//planira smao da cita restorane
             .ToListAsync(cancellationToken);
     }
+    public async Task<Restoran?> GetByKorisnikId(
+    decimal korisnikId,
+    CancellationToken cancellationToken = default)
+    {
+        return await _context.Radnici
+            .AsNoTracking()
+            .Where(r => r.KorisnikId == korisnikId)
+            .Select(r => r.Restoran)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }
