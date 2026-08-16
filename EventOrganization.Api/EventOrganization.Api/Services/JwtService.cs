@@ -8,7 +8,7 @@ namespace EventOrganization.Api.Services;
 
 public class JwtService
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration; //citanje konfiguracije za app, najvesce applicaton.json, ovde za citanje jwt
 
     public JwtService(IConfiguration configuration)
     {
@@ -20,6 +20,11 @@ public class JwtService
         var key = _configuration["Jwt:Key"]
             ?? throw new InvalidOperationException(
                 "JWT ključ nije konfigurisan.");
+        /*"Jwt": {
+  "Key": "neki-dugacak-tajni-kljuc",
+  "Issuer": "EventOrganizationApi",
+  "Audience": "EventOrganizationClient"
+}*/
 
         var issuer = _configuration["Jwt:Issuer"]
             ?? throw new InvalidOperationException(
@@ -29,7 +34,7 @@ public class JwtService
             ?? throw new InvalidOperationException(
                 "JWT audience nije konfigurisan.");
 
-        var claims = new List<Claim>
+        var claims = new List<Claim>//claims-info o korisniku, stavljanje tih info u jwt
         {
             new(
                 ClaimTypes.NameIdentifier,

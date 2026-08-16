@@ -22,7 +22,7 @@ public class AuthService
 		CancellationToken cancellationToken = default)
 	{
 		var korisnik = await _context.Korisnici
-			.Include(k => k.Uloga)
+			.Include(k => k.Uloga) // za ucitavanje povezanog entiteta
 			.FirstOrDefaultAsync(
 				k => k.Email == request.Email,
 				cancellationToken);
@@ -32,7 +32,6 @@ public class AuthService
 			return null;
 		}
 
-		// Privremeno dok još koristiš plain-text lozinke iz seed-a.
 		if (korisnik.Lozinka != request.Lozinka)
 		{
 			return null;

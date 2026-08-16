@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using EventOrganization.Api.Models;
+using EventOrganization.Api.Repositories;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +19,21 @@ builder.Services.AddDbContext<EventOrganizationDbContext>(options =>
 
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RestoranRepository>();
+builder.Services.AddScoped<RestoranService>();
 
-    var jwtKey = builder.Configuration["Jwt:Key"]
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+var jwtKey = builder.Configuration["Jwt:Key"]
     ?? throw new InvalidOperationException(
         "JWT ključ nije konfigurisan.");
 
@@ -72,6 +86,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
