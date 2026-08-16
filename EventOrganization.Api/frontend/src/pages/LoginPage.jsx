@@ -30,9 +30,9 @@ function LoginPage() {
                     prezime: result.prezime,
                     email: result.email,
                     uloga: result.uloga,
+                    restoranId: result.restoranId,
                 }),
             );
-
             navigate('/');
         }  catch (error) {
             setError(error.message);

@@ -21,6 +21,8 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<RestoranRepository>();
 builder.Services.AddScoped<RestoranService>();
+builder.Services.AddScoped<PaketRepository>();
+builder.Services.AddScoped<PaketService>();
 
 builder.Services.AddCors(options =>
 {

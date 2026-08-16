@@ -21,45 +21,13 @@ public class RestoranService
             cancellationToken);
 
         return restorani
-            .Select(restoran => new RestoranDto
-            {
-                RestoranId = restoran.RestoranId,
-                Naziv = restoran.Naziv,
-                Adresa = restoran.Adresa,
-                Grad = restoran.Grad,
-                Telefon = restoran.Telefon
-            })
+            .Select(MapToDto)
             .ToList();
     }
-    public async Task<RestoranDto?> GetMojRestoran(
-    decimal korisnikId,
-    CancellationToken cancellationToken = default)
-    {
-        var restoran = await _restoranRepository.GetByKorisnikId(
-            korisnikId,
-            cancellationToken);
 
-        if (restoran is null)
-        {
-            return null;
-        }
-
-        return MapToDto(restoran);
-    }
-    private static RestoranDto MapToDto(Restoran restoran)
-    {
-        return new RestoranDto
-        {
-            RestoranId = restoran.RestoranId,
-            Naziv = restoran.Naziv,
-            Adresa = restoran.Adresa,
-            Grad = restoran.Grad,
-            Telefon = restoran.Telefon
-        };
-    }
     public async Task<RestoranDto?> GetById(
-    decimal restoranId,
-    CancellationToken cancellationToken = default)
+        decimal restoranId,
+        CancellationToken cancellationToken = default)
     {
         var restoran = await _restoranRepository.GetById(
             restoranId,
@@ -71,5 +39,28 @@ public class RestoranService
         }
 
         return MapToDto(restoran);
+    }
+
+    public Task<bool> KorisnikRadiURestoranu(
+        decimal korisnikId,
+        decimal restoranId,
+        CancellationToken cancellationToken = default)
+    {
+        return _restoranRepository.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
+    }
+
+    private static RestoranDto MapToDto(Restoran restoran)
+    {
+        return new RestoranDto
+        {
+            RestoranId = restoran.RestoranId,
+            Naziv = restoran.Naziv,
+            Adresa = restoran.Adresa,
+            Grad = restoran.Grad,
+            Telefon = restoran.Telefon
+        };
     }
 }

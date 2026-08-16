@@ -1,0 +1,215 @@
+.restoran-detalji-page {
+    min-height: 100vh;
+    padding: 50px 24px;
+    background-color: #f8f5f0;
+}
+
+.restoran-detalji-container {
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.restoran-detalji-card {
+    padding: 38px 42px;
+    background-color: #ffffff;
+    border: 1px solid #e4ded5;
+    border-left: 4px solid #c8a96b;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.restoran-detalji-header {
+    margin-bottom: 30px;
+}
+
+.restoran-label {
+    display: inline-block;
+    margin-bottom: 9px;
+    padding: 5px 11px;
+    color: #7a6235;
+    background-color: #f4ecdc;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.restoran-detalji-header h1 {
+    margin: 0;
+    color: #3f5c4a;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.restoran-detalji-info {
+    padding: 22px 0;
+    border-top: 1px solid #eee8df;
+    border-bottom: 1px solid #eee8df;
+}
+
+.restoran-info-red {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+    .restoran-info-red:last-child {
+        margin-bottom: 0;
+    }
+
+    .restoran-info-red span {
+        width: 90px;
+        color: #77736d;
+        font-size: 14px;
+    }
+
+    .restoran-info-red strong {
+        color: #34312e;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+.paketi-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 26px;
+    padding: 14px 18px;
+    color: #ffffff;
+    background-color: #3f5c4a;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+    .paketi-toggle:hover {
+        background-color: #31483a;
+    }
+
+    .paketi-toggle:active {
+        transform: translateY(1px);
+    }
+
+.paketi-strelica {
+    display: inline-block;
+    font-size: 18px;
+    transition: transform 0.25s ease;
+}
+
+    .paketi-strelica.otvorena {
+        transform: rotate(180deg);
+    }
+
+.paketi-sekcija {
+    margin-top: 32px;
+}
+
+.paketi-header {
+    margin-bottom: 20px;
+}
+
+    .paketi-header h2 {
+        margin: 0;
+        color: #3f5c4a;
+        font-size: 23px;
+        font-weight: 600;
+    }
+
+.paketi-header-linija {
+    width: 45px;
+    height: 2px;
+    margin-top: 10px;
+    background-color: #c8a96b;
+    border-radius: 2px;
+}
+
+.paketi-lista-detalji {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.paket-card {
+    padding: 22px 26px;
+    background-color: #ffffff;
+    border: 1px solid #e4ded5;
+    border-left: 3px solid #c8a96b;
+    border-radius: 9px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .paket-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    .paket-card h3 {
+        margin: 0 0 9px;
+        color: #3f5c4a;
+        font-size: 19px;
+        font-weight: 600;
+    }
+
+    .paket-card p {
+        margin: 0;
+        color: #625e58;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+.paket-bez-opisa {
+    color: #8a857f !important;
+    font-style: italic;
+}
+
+.paketi-loading,
+.paketi-empty,
+.restoran-detalji-loading {
+    margin-top: 40px;
+    color: #77736d;
+    text-align: center;
+    font-size: 15px;
+}
+
+.paketi-error,
+.restoran-detalji-error {
+    margin-top: 40px;
+    color: #a94442;
+    text-align: center;
+    font-size: 14px;
+}
+
+@media (max-width: 650px) {
+    .restoran-detalji-page {
+        padding: 32px 16px;
+    }
+
+    .restoran-detalji-card {
+        padding: 28px 22px;
+    }
+
+    .restoran-detalji-header h1 {
+        font-size: 27px;
+    }
+
+    .restoran-info-red {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+        .restoran-info-red span {
+            width: auto;
+        }
+
+    .paket-card {
+        padding: 20px;
+    }
+}

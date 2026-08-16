@@ -23,7 +23,8 @@ public class AuthService
 	{
 		var korisnik = await _context.Korisnici
 			.Include(k => k.Uloga) // za ucitavanje povezanog entiteta
-			.FirstOrDefaultAsync(
+            .Include(k => k.Radnik)
+            .FirstOrDefaultAsync(
 				k => k.Email == request.Email,
 				cancellationToken);
 
@@ -39,14 +40,15 @@ public class AuthService
 
 		var token = _jwtService.GenerateToken(korisnik);
 
-		return new LoginResponseDto
-		{
-			Token = token,
-			KorisnikId = korisnik.KorisnikId,
-			Ime = korisnik.Ime,
-			Prezime = korisnik.Prezime,
-			Email = korisnik.Email,
-			Uloga = korisnik.Uloga.TipUloge.ToString()
-		};
-	}
+        return new LoginResponseDto
+        {
+            Token = token,
+            KorisnikId = korisnik.KorisnikId,
+            Ime = korisnik.Ime,
+            Prezime = korisnik.Prezime,
+            Email = korisnik.Email,
+            Uloga = korisnik.Uloga.TipUloge.ToString(),
+            RestoranId = korisnik.Radnik?.RestoranId
+        };
+    }
 }

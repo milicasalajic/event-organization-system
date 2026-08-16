@@ -17,27 +17,33 @@ public class RestoranRepository
         CancellationToken cancellationToken = default)
     {
         return _context.Restorani
-            .AsNoTracking()//planira smao da cita restorane
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
-    public async Task<Restoran?> GetByKorisnikId(
-    decimal korisnikId,
-    CancellationToken cancellationToken = default)
-    {
-        return await _context.Radnici
-            .AsNoTracking()
-            .Where(r => r.KorisnikId == korisnikId)
-            .Select(r => r.Restoran)
-            .FirstOrDefaultAsync(cancellationToken);
-    }
+
     public Task<Restoran?> GetById(
-    decimal restoranId,
-    CancellationToken cancellationToken = default)
+        decimal restoranId,
+        CancellationToken cancellationToken = default)
     {
         return _context.Restorani
             .AsNoTracking()
             .FirstOrDefaultAsync(
-                r => r.RestoranId == restoranId,
+                restoran => restoran.RestoranId == restoranId,
                 cancellationToken);
+    }
+
+    public async Task<bool> KorisnikRadiURestoranu(
+    decimal korisnikId,
+    decimal restoranId,
+    CancellationToken cancellationToken = default)
+    {
+        var pronadjenKorisnikId = await _context.Radnici
+            .Where(radnik =>
+                radnik.KorisnikId == korisnikId &&
+                radnik.RestoranId == restoranId)
+            .Select(radnik => (decimal?)radnik.KorisnikId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return pronadjenKorisnikId.HasValue;
     }
 }

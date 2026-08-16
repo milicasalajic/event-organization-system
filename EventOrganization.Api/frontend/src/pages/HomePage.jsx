@@ -20,7 +20,12 @@ function HomePage() {
         korisnik.uloga === 'MENADZER' ||
         korisnik.uloga === 'OPERATER'
     ) {
-        return <Navigate to="/moj-restoran" replace />;
+        return (
+            <Navigate
+                to={`/restorani/${korisnik.restoranId}`}
+                replace
+            />
+        );
     }
 
     return <Navigate to="/login" replace />;

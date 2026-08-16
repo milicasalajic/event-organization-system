@@ -1,39 +1,29 @@
-﻿using System.Security.Claims;
-using EventOrganization.Api.DTOs.Restorani;
+using EventOrganization.Api.DTOs.Paketi;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-namespace EventOrganization.Api.Controllers;
+using System.Security.Claims;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RestoranController : ControllerBase
+public class PaketController : ControllerBase
 {
+    private readonly PaketService _paketService;
     private readonly RestoranService _restoranService;
 
-    public RestoranController(
+    public PaketController(
+        PaketService paketService,
         RestoranService restoranService)
     {
+        _paketService = paketService;
         _restoranService = restoranService;
     }
 
-    [Authorize(Roles = "ADMINISTRATOR, KLIJENT")]
-    [HttpGet]
-    public async Task<ActionResult<List<RestoranDto>>> GetAll(
-        CancellationToken cancellationToken)
-    {
-        var restorani = await _restoranService.GetAll(
-            cancellationToken);
-
-        return Ok(restorani);
-    }
-
     [Authorize]
-    [HttpGet("{restoranId}")]
-    public async Task<ActionResult<RestoranDto>> GetById(
-     decimal restoranId,
-     CancellationToken cancellationToken)
+    [HttpGet("restoran/{restoranId}")]
+    public async Task<ActionResult<List<PaketDto>>> GetByRestoranId(
+    decimal restoranId,
+    CancellationToken cancellationToken)
     {
         var korisnikIdClaim = User.FindFirst(
             ClaimTypes.NameIdentifier)?.Value;
@@ -60,15 +50,10 @@ public class RestoranController : ControllerBase
             }
         }
 
-        var restoran = await _restoranService.GetById(
+        var paketi = await _paketService.GetByRestoranId(
             restoranId,
             cancellationToken);
 
-        if (restoran is null)
-        {
-            return NotFound("Restoran nije pronađen.");
-        }
-
-        return Ok(restoran);
+        return Ok(paketi);
     }
 }

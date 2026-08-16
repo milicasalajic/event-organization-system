@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import RestoraniPage from './pages/RestoraniPage.jsx';
-import MojRestoranPage from './pages/MojRestoranPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RestoranDetaljiPage from './pages/RestoranDetaljiPage.jsx';
 
@@ -35,16 +34,7 @@ function App() {
                 }
             />
 
-            <Route
-                path="/moj-restoran"
-                element={
-                    <ProtectedRoute
-                        allowedRoles={['MENADZER', 'OPERATER']}
-                    >
-                        <MojRestoranPage />
-                    </ProtectedRoute>
-                }
-            />
+            
 
             <Route
                 path="*"
@@ -53,9 +43,7 @@ function App() {
             <Route
                 path="/restorani/:restoranId"
                 element={
-                    <ProtectedRoute
-                        allowedRoles={['ADMINISTRATOR', 'KLIJENT']}
-                    >
+                    <ProtectedRoute>
                         <RestoranDetaljiPage />
                     </ProtectedRoute>
                 }
