@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+   /* [Authorize]
     [HttpGet("test")]
     public IActionResult Test()
     {
@@ -49,5 +49,5 @@ public class AuthController : ControllerBase
             Uloga = User.FindFirst(
                 System.Security.Claims.ClaimTypes.Role)?.Value
         });
-    }
+    }*/
 }

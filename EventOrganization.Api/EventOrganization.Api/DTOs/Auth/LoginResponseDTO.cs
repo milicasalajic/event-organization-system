@@ -13,4 +13,6 @@ public class LoginResponseDto
     public string Email { get; set; } = null!;
 
     public string Uloga { get; set; } = null!;
+
+    public decimal? RestoranId { get; set; }
 }

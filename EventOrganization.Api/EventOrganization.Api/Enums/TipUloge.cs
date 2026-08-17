@@ -5,6 +5,6 @@
         MENADZER,
         ADMINISTRATOR,
         OPERATER,
-        KLEIJNT
+        KLIJENT
     }
 }
