@@ -1,0 +1,150 @@
+.restorani-page {
+    min-height: 100vh;
+    padding: 50px 24px;
+    background-color: #f8f5f0;
+}
+
+.restorani-container {
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.restorani-header {
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+    .restorani-header h1 {
+        margin: 0;
+        color: #3f5c4a;
+        font-size: 32px;
+        font-weight: 600;
+    }
+
+        .restorani-header h1::after {
+            content: '';
+            display: block;
+            width: 55px;
+            height: 2px;
+            margin: 14px auto 0;
+            background-color: #c8a96b;
+        }
+
+    .restorani-header p {
+        margin-top: 14px;
+        color: #77736d;
+        font-size: 15px;
+    }
+
+.restorani-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.restoran-card {
+    width: 100%;
+    padding: 26px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    background-color: #ffffff;
+    border: 1px solid #e4ded5;
+    border-left: 4px solid #c8a96b;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .restoran-card:hover {
+        transform: translateY(-3px);
+        border-color: #d7c29a;
+        border-left-color: #c8a96b;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
+    }
+
+.restoran-sadrzaj {
+    flex: 1;
+}
+
+.restoran-card h2 {
+    margin: 0 0 16px;
+    color: #3f5c4a;
+    font-size: 23px;
+    font-weight: 600;
+}
+
+.restoran-info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+    .restoran-info p {
+        margin: 0;
+        color: #55514c;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .restoran-info strong {
+        color: #2c2c2c;
+        font-weight: 600;
+    }
+
+.restoran-detalji {
+    flex-shrink: 0;
+    color: #3f5c4a;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.restoran-card:hover .restoran-detalji {
+    transform: translateX(4px);
+}
+
+.restorani-loading,
+.restorani-error,
+.restorani-empty {
+    margin-top: 80px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.restorani-loading,
+.restorani-empty {
+    color: #77736d;
+}
+
+.restorani-error {
+    color: #a94442;
+}
+
+@media (max-width: 650px) {
+    .restorani-page {
+        padding: 32px 16px;
+    }
+
+    .restoran-card {
+        padding: 22px 20px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+        .restoran-card h2 {
+            font-size: 20px;
+        }
+
+    .restorani-header h1 {
+        font-size: 27px;
+    }
+
+    .restoran-detalji {
+        align-self: flex-end;
+    }
+}

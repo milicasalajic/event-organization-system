@@ -5,7 +5,7 @@
     {
         BEND,
         DJ,
-        ORKESTAR,
+        TAMBURASI,
         TRUBACI 
     }
 }

@@ -22,8 +22,9 @@ public class AuthService
 		CancellationToken cancellationToken = default)
 	{
 		var korisnik = await _context.Korisnici
-			.Include(k => k.Uloga)
-			.FirstOrDefaultAsync(
+			.Include(k => k.Uloga) // za ucitavanje povezanog entiteta
+            .Include(k => k.Radnik)
+            .FirstOrDefaultAsync(
 				k => k.Email == request.Email,
 				cancellationToken);
 
@@ -32,7 +33,6 @@ public class AuthService
 			return null;
 		}
 
-		// Privremeno dok još koristiš plain-text lozinke iz seed-a.
 		if (korisnik.Lozinka != request.Lozinka)
 		{
 			return null;
@@ -40,14 +40,15 @@ public class AuthService
 
 		var token = _jwtService.GenerateToken(korisnik);
 
-		return new LoginResponseDto
-		{
-			Token = token,
-			KorisnikId = korisnik.KorisnikId,
-			Ime = korisnik.Ime,
-			Prezime = korisnik.Prezime,
-			Email = korisnik.Email,
-			Uloga = korisnik.Uloga.TipUloge.ToString()
-		};
-	}
+        return new LoginResponseDto
+        {
+            Token = token,
+            KorisnikId = korisnik.KorisnikId,
+            Ime = korisnik.Ime,
+            Prezime = korisnik.Prezime,
+            Email = korisnik.Email,
+            Uloga = korisnik.Uloga.TipUloge.ToString(),
+            RestoranId = korisnik.Radnik?.RestoranId
+        };
+    }
 }
