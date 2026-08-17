@@ -133,6 +133,7 @@ public partial class EventOrganizationDbContext : DbContext
                 .HasColumnName("CENA_FOTO");
 
             entity.Property(e => e.TipFoto)
+                .HasConversion<string>()
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("TIP_FOTO");

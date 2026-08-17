@@ -1,300 +1,579 @@
 .restoran-detalji-page {
     min-height: 100vh;
-    padding: 50px 24px;
-    background-color: #f8f5f0;
+    padding: 40px 24px 70px;
+    background: #f7f4ef;
+    color: #2d312e;
 }
+
+    .restoran-detalji-page * {
+        box-sizing: border-box;
+    }
 
 .restoran-detalji-container {
     width: 100%;
-    max-width: 950px;
+    max-width: 1180px;
     margin: 0 auto;
 }
 
-.restoran-detalji-card {
-    padding: 38px 42px;
-    background-color: #ffffff;
-    border: 1px solid #e4ded5;
-    border-left: 4px solid #c8a96b;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-}
+/* RESTORAN */
 
-.restoran-detalji-header {
-    margin-bottom: 30px;
-}
-
-.restoran-label {
-    display: inline-block;
-    margin-bottom: 9px;
-    padding: 5px 11px;
-    color: #7a6235;
-    background-color: #f4ecdc;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.restoran-detalji-header h1 {
-    margin: 0;
-    color: #3f5c4a;
-    font-size: 32px;
-    font-weight: 600;
-}
-
-.restoran-detalji-info {
-    padding: 22px 0;
-    border-top: 1px solid #eee8df;
-    border-bottom: 1px solid #eee8df;
-}
-
-.restoran-info-red {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-    .restoran-info-red:last-child {
-        margin-bottom: 0;
-    }
-
-    .restoran-info-red span {
-        width: 90px;
-        color: #77736d;
-        font-size: 14px;
-    }
-
-    .restoran-info-red strong {
-        color: #34312e;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-.paketi-toggle {
+.restoran-hero {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    margin-top: 26px;
-    padding: 14px 18px;
-    color: #ffffff;
-    background-color: #3f5c4a;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.15s ease;
+    gap: 40px;
+    padding: 30px 34px;
+    background: #ffffff;
+    border: 1px solid #e5dfd6;
+    border-top: 4px solid #3f5c4a;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(34, 43, 37, 0.04);
 }
 
-    .paketi-toggle:hover {
-        background-color: #31483a;
-    }
-
-    .paketi-toggle:active {
-        transform: translateY(1px);
-    }
-
-.paketi-strelica {
-    display: inline-block;
-    font-size: 18px;
-    transition: transform 0.25s ease;
+.restoran-kicker,
+.section-kicker {
+    display: block;
+    margin-bottom: 6px;
+    color: #9b8151;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
-    .paketi-strelica.otvorena {
-        transform: rotate(180deg);
+.restoran-hero h1 {
+    margin: 0;
+    color: #29352d;
+    font-size: 32px;
+    line-height: 1.15;
+}
+
+.restoran-meta {
+    display: flex;
+    align-items: stretch;
+}
+
+.restoran-meta-item {
+    min-width: 145px;
+    padding: 5px 24px;
+    border-left: 1px solid #e8e3dc;
+}
+
+    .restoran-meta-item:first-child {
+        border-left: none;
     }
+
+    .restoran-meta-item span {
+        display: block;
+        margin-bottom: 5px;
+        color: #8a867f;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .restoran-meta-item strong {
+        color: #3c403d;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+/* NASLOVI SEKCIJA */
 
 .paketi-sekcija {
-    margin-top: 32px;
+    margin-top: 38px;
 }
 
-.paketi-header {
-    margin-bottom: 20px;
-}
-
-    .paketi-header h2 {
-        margin: 0;
-        color: #3f5c4a;
-        font-size: 23px;
-        font-weight: 600;
-    }
-
-.paketi-header-linija {
-    width: 45px;
-    height: 2px;
-    margin-top: 10px;
-    background-color: #c8a96b;
-    border-radius: 2px;
-}
-
-.paketi-lista-detalji {
+.section-heading,
+.subsection-heading {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.paket-card {
-    padding: 22px 26px;
-    background-color: #ffffff;
-    border: 1px solid #e4ded5;
-    border-left: 3px solid #c8a96b;
-    border-radius: 9px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.section-heading {
+    margin-bottom: 16px;
 }
 
-    .paket-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
-    }
-
-    .paket-card h3 {
-        margin: 0 0 9px;
-        color: #3f5c4a;
-        font-size: 19px;
-        font-weight: 600;
-    }
-
-    .paket-card p {
+    .section-heading h2,
+    .paket-detalji-header h2 {
         margin: 0;
-        color: #625e58;
-        font-size: 14px;
-        line-height: 1.7;
+        color: #29352d;
+        font-size: 24px;
     }
 
-.paket-bez-opisa {
-    color: #8a857f !important;
-    font-style: italic;
+.section-count,
+.subsection-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    background: #eee9e1;
+    border-radius: 6px;
+    color: #68645e;
+    font-size: 12px;
+    font-weight: 700;
 }
 
-.paketi-loading,
-.paketi-empty,
-.restoran-detalji-loading {
-    margin-top: 40px;
+/* PAKETI */
+
+.paketi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.paket-option {
+    position: relative;
+    min-height: 145px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e3ddd4;
+    border-radius: 10px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+    .paket-option:hover {
+        transform: translateY(-2px);
+        border-color: #bca475;
+        box-shadow: 0 6px 18px rgba(42, 50, 45, 0.06);
+    }
+
+    .paket-option.aktivan {
+        background: #3f5c4a;
+        border-color: #3f5c4a;
+        box-shadow: 0 8px 20px rgba(63, 92, 74, 0.15);
+    }
+
+.paket-option-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.paket-option h3 {
+    margin: 0;
+    color: #334239;
+    font-size: 17px;
+}
+
+.paket-option p {
+    margin: 10px 0 28px;
     color: #77736d;
-    text-align: center;
-    font-size: 15px;
+    font-size: 13px;
+    line-height: 1.55;
 }
 
-.paketi-error,
-.restoran-detalji-error {
-    margin-top: 40px;
-    color: #a94442;
-    text-align: center;
-    font-size: 14px;
+.paket-pregled {
+    position: absolute;
+    bottom: 18px;
+    left: 20px;
+    color: #8f7545;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
 }
 
-@media (max-width: 650px) {
-    .restoran-detalji-page {
-        padding: 32px 16px;
+.paket-option.aktivan h3,
+.paket-option.aktivan p,
+.paket-option.aktivan .paket-pregled {
+    color: #ffffff;
+}
+
+.paket-option.aktivan p {
+    opacity: 0.8;
+}
+
+.paket-option.aktivan .paket-pregled {
+    opacity: 0.9;
+}
+
+/* DETALJI PAKETA */
+
+.paket-detalji-panel {
+    margin-top: 18px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e3ddd4;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(35, 43, 38, 0.04);
+}
+
+.paket-detalji-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 24px 28px;
+    border-bottom: 1px solid #ebe6df;
+}
+
+    .paket-detalji-header p {
+        max-width: 600px;
+        margin: 0;
+        color: #77736d;
+        font-size: 13px;
+        line-height: 1.6;
     }
 
-    .restoran-detalji-card {
-        padding: 28px 22px;
+/* SALE */
+
+.sale-blok,
+.usluge-blok {
+    padding: 24px 28px;
+}
+
+.sale-blok {
+    border-bottom: 1px solid #ebe6df;
+}
+
+.subsection-heading {
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+    .subsection-heading h3 {
+        margin: 0;
+        color: #364139;
+        font-size: 18px;
     }
 
-    .restoran-detalji-header h1 {
-        font-size: 27px;
+    .subsection-heading p {
+        margin: 4px 0 0;
+        color: #8a867f;
+        font-size: 12px;
     }
 
-    .restoran-info-red {
-        align-items: flex-start;
+.sale-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.sala-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70px;
+    padding: 14px 16px;
+    background: #faf8f4;
+    border: 1px solid #e8e2d9;
+    border-radius: 8px;
+}
+
+    .sala-item div {
+        display: flex;
         flex-direction: column;
         gap: 4px;
     }
 
-        .restoran-info-red span {
-            width: auto;
-        }
-
-    .paket-card {
-        padding: 20px;
+    .sala-item strong {
+        color: #3f4b43;
+        font-size: 14px;
     }
+
+    .sala-item span {
+        color: #969087;
+        font-size: 11px;
+    }
+
+    .sala-item b {
+        color: #9b7e48;
+        font-size: 21px;
+    }
+
+/* TABOVI USLUGA */
+
+.usluge-tabs {
+    display: flex;
+    gap: 7px;
+    margin-bottom: 15px;
+    overflow-x: auto;
+    padding-bottom: 2px;
 }
-.sale-toggle {
+
+.usluga-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 10px 14px;
+    background: #f7f4ef;
+    border: 1px solid #e5dfd6;
+    border-radius: 7px;
+    color: #625f59;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+    .usluga-tab:hover {
+        border-color: #bba575;
+        color: #3f5c4a;
+    }
+
+    .usluga-tab.aktivan {
+        background: #3f5c4a;
+        border-color: #3f5c4a;
+        color: #ffffff;
+    }
+
+    .usluga-tab span {
+        min-width: 20px;
+        padding: 2px 6px;
+        background: rgba(0, 0, 0, 0.07);
+        border-radius: 4px;
+        text-align: center;
+        font-size: 10px;
+    }
+
+    .usluga-tab.aktivan span {
+        background: rgba(255, 255, 255, 0.16);
+    }
+
+/* LISTA USLUGA */
+
+.usluge-lista-nova {
+    overflow: hidden;
+    border: 1px solid #e8e2d9;
+    border-radius: 9px;
+}
+
+.usluga-red {
+    padding: 20px 22px;
+    background: #ffffff;
+    border-bottom: 1px solid #eee9e2;
+    transition: background-color 0.2s ease;
+}
+
+    .usluga-red:last-child {
+        border-bottom: none;
+    }
+
+    .usluga-red:hover {
+        background: #fdfcf9;
+    }
+
+.usluga-red-main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    margin-top: 18px;
-    padding: 11px 14px;
-    color: #3f5c4a;
-    background-color: #f8f5f0;
-    border: 1px solid #ddd5c8;
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    gap: 30px;
 }
 
-    .sale-toggle:hover {
-        background-color: #f2ede5;
-        border-color: #c8a96b;
-    }
-
-.sale-strelica {
-    display: inline-block;
-    transition: transform 0.25s ease;
+.usluga-tekst {
+    min-width: 0;
+    flex: 1;
 }
 
-    .sale-strelica.otvorena {
-        transform: rotate(180deg);
-    }
-
-.sale-sekcija {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #eee8df;
-}
-
-.sale-lista {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.sala-card {
-    padding: 16px 18px;
-    background-color: #faf8f4;
-    border: 1px solid #e7e0d6;
-    border-radius: 7px;
-}
-
-    .sala-card h4 {
-        margin: 0 0 8px;
-        color: #3f5c4a;
+    .usluga-tekst h4 {
+        margin: 0;
+        color: #344139;
         font-size: 16px;
+        font-weight: 700;
+    }
+
+    .usluga-tekst p {
+        max-width: 700px;
+        margin: 6px 0 0;
+        color: #7c7770;
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+/* DUGME KA PORTFOLIJU / PONUDI */
+
+.portfolio-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    flex-shrink: 0;
+    min-width: 150px;
+    padding: 11px 16px;
+    background: #3f5c4a;
+    border: 1px solid #3f5c4a;
+    border-radius: 7px;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .portfolio-link:hover {
+        background: #31483a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(63, 92, 74, 0.2);
+    }
+
+.portfolio-link-icon {
+    font-size: 15px;
+    line-height: 1;
+}
+
+/* INFORMACIJE O USLUZI */
+
+.usluga-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 34px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #f0ece6;
+}
+
+    .usluga-meta div {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 115px;
+    }
+
+    .usluga-meta span {
+        color: #99938b;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+    .usluga-meta strong {
+        color: #57534e;
+        font-size: 12px;
         font-weight: 600;
     }
 
-    .sala-card p {
-        margin: 0;
-        color: #625e58;
-        font-size: 13px;
-    }
+/* STATES */
 
-    .sala-card strong {
-        color: #3f3934;
-    }
-
-.sale-loading,
-.sale-empty {
-    margin: 15px 0 0;
-    color: #77736d;
+.page-state,
+.empty-state,
+.empty-inline,
+.detalji-loading,
+.detalji-error {
+    padding: 22px;
+    border-radius: 8px;
     font-size: 13px;
 }
 
-.sale-error {
-    margin: 15px 0 0;
-    color: #a94442;
-    font-size: 13px;
+.page-state {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e5dfd6;
+}
+
+.page-state-error,
+.detalji-error {
+    color: #9d3e38;
+    background: #fff4f2;
+    border: 1px solid #eccbc7;
+}
+
+.empty-state,
+.empty-inline {
+    color: #817c74;
+    background: #faf8f4;
+    border: 1px solid #e7e1d8;
+}
+
+.detalji-loading {
+    margin: 22px 28px;
+    color: #747069;
+    background: #faf8f4;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 950px) {
+    .restoran-hero {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .restoran-meta {
+        width: 100%;
+    }
+
+    .restoran-meta-item {
+        flex: 1;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .paketi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sale-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 650px) {
-    .sale-lista {
+    .restoran-detalji-page {
+        padding: 20px 14px 50px;
+    }
+
+    .restoran-hero {
+        padding: 24px 20px;
+    }
+
+        .restoran-hero h1 {
+            font-size: 27px;
+        }
+
+    .restoran-meta {
+        flex-direction: column;
+    }
+
+    .restoran-meta-item {
+        padding: 10px 0;
+        border-left: none;
+        border-top: 1px solid #e8e3dc;
+    }
+
+        .restoran-meta-item:first-child {
+            border-top: none;
+        }
+
+    .paketi-grid {
         grid-template-columns: 1fr;
+    }
+
+    .paket-detalji-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 22px 18px;
+    }
+
+    .sale-blok,
+    .usluge-blok {
+        padding: 20px 18px;
+    }
+
+    .sale-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .usluga-red-main {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .portfolio-link {
+        min-width: 0;
+        align-self: flex-start;
+    }
+
+    .usluga-meta {
+        gap: 15px 22px;
     }
 }

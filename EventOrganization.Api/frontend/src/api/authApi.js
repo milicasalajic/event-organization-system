@@ -22,7 +22,7 @@ export async function login(email, lozinka) {
         console.error('Login error:', response.status, errorText);
 
         throw new Error(
-            `Greöka pri prijavljivanju. Status: ${response.status}`,
+            `Gre≈°ka pri prijavljivanju. Status: ${response.status}`,
         );
     }
 

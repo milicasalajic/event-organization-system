@@ -25,13 +25,15 @@ builder.Services.AddScoped<PaketRepository>();
 builder.Services.AddScoped<PaketService>();
 builder.Services.AddScoped<SalaRepository>();
 builder.Services.AddScoped<SalaService>();
+builder.Services.AddScoped<UslugaRepository>();
+builder.Services.AddScoped<UslugaService>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins("http://localhost:5174")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
