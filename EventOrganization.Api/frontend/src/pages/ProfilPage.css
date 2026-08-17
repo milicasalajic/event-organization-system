@@ -1,0 +1,210 @@
+.profil-page {
+    min-height: 100vh;
+    padding: 55px 24px;
+    background: #f7f4ef;
+    color: #2d312e;
+}
+
+    .profil-page * {
+        box-sizing: border-box;
+    }
+
+.profil-container {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.profil-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 22px;
+}
+
+    .profil-heading span {
+        display: block;
+        margin-bottom: 5px;
+        color: #9b8151;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+    }
+
+    .profil-heading h1 {
+        margin: 0;
+        color: #29352d;
+        font-size: 30px;
+    }
+
+    .profil-heading p {
+        margin: 7px 0 0;
+        color: #7d7871;
+        font-size: 13px;
+    }
+
+.profil-card {
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e4ded5;
+    border-top: 4px solid #3f5c4a;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(35, 43, 38, 0.05);
+}
+
+.profil-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 28px;
+}
+
+.profil-field {
+    min-width: 0;
+}
+
+    .profil-field label {
+        display: block;
+        margin-bottom: 7px;
+        color: #89847c;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+.profil-value {
+    min-height: 43px;
+    padding: 11px 13px;
+    background: #faf8f4;
+    border: 1px solid #ebe5dc;
+    border-radius: 7px;
+    color: #3e433f;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.profil-field input {
+    width: 100%;
+    height: 43px;
+    padding: 0 13px;
+    background: #ffffff;
+    border: 1px solid #d8d1c7;
+    border-radius: 7px;
+    outline: none;
+    color: #353a36;
+    font: inherit;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .profil-field input:focus {
+        border-color: #718777;
+        box-shadow: 0 0 0 3px rgba(63, 92, 74, 0.09);
+    }
+
+.profil-edit-button,
+.profil-save-button {
+    padding: 11px 17px;
+    background: #3f5c4a;
+    border: 1px solid #3f5c4a;
+    border-radius: 7px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .profil-edit-button:hover,
+    .profil-save-button:hover {
+        background: #31483a;
+        transform: translateY(-1px);
+    }
+
+.profil-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #eee8df;
+}
+
+.profil-cancel-button {
+    padding: 11px 17px;
+    background: #ffffff;
+    border: 1px solid #d9d2c8;
+    border-radius: 7px;
+    color: #65615b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .profil-cancel-button:hover {
+        background: #f6f3ee;
+    }
+
+.profil-message,
+.profil-state {
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.profil-state {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e4ded5;
+}
+
+.profil-error {
+    color: #9d3e38;
+    background: #fff3f2;
+    border: 1px solid #edccc8;
+}
+
+.profil-success {
+    color: #3f654b;
+    background: #f1f8f3;
+    border: 1px solid #cadfce;
+}
+
+.profil-actions button:disabled {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+}
+
+@media (max-width: 650px) {
+    .profil-page {
+        padding: 70px 15px 45px;
+    }
+
+    .profil-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .profil-form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .profil-card {
+        padding: 21px 18px;
+    }
+
+    .profil-actions {
+        flex-direction: column-reverse;
+    }
+
+        .profil-actions button {
+            width: 100%;
+        }
+}

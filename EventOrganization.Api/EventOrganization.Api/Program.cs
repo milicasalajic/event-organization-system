@@ -27,6 +27,8 @@ builder.Services.AddScoped<SalaRepository>();
 builder.Services.AddScoped<SalaService>();
 builder.Services.AddScoped<UslugaRepository>();
 builder.Services.AddScoped<UslugaService>();
+builder.Services.AddScoped<KorisnikRepository>();
+builder.Services.AddScoped<KorisnikService>();
 
 builder.Services.AddCors(options =>
 {
