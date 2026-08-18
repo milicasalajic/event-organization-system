@@ -2,6 +2,7 @@
 import { getAllRestorani } from '../api/restoranApi';
 import './RestoraniPage.css';
 import { useNavigate } from 'react-router-dom';
+
 function RestoraniPage() {
     const [restorani, setRestorani] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

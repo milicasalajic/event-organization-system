@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getRestoranById } from '../api/restoranApi';
 import { getPaketiByRestoranId } from '../api/paketApi';
 import { getSaleByPaketId } from '../api/salaApi';
@@ -69,6 +69,17 @@ function getLinkTekst(tipUsluge) {
 
 function RestoranDetaljiPage() {
     const { restoranId } = useParams();
+    const navigate = useNavigate();
+
+    const korisnikJson = localStorage.getItem('korisnik');
+
+    const korisnik = korisnikJson
+        ? JSON.parse(korisnikJson)
+        : null;
+
+    const jeRadnik =
+        korisnik?.uloga === 'MENADZER' ||
+        korisnik?.uloga === 'OPERATER';
 
     const [restoran, setRestoran] = useState(null);
     const [paketi, setPaketi] = useState([]);
@@ -266,6 +277,22 @@ function RestoranDetaljiPage() {
                     </div>
                 </section>
 
+                {jeRadnik && (
+                    <div className="restoran-radnik-akcije">
+                        <button
+                            type="button"
+                            className="rezervacije-button"
+                            onClick={() =>
+                                navigate(
+                                    `/restorani/${restoranId}/rezervacije`,
+                                )
+                            }
+                        >
+                            Pregled rezervacija
+                        </button>
+                    </div>
+                )}
+
                 <section className="paketi-sekcija">
                     <div className="section-heading">
                         <div>
@@ -387,19 +414,16 @@ function RestoranDetaljiPage() {
                             ] && (
                                 <>
                                     <div className="sale-blok">
-
                                         <div className="subsection-heading">
                                             <div>
                                                 <h3>
-                                                    Dostupne
-                                                    sale
+                                                    Dostupne sale
                                                 </h3>
 
                                                 <p>
-                                                    Sale koje
-                                                    možete
-                                                    izabrati uz
-                                                    ovaj paket.
+                                                    Sale koje možete
+                                                    izabrati uz ovaj
+                                                    paket.
                                                 </p>
                                             </div>
 
@@ -413,16 +437,13 @@ function RestoranDetaljiPage() {
                                         {saleAktivnogPaketa.length ===
                                             0 ? (
                                             <div className="empty-inline">
-                                                Paket trenutno
-                                                nema dostupnih
-                                                sala.
+                                                Paket trenutno nema
+                                                dostupnih sala.
                                             </div>
                                         ) : (
                                             <div className="sale-grid">
                                                 {saleAktivnogPaketa.map(
-                                                    (
-                                                        sala,
-                                                    ) => (
+                                                    (sala) => (
                                                         <div
                                                             className="sala-item"
                                                             key={
@@ -455,12 +476,10 @@ function RestoranDetaljiPage() {
                                     </div>
 
                                     <div className="usluge-blok">
-
                                         <div className="subsection-heading">
                                             <div>
                                                 <h3>
-                                                    Dodatne
-                                                    usluge
+                                                    Dodatne usluge
                                                 </h3>
 
                                                 <p>
@@ -468,8 +487,7 @@ function RestoranDetaljiPage() {
                                                     kategoriju i
                                                     pogledajte
                                                     dostupne
-                                                    pružaoce
-                                                    usluga.
+                                                    pružaoce usluga.
                                                 </p>
                                             </div>
 
@@ -483,17 +501,14 @@ function RestoranDetaljiPage() {
                                         {uslugeAktivnogPaketa.length ===
                                             0 ? (
                                             <div className="empty-inline">
-                                                Paket trenutno
-                                                nema dodatnih
-                                                usluga.
+                                                Paket trenutno nema
+                                                dodatnih usluga.
                                             </div>
                                         ) : (
                                             <>
                                                 <div className="usluge-tabs">
                                                     {tipoviSaUslugama.map(
-                                                        (
-                                                            tip,
-                                                        ) => (
+                                                        (tip) => (
                                                             <button
                                                                 key={
                                                                     tip
@@ -532,9 +547,7 @@ function RestoranDetaljiPage() {
 
                                                 <div className="usluge-lista-nova">
                                                     {uslugeZaPrikaz.map(
-                                                        (
-                                                            usluga,
-                                                        ) => (
+                                                        (usluga) => (
                                                             <article
                                                                 className="usluga-red"
                                                                 key={
@@ -542,7 +555,6 @@ function RestoranDetaljiPage() {
                                                                 }
                                                             >
                                                                 <div className="usluga-red-main">
-
                                                                     <div className="usluga-tekst">
                                                                         <h4>
                                                                             {
@@ -582,7 +594,6 @@ function RestoranDetaljiPage() {
                                                                 </div>
 
                                                                 <div className="usluga-meta">
-
                                                                     {usluga.telefon && (
                                                                         <div>
                                                                             <span>
@@ -600,8 +611,7 @@ function RestoranDetaljiPage() {
                                                                     {usluga.tipFoto && (
                                                                         <div>
                                                                             <span>
-                                                                                Vrsta
-                                                                                usluge
+                                                                                Vrsta usluge
                                                                             </span>
 
                                                                             <strong>
@@ -630,8 +640,7 @@ function RestoranDetaljiPage() {
                                                                     {usluga.tipMuzicara && (
                                                                         <div>
                                                                             <span>
-                                                                                Vrsta
-                                                                                izvođača
+                                                                                Vrsta izvođača
                                                                             </span>
 
                                                                             <strong>

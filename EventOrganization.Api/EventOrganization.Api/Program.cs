@@ -27,6 +27,10 @@ builder.Services.AddScoped<SalaRepository>();
 builder.Services.AddScoped<SalaService>();
 builder.Services.AddScoped<UslugaRepository>();
 builder.Services.AddScoped<UslugaService>();
+builder.Services.AddScoped<KorisnikRepository>();
+builder.Services.AddScoped<KorisnikService>();
+builder.Services.AddScoped<RezervacijaRepository>();
+builder.Services.AddScoped<RezervacijaService>();
 
 builder.Services.AddCors(options =>
 {
@@ -85,11 +89,22 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var rezervacijaService =
+        scope.ServiceProvider
+            .GetRequiredService<RezervacijaService>();
+
+    await rezervacijaService
+        .RealizujIstekleRezervacije();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 
@@ -99,5 +114,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

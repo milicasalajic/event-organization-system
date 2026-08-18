@@ -15,7 +15,10 @@
     margin: 0 auto;
 }
 
-/* RESTORAN */
+
+/* =========================================================
+   RESTORAN
+   ========================================================= */
 
 .restoran-hero {
     display: flex;
@@ -25,7 +28,7 @@
     padding: 30px 34px;
     background: #ffffff;
     border: 1px solid #e5dfd6;
-    border-top: 4px solid #3f5c4a;
+    border-top: 4px solid #607a68;
     border-radius: 12px;
     box-shadow: 0 4px 18px rgba(34, 43, 37, 0.04);
 }
@@ -68,8 +71,8 @@
         margin-bottom: 5px;
         color: #8a867f;
         font-size: 11px;
-        text-transform: uppercase;
         letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
 
     .restoran-meta-item strong {
@@ -78,10 +81,53 @@
         font-weight: 600;
     }
 
-/* NASLOVI SEKCIJA */
+
+/* =========================================================
+   GLAVNA AKCIJA RADNIKA - REZERVACIJE
+   ========================================================= */
+
+.restoran-radnik-akcije {
+    display: flex;
+    justify-content: center;
+    margin-top: 26px;
+}
+
+.rezervacije-button {
+    min-width: 260px;
+    padding: 15px 34px;
+    background: #2f4738;
+    border: 1px solid #2f4738;
+    border-radius: 9px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+    cursor: pointer;
+    box-shadow: 0 6px 17px rgba(47, 71, 56, 0.2);
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .rezervacije-button:hover {
+        background: #24372c;
+        border-color: #24372c;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(47, 71, 56, 0.27);
+    }
+
+
+/* =========================================================
+   NASLOVI SEKCIJA
+   ========================================================= */
 
 .paketi-sekcija {
     margin-top: 38px;
+}
+
+/* Kada postoji dugme za rezervacije,
+   malo smanjujemo razmak do paketa. */
+.restoran-radnik-akcije + .paketi-sekcija {
+    margin-top: 30px;
 }
 
 .section-heading,
@@ -116,7 +162,10 @@
     font-weight: 700;
 }
 
-/* PAKETI */
+
+/* =========================================================
+   PAKETI
+   ========================================================= */
 
 .paketi-grid {
     display: grid;
@@ -142,10 +191,13 @@
         box-shadow: 0 6px 18px rgba(42, 50, 45, 0.06);
     }
 
+    /* Aktivni paket je namerno svetliji od
+   glavnog dugmeta za rezervacije. */
+
     .paket-option.aktivan {
-        background: #3f5c4a;
-        border-color: #3f5c4a;
-        box-shadow: 0 8px 20px rgba(63, 92, 74, 0.15);
+        background: #718979;
+        border-color: #718979;
+        box-shadow: 0 7px 18px rgba(92, 119, 101, 0.14);
     }
 
 .paket-option-top {
@@ -184,14 +236,17 @@
 }
 
 .paket-option.aktivan p {
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
 .paket-option.aktivan .paket-pregled {
-    opacity: 0.9;
+    opacity: 0.95;
 }
 
-/* DETALJI PAKETA */
+
+/* =========================================================
+   DETALJI PAKETA
+   ========================================================= */
 
 .paket-detalji-panel {
     margin-top: 18px;
@@ -219,7 +274,10 @@
         line-height: 1.6;
     }
 
-/* SALE */
+
+/* =========================================================
+   SALE
+   ========================================================= */
 
 .sale-blok,
 .usluge-blok {
@@ -285,14 +343,17 @@
         font-size: 21px;
     }
 
-/* TABOVI USLUGA */
+
+/* =========================================================
+   TABOVI USLUGA
+   ========================================================= */
 
 .usluge-tabs {
     display: flex;
     gap: 7px;
     margin-bottom: 15px;
-    overflow-x: auto;
     padding-bottom: 2px;
+    overflow-x: auto;
 }
 
 .usluga-tab {
@@ -305,6 +366,7 @@
     border: 1px solid #e5dfd6;
     border-radius: 7px;
     color: #625f59;
+    font-family: inherit;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -312,13 +374,15 @@
 }
 
     .usluga-tab:hover {
-        border-color: #bba575;
-        color: #3f5c4a;
+        border-color: #9cad9f;
+        color: #4f6957;
     }
 
+    /* Svetlija zelena od glavne akcije */
+
     .usluga-tab.aktivan {
-        background: #3f5c4a;
-        border-color: #3f5c4a;
+        background: #789080;
+        border-color: #789080;
         color: #ffffff;
     }
 
@@ -332,10 +396,13 @@
     }
 
     .usluga-tab.aktivan span {
-        background: rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.18);
     }
 
-/* LISTA USLUGA */
+
+/* =========================================================
+   LISTA USLUGA
+   ========================================================= */
 
 .usluge-lista-nova {
     overflow: hidden;
@@ -385,7 +452,10 @@
         line-height: 1.55;
     }
 
-/* DUGME KA PORTFOLIJU / PONUDI */
+
+/* =========================================================
+   DUGME KA PORTFOLIJU / PONUDI
+   ========================================================= */
 
 .portfolio-link {
     display: inline-flex;
@@ -395,8 +465,8 @@
     flex-shrink: 0;
     min-width: 150px;
     padding: 11px 16px;
-    background: #3f5c4a;
-    border: 1px solid #3f5c4a;
+    background: #789080;
+    border: 1px solid #789080;
     border-radius: 7px;
     color: #ffffff;
     font-size: 12px;
@@ -406,9 +476,10 @@
 }
 
     .portfolio-link:hover {
-        background: #31483a;
+        background: #657c6c;
+        border-color: #657c6c;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(63, 92, 74, 0.2);
+        box-shadow: 0 4px 12px rgba(83, 106, 90, 0.17);
     }
 
 .portfolio-link-icon {
@@ -416,7 +487,10 @@
     line-height: 1;
 }
 
-/* INFORMACIJE O USLUZI */
+
+/* =========================================================
+   INFORMACIJE O USLUZI
+   ========================================================= */
 
 .usluga-meta {
     display: flex;
@@ -448,7 +522,10 @@
         font-weight: 600;
     }
 
-/* STATES */
+
+/* =========================================================
+   STATES
+   ========================================================= */
 
 .page-state,
 .empty-state,
@@ -487,7 +564,10 @@
     background: #faf8f4;
 }
 
-/* RESPONSIVE */
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 950px) {
     .restoran-hero {
@@ -534,13 +614,27 @@
 
     .restoran-meta-item {
         padding: 10px 0;
-        border-left: none;
         border-top: 1px solid #e8e3dc;
+        border-left: none;
     }
 
         .restoran-meta-item:first-child {
             border-top: none;
         }
+
+    .restoran-radnik-akcije {
+        margin-top: 22px;
+    }
+
+    .rezervacije-button {
+        width: 100%;
+        min-width: 0;
+        padding: 14px 22px;
+    }
+
+    .restoran-radnik-akcije + .paketi-sekcija {
+        margin-top: 28px;
+    }
 
     .paketi-grid {
         grid-template-columns: 1fr;

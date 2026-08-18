@@ -5,6 +5,7 @@
         POSLATA,
         POTVRDJENA,
         REALIZOVANA,
-        OTKAZANA
+        OTKAZANA,
+        ODBIJENA
     }
 }

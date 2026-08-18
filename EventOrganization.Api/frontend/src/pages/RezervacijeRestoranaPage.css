@@ -1,0 +1,695 @@
+﻿.pregled-rezervacija-page {
+    min-height: 100vh;
+    padding: 40px 24px 70px;
+    background: #f7f4ef;
+    color: #2d312e;
+}
+
+    .pregled-rezervacija-page * {
+        box-sizing: border-box;
+    }
+
+.pregled-rezervacija-container {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+
+
+.nazad-button {
+    margin-bottom: 22px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: #6f746f;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+    .nazad-button:hover {
+        color: #3f5c4a;
+    }
+
+
+.rezervacije-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 24px;
+}
+
+.rezervacije-kicker {
+    display: block;
+    margin-bottom: 6px;
+    color: #9b8151;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+.rezervacije-heading h1 {
+    margin: 0;
+    color: #29352d;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.rezervacije-heading p {
+    margin: 7px 0 0;
+    color: #7d7871;
+    font-size: 13px;
+}
+
+
+.rezervacije-table-wrapper {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e4ded5;
+    border-radius: 11px;
+    box-shadow: 0 5px 20px rgba(35, 43, 38, 0.05);
+}
+
+.rezervacije-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .rezervacije-table thead {
+        background: #f4f1ec;
+    }
+
+    .rezervacije-table th {
+        padding: 13px 18px;
+        color: #817c74;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-align: left;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e5dfd6;
+    }
+
+    .rezervacije-table td {
+        padding: 17px 18px;
+        color: #575b57;
+        font-size: 13px;
+        border-bottom: 1px solid #eee9e2;
+        vertical-align: middle;
+    }
+
+
+.rezervacija-red {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+    .rezervacija-red:hover {
+        background: #faf8f4;
+    }
+
+    .rezervacija-red.aktivan {
+        background: #f5f2ed;
+    }
+
+        .rezervacija-red.aktivan td {
+            border-bottom: none;
+        }
+
+.datum-cell {
+    color: #343d37 !important;
+    font-weight: 700;
+}
+
+.gosti-cell {
+    color: #3f5c4a !important;
+    font-weight: 700;
+}
+
+.vreme-rezervacije {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+    .vreme-rezervacije span {
+        color: #aaa49b;
+    }
+
+
+.tipovi-dogadjaja {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tip-dogadjaja {
+    display: inline-flex;
+    padding: 5px 8px;
+    background: #f3efe8;
+    border: 1px solid #e7dfd2;
+    border-radius: 5px;
+    color: #675f54;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+.status-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 6px 9px;
+    background: #eeebe6;
+    border-radius: 5px;
+    color: #625e58;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+    white-space: nowrap;
+}
+
+.status-potvrdjena,
+.status-potvrdjeno {
+    color: #366044;
+    background: #e9f4ec;
+}
+
+.status-na-cekanju,
+.status-kreirana,
+.status-kreirano {
+    color: #85691e;
+    background: #faf2d9;
+}
+
+.status-odbijena,
+.status-odbijeno,
+.status-otkazana,
+.status-otkazano {
+    color: #944841;
+    background: #fae9e7;
+}
+
+.status-realizovana,
+.status-realizovano {
+    color: #506275;
+    background: #e9eef3;
+}
+
+.rezervacija-toggle {
+    color: #99938b;
+    font-size: 9px;
+}
+
+
+.rezervacija-detalji-row {
+    background: #f8f6f2;
+}
+
+    .rezervacija-detalji-row:hover {
+        background: #f8f6f2;
+    }
+
+.rezervacije-table .rezervacija-detalji-cell {
+    padding: 0;
+    border-bottom: 1px solid #ddd6cc;
+}
+
+.rezervacija-detalji {
+    padding: 26px 28px 28px;
+    background: #f8f6f2;
+    border-top: 1px solid #e4ded5;
+    border-left: 4px solid #718979;
+}
+
+
+.rezervacija-detalji-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 22px;
+}
+
+.rezervacija-detalji-kicker {
+    display: block;
+    margin-bottom: 5px;
+    color: #9b8151;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.rezervacija-detalji-header h3 {
+    margin: 0;
+    color: #344139;
+    font-size: 19px;
+}
+
+
+.rezervacija-detalji-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.rezervacija-detalji-sekcija {
+    min-width: 0;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e5dfd6;
+    border-radius: 8px;
+}
+
+    .rezervacija-detalji-sekcija h4 {
+        margin: 0 0 15px;
+        color: #607a68;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+
+.detalj-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 12px;
+}
+
+    .detalj-item:first-of-type {
+        margin-top: 0;
+    }
+
+    .detalj-item span {
+        color: #979189;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.35px;
+        text-transform: uppercase;
+    }
+
+    .detalj-item strong {
+        overflow-wrap: anywhere;
+        color: #4e534f;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.45;
+    }
+
+
+.dodatne-usluge-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+    .dodatne-usluge-lista span {
+        display: inline-flex;
+        padding: 6px 9px;
+        background: #edf2ee;
+        border: 1px solid #d9e2db;
+        border-radius: 5px;
+        color: #506456;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+.nema-dodatnih-usluga {
+    color: #918b83;
+    font-size: 12px;
+}
+
+
+.rezervacija-tekstualni-detalji {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+}
+
+    .rezervacija-tekstualni-detalji > div {
+        padding: 17px 18px;
+        background: #ffffff;
+        border: 1px solid #e5dfd6;
+        border-radius: 8px;
+    }
+
+    .rezervacija-tekstualni-detalji span {
+        display: block;
+        margin-bottom: 7px;
+        color: #979189;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+    .rezervacija-tekstualni-detalji p {
+        margin: 0;
+        color: #5f625f;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+
+.rezervacija-detalji-loading {
+    padding: 22px 26px;
+    background: #f8f6f2;
+    border-top: 1px solid #e4ded5;
+    color: #77736d;
+    font-size: 12px;
+}
+
+
+.rezervacija-detalji-error {
+    padding: 18px 24px;
+    background: #fff3f2;
+    border-top: 1px solid #edccc8;
+    color: #9d3e38;
+    font-size: 12px;
+}
+
+
+.rezervacije-empty {
+    padding: 55px 25px;
+    background: #ffffff;
+    border: 1px solid #e4ded5;
+    border-radius: 11px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(35, 43, 38, 0.04);
+}
+
+    .rezervacije-empty h2 {
+        margin: 0;
+        color: #3e4942;
+        font-size: 18px;
+    }
+
+    .rezervacije-empty p {
+        margin: 8px 0 0;
+        color: #858078;
+        font-size: 13px;
+    }
+
+
+.rezervacije-state {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e4ded5;
+    border-radius: 9px;
+    color: #77736d;
+    font-size: 13px;
+}
+
+.rezervacije-state-error {
+    color: #9d3e38;
+    background: #fff3f2;
+    border-color: #edccc8;
+}
+
+
+@media (max-width: 950px) {
+    .rezervacija-detalji-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 750px) {
+    .pregled-rezervacija-page {
+        padding: 25px 14px 50px;
+    }
+
+    .rezervacije-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+
+    .rezervacije-table-wrapper {
+        overflow: visible;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    .rezervacije-table,
+    .rezervacije-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+        .rezervacije-table thead {
+            display: none;
+        }
+
+    .rezervacija-red {
+        display: block;
+        margin-bottom: 12px;
+        padding: 5px 16px;
+        background: #ffffff;
+        border: 1px solid #e4ded5;
+        border-radius: 9px;
+        box-shadow: 0 3px 12px rgba(35, 43, 38, 0.04);
+    }
+
+        .rezervacija-red.aktivan {
+            margin-bottom: 0;
+            background: #f5f2ed;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+    .rezervacije-table .rezervacija-red td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee9e2;
+        text-align: right;
+    }
+
+        .rezervacije-table
+        .rezervacija-red td:last-child {
+            border-bottom: none;
+        }
+
+        .rezervacije-table
+        .rezervacija-red td::before {
+            content: attr(data-label);
+            color: #918b83;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+    .tipovi-dogadjaja {
+        justify-content: flex-end;
+    }
+
+    .status-cell {
+        justify-content: flex-end;
+    }
+
+
+    .rezervacija-detalji-row {
+        display: block;
+        margin: 0 0 12px;
+        padding: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    .rezervacije-table
+    .rezervacija-detalji-cell {
+        display: block;
+        padding: 0;
+        border: none;
+        text-align: left;
+    }
+
+        .rezervacije-table
+        .rezervacija-detalji-cell::before {
+            display: none;
+        }
+
+    .rezervacija-detalji {
+        padding: 20px 16px;
+        background: #f8f6f2;
+        border: 1px solid #e4ded5;
+        border-top: none;
+        border-left: 4px solid #718979;
+        border-radius: 0 0 9px 9px;
+    }
+
+    .rezervacija-detalji-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .rezervacija-detalji-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rezervacija-tekstualni-detalji {
+        grid-template-columns: 1fr;
+    }
+}
+.rezervacija-detalji-akcije {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.obrada-rezervacije-button {
+    padding: 10px 17px;
+    background: #2f4738;
+    border: 1px solid #2f4738;
+    border-radius: 7px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .obrada-rezervacije-button:hover {
+        background: #24372c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(47, 71, 56, 0.2);
+    }
+.obrada-rezervacije-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 18px;
+    padding: 17px 18px;
+    background: #ffffff;
+    border: 1px solid #ddd7cd;
+    border-left: 4px solid #718979;
+    border-radius: 8px;
+}
+
+    .obrada-rezervacije-panel h4 {
+        margin: 0;
+        color: #344139;
+        font-size: 14px;
+    }
+
+    .obrada-rezervacije-panel p {
+        margin: 4px 0 0;
+        color: #858078;
+        font-size: 11px;
+    }
+
+.obrada-rezervacije-akcije {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.potvrdi-rezervaciju-button,
+.odbij-rezervaciju-button,
+.otkazi-rezervaciju-button {
+    padding: 9px 15px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.potvrdi-rezervaciju-button {
+    background: #607a68;
+    border: 1px solid #607a68;
+    color: #ffffff;
+}
+
+    .potvrdi-rezervaciju-button:hover {
+        background: #4c6555;
+        transform: translateY(-1px);
+    }
+
+.odbij-rezervaciju-button {
+    background: #ffffff;
+    border: 1px solid #bd7770;
+    color: #944841;
+}
+
+    .odbij-rezervaciju-button:hover {
+        background: #fae9e7;
+    }
+
+.otkazi-rezervaciju-button {
+    background: #ffffff;
+    border: 1px solid #aaa39a;
+    color: #625e58;
+}
+
+    .otkazi-rezervaciju-button:hover {
+        background: #f0ede8;
+    }
+
+.obrada-rezervacije-button {
+    padding: 10px 17px;
+    background: #2f4738;
+    border: 1px solid #2f4738;
+    border-radius: 7px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .obrada-rezervacije-button:hover {
+        background: #24372c;
+    }
+
+.obrada-rezervacije-akcije button:disabled,
+.otkazi-rezervaciju-button:disabled {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+}
+
+.obrada-rezervacije-error {
+    width: 100%;
+    padding: 9px 12px;
+    background: #fff3f2;
+    border: 1px solid #edccc8;
+    border-radius: 6px;
+    color: #9d3e38;
+    font-size: 11px;
+}

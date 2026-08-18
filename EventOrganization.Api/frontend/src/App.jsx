@@ -5,7 +5,8 @@ import HomePage from './pages/HomePage.jsx';
 import RestoraniPage from './pages/RestoraniPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RestoranDetaljiPage from './pages/RestoranDetaljiPage.jsx';
-
+import ProfilPage from './pages/ProfilPage';
+import RezervacijeRestoranaPage from './pages/RezervacijeRestoranaPage.jsx';
 function App() {
     return (
         <Routes>
@@ -45,6 +46,27 @@ function App() {
                 element={
                     <ProtectedRoute>
                         <RestoranDetaljiPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/profil"
+                element={
+                    <ProtectedRoute>
+                        <ProfilPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/restorani/:restoranId/rezervacije"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            'MENADZER',
+                            'OPERATER',
+                        ]}
+                    >
+                        <RezervacijeRestoranaPage />
                     </ProtectedRoute>
                 }
             />
