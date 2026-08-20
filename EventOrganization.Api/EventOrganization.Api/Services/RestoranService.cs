@@ -1,4 +1,5 @@
 using EventOrganization.Api.DTOs.Restorani;
+using EventOrganization.Api.Enums;
 using EventOrganization.Api.Models;
 using EventOrganization.Api.Repositories;
 
@@ -60,7 +61,59 @@ public class RestoranService
             Naziv = restoran.Naziv,
             Adresa = restoran.Adresa,
             Grad = restoran.Grad,
-            Telefon = restoran.Telefon
+            Telefon = restoran.Telefon,
+            Status = restoran.Status.ToString()
         };
+    }
+    public async Task<RestoranDto> Add(
+    DodavanjeRestoranaDto request,
+    CancellationToken cancellationToken = default)
+    {
+        var restoran = new Restoran
+        {
+            Naziv = request.Naziv,
+            Telefon = request.Telefon,
+            RadnoVreme = request.RadnoVreme,
+            Adresa = request.Adresa,
+            Grad = request.Grad,
+
+            Status = Status.AKTIVNO
+        };
+
+        await _restoranRepository.Add(
+            restoran,
+            cancellationToken);
+
+        return new RestoranDto
+        {
+            RestoranId = restoran.RestoranId,
+            Naziv = restoran.Naziv,
+            Telefon = restoran.Telefon,
+            RadnoVreme = restoran.RadnoVreme,
+            Adresa = restoran.Adresa,
+            Grad = restoran.Grad
+        };
+    }
+    public async Task<bool> Delete(
+    decimal restoranId,
+    CancellationToken cancellationToken = default)
+    {
+        var restoran =
+            await _restoranRepository.GetForUpdate(
+                restoranId,
+                cancellationToken);
+
+        if (restoran is null)
+        {
+            return false;
+        }
+
+        restoran.Status =
+            Status.NEAKTIVNO;
+
+        await _restoranRepository.SaveChanges(
+            cancellationToken);
+
+        return true;
     }
 }

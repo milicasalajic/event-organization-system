@@ -71,4 +71,36 @@ public class RestoranController : ControllerBase
 
         return Ok(restoran);
     }
+    [Authorize(Roles = "ADMINISTRATOR")]
+    [HttpPost]
+    public async Task<ActionResult<RestoranDto>> Add(
+    DodavanjeRestoranaDto request,
+    CancellationToken cancellationToken)
+    {
+        var restoran =
+            await _restoranService.Add(
+                request,
+                cancellationToken);
+
+        return Ok(restoran);
+    }
+    [Authorize(Roles = "ADMINISTRATOR")]
+    [HttpDelete("{restoranId}")]
+    public async Task<IActionResult> Delete(
+    decimal restoranId,
+    CancellationToken cancellationToken)
+    {
+        var obrisan =
+            await _restoranService.Delete(
+                restoranId,
+                cancellationToken);
+
+        if (!obrisan)
+        {
+            return NotFound(
+                "Restoran nije pronađen.");
+        }
+
+        return NoContent();
+    }
 }
