@@ -1,3 +1,4 @@
+using EventOrganization.Api.Enums;
 using EventOrganization.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,13 +15,14 @@ public class RestoranRepository
     }
 
     public Task<List<Restoran>> GetAll(
-        CancellationToken cancellationToken = default)
+      CancellationToken cancellationToken = default)
     {
         return _context.Restorani
             .AsNoTracking()
+            .OrderBy(restoran =>
+                restoran.Naziv)
             .ToListAsync(cancellationToken);
     }
-
     public Task<Restoran?> GetById(
         decimal restoranId,
         CancellationToken cancellationToken = default)
@@ -45,5 +47,33 @@ public class RestoranRepository
             .FirstOrDefaultAsync(cancellationToken);
 
         return pronadjenKorisnikId.HasValue;
+    }
+    public async Task Add(
+    Restoran restoran,
+    CancellationToken cancellationToken = default)
+    {
+        await _context.Restorani.AddAsync(
+            restoran,
+            cancellationToken);
+
+        await _context.SaveChangesAsync(
+            cancellationToken);
+    }
+    public Task<Restoran?> GetForUpdate(
+    decimal restoranId,
+    CancellationToken cancellationToken = default)
+    {
+        return _context.Restorani
+            .FirstOrDefaultAsync(
+                restoran =>
+                    restoran.RestoranId == restoranId,
+                cancellationToken);
+    }
+
+    public Task SaveChanges(
+        CancellationToken cancellationToken = default)
+    {
+        return _context.SaveChangesAsync(
+            cancellationToken);
     }
 }
