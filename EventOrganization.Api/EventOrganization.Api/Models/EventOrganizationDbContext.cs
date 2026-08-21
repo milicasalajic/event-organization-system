@@ -484,6 +484,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("SALA");
 
             entity.Property(e => e.SalaId)
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("SALA_ID");
 
