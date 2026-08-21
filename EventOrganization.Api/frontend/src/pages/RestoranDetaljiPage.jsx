@@ -1,5 +1,8 @@
 ﻿import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import {
+    useNavigate,
+    useParams,
+} from 'react-router-dom';
 import { getRestoranById } from '../api/restoranApi';
 import { getPaketiByRestoranId } from '../api/paketApi';
 import { getSaleByPaketId } from '../api/salaApi';
@@ -30,7 +33,9 @@ function grupisiUslugePoTipu(usluge) {
 
     usluge.forEach((usluga) => {
         if (grupe[usluga.tipUsluge]) {
-            grupe[usluga.tipUsluge].push(usluga);
+            grupe[usluga.tipUsluge].push(
+                usluga,
+            );
         }
     });
 
@@ -45,7 +50,11 @@ function formatEnumValue(value) {
     return value
         .toLowerCase()
         .replaceAll('_', ' ')
-        .replace(/\b\w/g, (slovo) => slovo.toUpperCase());
+        .replace(
+            /\b\w/g,
+            (slovo) =>
+                slovo.toUpperCase(),
+        );
 }
 
 function getLinkTekst(tipUsluge) {
@@ -71,30 +80,71 @@ function RestoranDetaljiPage() {
     const { restoranId } = useParams();
     const navigate = useNavigate();
 
-    const korisnikJson = localStorage.getItem('korisnik');
+    const korisnikJson =
+        localStorage.getItem(
+            'korisnik',
+        );
 
-    const korisnik = korisnikJson
-        ? JSON.parse(korisnikJson)
-        : null;
+    const korisnik =
+        korisnikJson
+            ? JSON.parse(
+                korisnikJson,
+            )
+            : null;
 
     const jeRadnik =
-        korisnik?.uloga === 'MENADZER' ||
-        korisnik?.uloga === 'OPERATER';
+        korisnik?.uloga ===
+        'MENADZER' ||
+        korisnik?.uloga ===
+        'OPERATER';
 
-    const [restoran, setRestoran] = useState(null);
-    const [paketi, setPaketi] = useState([]);
+    const jeMenadzer =
+        korisnik?.uloga ===
+        'MENADZER';
 
-    const [aktivanPaketId, setAktivanPaketId] = useState(null);
-    const [aktivanTipUsluge, setAktivanTipUsluge] = useState(null);
+    const [restoran, setRestoran] =
+        useState(null);
 
-    const [salePoPaketu, setSalePoPaketu] = useState({});
-    const [uslugePoPaketu, setUslugePoPaketu] = useState({});
+    const [paketi, setPaketi] =
+        useState([]);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
+    const [
+        aktivanPaketId,
+        setAktivanPaketId,
+    ] = useState(null);
 
-    const [detaljiLoading, setDetaljiLoading] = useState({});
-    const [detaljiError, setDetaljiError] = useState({});
+    const [
+        aktivanTipUsluge,
+        setAktivanTipUsluge,
+    ] = useState(null);
+
+    const [
+        salePoPaketu,
+        setSalePoPaketu,
+    ] = useState({});
+
+    const [
+        uslugePoPaketu,
+        setUslugePoPaketu,
+    ] = useState({});
+
+    const [
+        isLoading,
+        setIsLoading,
+    ] = useState(true);
+
+    const [error, setError] =
+        useState('');
+
+    const [
+        detaljiLoading,
+        setDetaljiLoading,
+    ] = useState({});
+
+    const [
+        detaljiError,
+        setDetaljiError,
+    ] = useState({});
 
     useEffect(() => {
         async function loadPage() {
@@ -102,92 +152,157 @@ function RestoranDetaljiPage() {
             setError('');
 
             try {
-                const [restoranResult, paketiResult] =
+                const [
+                    restoranResult,
+                    paketiResult,
+                ] =
                     await Promise.all([
-                        getRestoranById(restoranId),
-                        getPaketiByRestoranId(restoranId),
+                        getRestoranById(
+                            restoranId,
+                        ),
+                        getPaketiByRestoranId(
+                            restoranId,
+                        ),
                     ]);
 
-                setRestoran(restoranResult);
-                setPaketi(paketiResult);
+                setRestoran(
+                    restoranResult,
+                );
 
-                if (paketiResult.length > 0) {
+                setPaketi(
+                    paketiResult,
+                );
+
+                if (
+                    paketiResult.length >
+                    0
+                ) {
                     const prviPaketId =
-                        paketiResult[0].paketId;
+                        paketiResult[0]
+                            .paketId;
 
-                    setAktivanPaketId(prviPaketId);
+                    setAktivanPaketId(
+                        prviPaketId,
+                    );
 
-                    await loadPaketDetalje(prviPaketId);
+                    await loadPaketDetalje(
+                        prviPaketId,
+                    );
                 }
             } catch (error) {
-                setError(error.message);
+                setError(
+                    error.message,
+                );
             } finally {
-                setIsLoading(false);
+                setIsLoading(
+                    false,
+                );
             }
         }
 
         loadPage();
     }, [restoranId]);
 
-    async function loadPaketDetalje(paketId) {
+    async function loadPaketDetalje(
+        paketId,
+    ) {
         if (
-            salePoPaketu[paketId] !== undefined &&
-            uslugePoPaketu[paketId] !== undefined
+            salePoPaketu[
+            paketId
+            ] !== undefined &&
+            uslugePoPaketu[
+            paketId
+            ] !== undefined
         ) {
             return;
         }
 
-        setDetaljiLoading((prev) => ({
-            ...prev,
-            [paketId]: true,
-        }));
+        setDetaljiLoading(
+            (prev) => ({
+                ...prev,
+                [paketId]: true,
+            }),
+        );
 
-        setDetaljiError((prev) => ({
-            ...prev,
-            [paketId]: '',
-        }));
+        setDetaljiError(
+            (prev) => ({
+                ...prev,
+                [paketId]: '',
+            }),
+        );
 
         try {
-            const [saleResult, uslugeResult] =
+            const [
+                saleResult,
+                uslugeResult,
+            ] =
                 await Promise.all([
-                    getSaleByPaketId(restoranId, paketId),
-                    getUslugeByPaketId(restoranId, paketId),
+                    getSaleByPaketId(
+                        restoranId,
+                        paketId,
+                    ),
+                    getUslugeByPaketId(
+                        restoranId,
+                        paketId,
+                    ),
                 ]);
 
-            setSalePoPaketu((prev) => ({
-                ...prev,
-                [paketId]: saleResult,
-            }));
+            setSalePoPaketu(
+                (prev) => ({
+                    ...prev,
+                    [paketId]:
+                        saleResult,
+                }),
+            );
 
-            setUslugePoPaketu((prev) => ({
-                ...prev,
-                [paketId]: uslugeResult,
-            }));
+            setUslugePoPaketu(
+                (prev) => ({
+                    ...prev,
+                    [paketId]:
+                        uslugeResult,
+                }),
+            );
         } catch (error) {
-            setDetaljiError((prev) => ({
-                ...prev,
-                [paketId]: error.message,
-            }));
+            setDetaljiError(
+                (prev) => ({
+                    ...prev,
+                    [paketId]:
+                        error.message,
+                }),
+            );
         } finally {
-            setDetaljiLoading((prev) => ({
-                ...prev,
-                [paketId]: false,
-            }));
+            setDetaljiLoading(
+                (prev) => ({
+                    ...prev,
+                    [paketId]:
+                        false,
+                }),
+            );
         }
     }
 
-    async function handlePaketClick(paketId) {
-        setAktivanPaketId(paketId);
-        setAktivanTipUsluge(null);
+    async function handlePaketClick(
+        paketId,
+    ) {
+        setAktivanPaketId(
+            paketId,
+        );
 
-        await loadPaketDetalje(paketId);
+        setAktivanTipUsluge(
+            null,
+        );
+
+        await loadPaketDetalje(
+            paketId,
+        );
     }
 
     if (isLoading) {
         return (
             <div className="restoran-detalji-page">
                 <div className="page-state">
-                    Učitavanje restorana...
+                    Učitavanje
+                    restorana...
                 </div>
             </div>
         );
@@ -203,16 +318,22 @@ function RestoranDetaljiPage() {
         );
     }
 
-    const aktivanPaket = paketi.find(
-        (paket) =>
-            paket.paketId === aktivanPaketId,
-    );
+    const aktivanPaket =
+        paketi.find(
+            (paket) =>
+                paket.paketId ===
+                aktivanPaketId,
+        );
 
     const saleAktivnogPaketa =
-        salePoPaketu[aktivanPaketId] ?? [];
+        salePoPaketu[
+        aktivanPaketId
+        ] ?? [];
 
     const uslugeAktivnogPaketa =
-        uslugePoPaketu[aktivanPaketId] ?? [];
+        uslugePoPaketu[
+        aktivanPaketId
+        ] ?? [];
 
     const grupisaneUsluge =
         grupisiUslugePoTipu(
@@ -222,7 +343,9 @@ function RestoranDetaljiPage() {
     const tipoviSaUslugama =
         redosledTipovaUsluga.filter(
             (tip) =>
-                grupisaneUsluge[tip].length > 0,
+                grupisaneUsluge[
+                    tip
+                ].length > 0,
         );
 
     const prikazanTipUsluge =
@@ -250,28 +373,47 @@ function RestoranDetaljiPage() {
                             Restoran
                         </span>
 
-                        <h1>{restoran.naziv}</h1>
+                        <h1>
+                            {
+                                restoran.naziv
+                            }
+                        </h1>
                     </div>
 
                     <div className="restoran-meta">
                         <div className="restoran-meta-item">
-                            <span>Adresa</span>
+                            <span>
+                                Adresa
+                            </span>
+
                             <strong>
-                                {restoran.adresa}
+                                {
+                                    restoran.adresa
+                                }
                             </strong>
                         </div>
 
                         <div className="restoran-meta-item">
-                            <span>Grad</span>
+                            <span>
+                                Grad
+                            </span>
+
                             <strong>
-                                {restoran.grad}
+                                {
+                                    restoran.grad
+                                }
                             </strong>
                         </div>
 
                         <div className="restoran-meta-item">
-                            <span>Telefon</span>
+                            <span>
+                                Telefon
+                            </span>
+
                             <strong>
-                                {restoran.telefon}
+                                {
+                                    restoran.telefon
+                                }
                             </strong>
                         </div>
                     </div>
@@ -279,6 +421,7 @@ function RestoranDetaljiPage() {
 
                 {jeRadnik && (
                     <div className="restoran-radnik-akcije">
+
                         <button
                             type="button"
                             className="rezervacije-button"
@@ -290,11 +433,27 @@ function RestoranDetaljiPage() {
                         >
                             Pregled rezervacija
                         </button>
+
+                        {jeMenadzer && (
+                            <button
+                                type="button"
+                                className="upravljanje-ponudom-button"
+                                onClick={() =>
+                                    navigate(
+                                        `/restorani/${restoranId}/upravljanje-ponudom`,
+                                    )
+                                }
+                            >
+                                Upravljanje ponudom
+                            </button>
+                        )}
                     </div>
                 )}
 
                 <section className="paketi-sekcija">
+
                     <div className="section-heading">
+
                         <div>
                             <span className="section-kicker">
                                 Ponuda restorana
@@ -307,63 +466,76 @@ function RestoranDetaljiPage() {
 
                         <span className="section-count">
                             {paketi.length}{' '}
-                            {paketi.length === 1
+                            {paketi.length ===
+                                1
                                 ? 'paket'
                                 : 'paketa'}
                         </span>
+
                     </div>
 
-                    {paketi.length === 0 ? (
+                    {paketi.length ===
+                        0 ? (
                         <div className="empty-state">
-                            Ovaj restoran trenutno
-                            nema pakete u ponudi.
+                            Ovaj restoran
+                            trenutno nema
+                            pakete u ponudi.
                         </div>
                     ) : (
                         <div className="paketi-grid">
-                            {paketi.map((paket) => (
-                                <button
-                                    key={
-                                        paket.paketId
-                                    }
-                                    type="button"
-                                    className={
-                                        aktivanPaketId ===
+
+                            {paketi.map(
+                                (paket) => (
+                                    <button
+                                        key={
                                             paket.paketId
-                                            ? 'paket-option aktivan'
-                                            : 'paket-option'
-                                    }
-                                    onClick={() =>
-                                        handlePaketClick(
-                                            paket.paketId,
-                                        )
-                                    }
-                                >
-                                    <div className="paket-option-top">
-                                        <h3>
-                                            {
-                                                paket.naziv
-                                            }
-                                        </h3>
-                                    </div>
+                                        }
+                                        type="button"
+                                        className={
+                                            aktivanPaketId ===
+                                                paket.paketId
+                                                ? 'paket-option aktivan'
+                                                : 'paket-option'
+                                        }
+                                        onClick={() =>
+                                            handlePaketClick(
+                                                paket.paketId,
+                                            )
+                                        }
+                                    >
+                                        <div className="paket-option-top">
 
-                                    <p>
-                                        {paket.opis ||
-                                            'Pogledajte sale i dodatne usluge ovog paketa.'}
-                                    </p>
+                                            <h3>
+                                                {
+                                                    paket.naziv
+                                                }
+                                            </h3>
 
-                                    <span className="paket-pregled">
-                                        Pogledaj paket
-                                    </span>
-                                </button>
-                            ))}
+                                        </div>
+
+                                        <p>
+                                            {paket.opis ||
+                                                'Pogledajte sale i dodatne usluge ovog paketa.'}
+                                        </p>
+
+                                        <span className="paket-pregled">
+                                            Pogledaj paket
+                                        </span>
+
+                                    </button>
+                                ),
+                            )}
+
                         </div>
                     )}
+
                 </section>
 
                 {aktivanPaket && (
                     <section className="paket-detalji-panel">
 
                         <div className="paket-detalji-header">
+
                             <div>
                                 <span className="section-kicker">
                                     Izabrani paket
@@ -383,14 +555,15 @@ function RestoranDetaljiPage() {
                                     }
                                 </p>
                             )}
+
                         </div>
 
                         {detaljiLoading[
                             aktivanPaketId
                         ] && (
                                 <div className="detalji-loading">
-                                    Učitavanje detalja
-                                    paketa...
+                                    Učitavanje
+                                    detalja paketa...
                                 </div>
                             )}
 
@@ -414,16 +587,20 @@ function RestoranDetaljiPage() {
                             ] && (
                                 <>
                                     <div className="sale-blok">
+
                                         <div className="subsection-heading">
+
                                             <div>
                                                 <h3>
-                                                    Dostupne sale
+                                                    Dostupne
+                                                    sale
                                                 </h3>
 
                                                 <p>
-                                                    Sale koje možete
-                                                    izabrati uz ovaj
-                                                    paket.
+                                                    Sale koje
+                                                    možete
+                                                    izabrati uz
+                                                    ovaj paket.
                                                 </p>
                                             </div>
 
@@ -432,18 +609,24 @@ function RestoranDetaljiPage() {
                                                     saleAktivnogPaketa.length
                                                 }
                                             </span>
+
                                         </div>
 
                                         {saleAktivnogPaketa.length ===
                                             0 ? (
                                             <div className="empty-inline">
-                                                Paket trenutno nema
-                                                dostupnih sala.
+                                                Paket
+                                                trenutno nema
+                                                dostupnih
+                                                sala.
                                             </div>
                                         ) : (
                                             <div className="sale-grid">
+
                                                 {saleAktivnogPaketa.map(
-                                                    (sala) => (
+                                                    (
+                                                        sala,
+                                                    ) => (
                                                         <div
                                                             className="sala-item"
                                                             key={
@@ -471,23 +654,29 @@ function RestoranDetaljiPage() {
                                                         </div>
                                                     ),
                                                 )}
+
                                             </div>
                                         )}
+
                                     </div>
 
                                     <div className="usluge-blok">
+
                                         <div className="subsection-heading">
+
                                             <div>
                                                 <h3>
-                                                    Dodatne usluge
+                                                    Dodatne
+                                                    usluge
                                                 </h3>
 
                                                 <p>
                                                     Izaberite
-                                                    kategoriju i
-                                                    pogledajte
+                                                    kategoriju
+                                                    i pogledajte
                                                     dostupne
-                                                    pružaoce usluga.
+                                                    pružaoce
+                                                    usluga.
                                                 </p>
                                             </div>
 
@@ -496,19 +685,25 @@ function RestoranDetaljiPage() {
                                                     uslugeAktivnogPaketa.length
                                                 }
                                             </span>
+
                                         </div>
 
                                         {uslugeAktivnogPaketa.length ===
                                             0 ? (
                                             <div className="empty-inline">
-                                                Paket trenutno nema
-                                                dodatnih usluga.
+                                                Paket
+                                                trenutno nema
+                                                dodatnih
+                                                usluga.
                                             </div>
                                         ) : (
                                             <>
                                                 <div className="usluge-tabs">
+
                                                     {tipoviSaUslugama.map(
-                                                        (tip) => (
+                                                        (
+                                                            tip,
+                                                        ) => (
                                                             <button
                                                                 key={
                                                                     tip
@@ -543,19 +738,26 @@ function RestoranDetaljiPage() {
                                                             </button>
                                                         ),
                                                     )}
+
                                                 </div>
 
                                                 <div className="usluge-lista-nova">
+
                                                     {uslugeZaPrikaz.map(
-                                                        (usluga) => (
+                                                        (
+                                                            usluga,
+                                                        ) => (
                                                             <article
                                                                 className="usluga-red"
                                                                 key={
                                                                     usluga.uslugaId
                                                                 }
                                                             >
+
                                                                 <div className="usluga-red-main">
+
                                                                     <div className="usluga-tekst">
+
                                                                         <h4>
                                                                             {
                                                                                 usluga.naziv
@@ -569,6 +771,7 @@ function RestoranDetaljiPage() {
                                                                                 }
                                                                             </p>
                                                                         )}
+
                                                                     </div>
 
                                                                     {usluga.portfolio && (
@@ -591,9 +794,11 @@ function RestoranDetaljiPage() {
                                                                             </span>
                                                                         </a>
                                                                     )}
+
                                                                 </div>
 
                                                                 <div className="usluga-meta">
+
                                                                     {usluga.telefon && (
                                                                         <div>
                                                                             <span>
@@ -611,7 +816,8 @@ function RestoranDetaljiPage() {
                                                                     {usluga.tipFoto && (
                                                                         <div>
                                                                             <span>
-                                                                                Vrsta usluge
+                                                                                Vrsta
+                                                                                usluge
                                                                             </span>
 
                                                                             <strong>
@@ -640,7 +846,8 @@ function RestoranDetaljiPage() {
                                                                     {usluga.tipMuzicara && (
                                                                         <div>
                                                                             <span>
-                                                                                Vrsta izvođača
+                                                                                Vrsta
+                                                                                izvođača
                                                                             </span>
 
                                                                             <strong>
@@ -650,18 +857,24 @@ function RestoranDetaljiPage() {
                                                                             </strong>
                                                                         </div>
                                                                     )}
+
                                                                 </div>
+
                                                             </article>
                                                         ),
                                                     )}
+
                                                 </div>
                                             </>
                                         )}
+
                                     </div>
                                 </>
                             )}
+
                     </section>
                 )}
+
             </main>
         </div>
     );

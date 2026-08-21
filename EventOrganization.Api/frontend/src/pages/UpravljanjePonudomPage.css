@@ -1,0 +1,607 @@
+.upravljanje-ponudom-page {
+    min-height: 100vh;
+    padding: 40px 24px 70px;
+    background: #f7f4ef;
+    color: #2d312e;
+}
+
+    .upravljanje-ponudom-page * {
+        box-sizing: border-box;
+    }
+
+.upravljanje-ponudom-container {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.upravljanje-nazad-button {
+    margin-bottom: 22px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: #747069;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .upravljanje-nazad-button:hover {
+        color: #3f5c4a;
+    }
+
+.upravljanje-page-header {
+    margin-bottom: 30px;
+}
+
+    .upravljanje-page-header > span {
+        display: block;
+        margin-bottom: 6px;
+        color: #9b8151;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+    }
+
+    .upravljanje-page-header h1 {
+        margin: 0;
+        color: #29352d;
+        font-size: 30px;
+    }
+
+    .upravljanje-page-header p {
+        margin: 8px 0 0;
+        color: #817c75;
+        font-size: 13px;
+    }
+
+.upravljanje-layout {
+    display: grid;
+    grid-template-columns: 245px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.upravljanje-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid #e3ddd4;
+    border-radius: 11px;
+    box-shadow: 0 5px 18px rgba(35, 43, 38, 0.04);
+}
+
+.upravljanje-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 13px 12px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #696761;
+}
+
+    .upravljanje-nav-item.aktivan {
+        background: #edf2ee;
+        border-color: #d9e2db;
+        color: #385042;
+    }
+
+    .upravljanje-nav-item.disabled {
+        background: #faf9f7;
+        color: #aaa69f;
+        cursor: default;
+    }
+
+
+.upravljanje-nav-item > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.upravljanje-nav-item strong {
+    font-size: 12px;
+}
+
+.upravljanje-nav-item small {
+    color: #9a958e;
+    font-size: 9px;
+}
+
+.upravljanje-nav-item.disabled small {
+    color: #b8b4ae;
+}
+
+.upravljanje-content {
+    min-width: 0;
+    padding: 27px 28px 30px;
+    background: #ffffff;
+    border: 1px solid #e3ddd4;
+    border-radius: 11px;
+    box-shadow: 0 5px 20px rgba(35, 43, 38, 0.05);
+}
+
+.management-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 24px;
+}
+
+    .management-section-header > div > span {
+        display: block;
+        margin-bottom: 5px;
+        color: #9b8151;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+    }
+
+    .management-section-header h2 {
+        margin: 0;
+        color: #35443b;
+        font-size: 22px;
+    }
+
+    .management-section-header p {
+        margin: 6px 0 0;
+        color: #89847c;
+        font-size: 11px;
+    }
+
+.management-primary-button {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    background: #2f4738;
+    border: 1px solid #2f4738;
+    border-radius: 7px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .management-primary-button:hover {
+        background: #24372c;
+        transform: translateY(-1px);
+    }
+
+    .management-primary-button:disabled {
+        opacity: 0.6;
+        cursor: default;
+        transform: none;
+    }
+
+.management-secondary-button {
+    padding: 10px 16px;
+    background: #ffffff;
+    border: 1px solid #d7d0c6;
+    border-radius: 7px;
+    color: #65615b;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .management-secondary-button:hover {
+        background: #f5f2ed;
+    }
+
+    .management-secondary-button:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+
+.management-table-wrapper {
+    overflow: hidden;
+    border: 1px solid #e5dfd6;
+    border-radius: 8px;
+}
+
+.management-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .management-table thead {
+        background: #f5f2ed;
+    }
+
+    .management-table th {
+        padding: 12px 15px;
+        color: #8a857e;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-align: left;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e5dfd6;
+    }
+
+    .management-table td {
+        padding: 15px;
+        color: #5d615d;
+        font-size: 12px;
+        line-height: 1.45;
+        border-bottom: 1px solid #eee9e2;
+        vertical-align: middle;
+    }
+
+    .management-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .management-table tbody tr:hover {
+        background: #fdfbf8;
+    }
+
+    .management-table td strong {
+        color: #3f4943;
+    }
+
+.management-description-cell {
+    max-width: 310px;
+    color: #77736d !important;
+}
+
+.management-type-badge {
+    display: inline-flex;
+    padding: 5px 8px;
+    background: #f2eee7;
+    border: 1px solid #e3dbcf;
+    border-radius: 5px;
+    color: #6d6254;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.management-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.management-edit-button,
+.management-delete-button {
+    padding: 7px 10px;
+    background: #ffffff;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.management-edit-button {
+    border: 1px solid #b9c8bd;
+    color: #506456;
+}
+
+    .management-edit-button:hover {
+        background: #edf2ee;
+    }
+
+.management-delete-button {
+    border: 1px solid #d6aaa6;
+    color: #944841;
+}
+
+    .management-delete-button:hover {
+        background: #fae9e7;
+    }
+
+.management-empty {
+    padding: 42px 20px;
+    background: #faf8f5;
+    border: 1px dashed #ddd6cc;
+    border-radius: 8px;
+    color: #858078;
+    text-align: center;
+    font-size: 12px;
+}
+
+    .management-empty h3 {
+        margin: 0;
+        color: #59615c;
+        font-size: 15px;
+    }
+
+    .management-empty p {
+        margin: 6px 0 0;
+    }
+
+.management-error {
+    margin-bottom: 17px;
+    padding: 10px 13px;
+    background: #fff3f2;
+    border: 1px solid #edccc8;
+    border-radius: 6px;
+    color: #9d3e38;
+    font-size: 11px;
+}
+
+.management-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(29, 34, 30, 0.48);
+    backdrop-filter: blur(2px);
+}
+
+.management-form-modal,
+.management-confirm-modal {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e1dad0;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(24, 31, 26, 0.22);
+}
+
+.management-form-modal {
+    max-width: 600px;
+    padding: 27px 29px 25px;
+}
+
+.management-confirm-modal {
+    max-width: 420px;
+    padding: 29px 28px 25px;
+    text-align: center;
+}
+
+.management-form-header {
+    margin-bottom: 22px;
+}
+
+    .management-form-header > span {
+        display: block;
+        margin-bottom: 4px;
+        color: #9b8151;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+    }
+
+    .management-form-header h2 {
+        margin: 0;
+        color: #344139;
+        font-size: 20px;
+    }
+
+    .management-form-header p {
+        margin: 6px 0 0;
+        color: #8a857e;
+        font-size: 11px;
+    }
+
+.management-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.management-full-field {
+    grid-column: 1 / -1;
+}
+
+.management-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #868078;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.management-field input,
+.management-field select,
+.management-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: #ffffff;
+    border: 1px solid #d8d1c7;
+    border-radius: 7px;
+    outline: none;
+    color: #353a36;
+    font-family: inherit;
+    font-size: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.management-field input,
+.management-field select {
+    height: 42px;
+}
+
+.management-field textarea {
+    min-height: 105px;
+    resize: vertical;
+}
+
+    .management-field input:focus,
+    .management-field select:focus,
+    .management-field textarea:focus {
+        border-color: #718979;
+        box-shadow: 0 0 0 3px rgba(113, 137, 121, 0.1);
+    }
+
+.management-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 23px;
+    padding-top: 18px;
+    border-top: 1px solid #eee9e2;
+}
+
+.management-confirm-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 47px;
+    height: 47px;
+    margin: 0 auto 16px;
+    background: #fae9e7;
+    border: 1px solid #edccc8;
+    border-radius: 50%;
+    color: #944841;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.management-confirm-modal h2 {
+    margin: 0;
+    color: #344139;
+    font-size: 20px;
+}
+
+.management-confirm-modal p {
+    margin: 12px 0 0;
+    color: #66645f;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+    .management-confirm-modal p strong {
+        color: #343a36;
+    }
+
+.management-confirm-note {
+    display: block;
+    margin-top: 7px;
+    color: #99938b;
+    font-size: 10px;
+}
+
+.management-confirm-modal .management-error {
+    margin-top: 18px;
+    text-align: left;
+}
+
+.management-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #eee9e2;
+}
+
+.management-danger-button {
+    padding: 10px 16px;
+    background: #944841;
+    border: 1px solid #944841;
+    border-radius: 7px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .management-danger-button:hover {
+        background: #7d3d37;
+    }
+
+    .management-danger-button:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+
+.upravljanje-state {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e3ddd4;
+    border-radius: 9px;
+    color: #77736d;
+    font-size: 13px;
+}
+
+.upravljanje-state-error {
+    background: #fff3f2;
+    border-color: #edccc8;
+    color: #9d3e38;
+}
+
+@media (max-width: 850px) {
+    .upravljanje-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .upravljanje-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .upravljanje-ponudom-page {
+        padding: 28px 14px 50px;
+    }
+
+    .upravljanje-content {
+        padding: 21px 16px;
+    }
+
+    .upravljanje-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .management-section-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .management-primary-button {
+        width: 100%;
+    }
+
+    .management-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .management-table {
+        min-width: 650px;
+    }
+
+    .management-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .management-full-field {
+        grid-column: auto;
+    }
+
+    .management-form-modal {
+        padding: 23px 19px;
+    }
+
+    .management-form-actions,
+    .management-confirm-actions {
+        flex-direction: column-reverse;
+    }
+
+        .management-form-actions button,
+        .management-confirm-actions button {
+            width: 100%;
+        }
+}
