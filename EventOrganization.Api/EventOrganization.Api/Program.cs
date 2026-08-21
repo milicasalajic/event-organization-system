@@ -31,6 +31,10 @@ builder.Services.AddScoped<KorisnikRepository>();
 builder.Services.AddScoped<KorisnikService>();
 builder.Services.AddScoped<RezervacijaRepository>();
 builder.Services.AddScoped<RezervacijaService>();
+builder.Services.AddScoped<FotografRepository>();
+builder.Services.AddScoped<FotografService>();
+builder.Services.AddScoped<KeteringRepository>();
+builder.Services.AddScoped<KeteringService>();
 
 builder.Services.AddCors(options =>
 {

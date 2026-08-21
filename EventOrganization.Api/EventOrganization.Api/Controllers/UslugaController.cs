@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using EventOrganization.Api.DTOs.Usluge;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +12,6 @@ public class UslugaController : ControllerBase
 {
     private readonly UslugaService _uslugaService;
     private readonly RestoranService _restoranService;
-
     public UslugaController(
         UslugaService uslugaService,
         RestoranService restoranService)
@@ -28,8 +27,9 @@ public class UslugaController : ControllerBase
         decimal paketId,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim = User.FindFirst(
-            ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim =
+            User.FindFirst(
+                ClaimTypes.NameIdentifier)?.Value;
 
         if (!decimal.TryParse(
                 korisnikIdClaim,
@@ -38,8 +38,9 @@ public class UslugaController : ControllerBase
             return Unauthorized();
         }
 
-        var uloga = User.FindFirst(
-            ClaimTypes.Role)?.Value;
+        var uloga =
+            User.FindFirst(
+                ClaimTypes.Role)?.Value;
 
         if (uloga is "MENADZER" or "OPERATER")
         {
@@ -55,10 +56,11 @@ public class UslugaController : ControllerBase
             }
         }
 
-        var usluge = await _uslugaService.GetByPaketId(
-            restoranId,
-            paketId,
-            cancellationToken);
+        var usluge =
+            await _uslugaService.GetByPaketId(
+                restoranId,
+                paketId,
+                cancellationToken);
 
         return Ok(usluge);
     }

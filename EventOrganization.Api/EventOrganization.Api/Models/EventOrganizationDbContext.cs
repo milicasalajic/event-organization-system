@@ -124,7 +124,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("FOTOGRAF");
 
             entity.Property(e => e.UslugaId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("USLUGA_ID");
 
@@ -153,7 +153,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("KETERING_FIRMA");
 
             entity.Property(e => e.UslugaId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("USLUGA_ID");
 
