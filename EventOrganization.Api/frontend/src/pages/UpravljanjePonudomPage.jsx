@@ -24,6 +24,13 @@ import {
     updateFotograf,
 } from '../api/fotografApi';
 
+import {
+    addDekoraterskaFirma,
+    deleteDekoraterskaFirma,
+    getDekoraterskeFirmeByRestoranId,
+    updateDekoraterskaFirma,
+} from '../api/dekoraterskaFirmaApi';
+
 import './UpravljanjePonudomPage.css';
 
 function UpravljanjePonudomPage() {
@@ -34,6 +41,7 @@ function UpravljanjePonudomPage() {
     const [paketi, setPaketi] = useState([]);
     const [keteringFirme, setKeteringFirme] = useState([]);
     const [fotografi, setFotografi] = useState([]);
+    const [dekoraterskeFirme, setDekoraterskeFirme] = useState([]);
 
     const [aktivnaSekcija, setAktivnaSekcija] = useState('PAKETI');
 
@@ -44,7 +52,9 @@ function UpravljanjePonudomPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
+    // =========================
     // PAKET
+    // =========================
 
     const [prikaziPaketFormu, setPrikaziPaketFormu] = useState(false);
     const [paketZaIzmenu, setPaketZaIzmenu] = useState(null);
@@ -55,7 +65,9 @@ function UpravljanjePonudomPage() {
         opis: '',
     });
 
+    // =========================
     // KETERING
+    // =========================
 
     const [prikaziKeteringFormu, setPrikaziKeteringFormu] =
         useState(false);
@@ -71,7 +83,39 @@ function UpravljanjePonudomPage() {
         paketIds: [],
     });
 
+    // =========================
+    // DEKORATERSKA FIRMA
+    // =========================
+
+    const [
+        prikaziDekoraterskaFirmaFormu,
+        setPrikaziDekoraterskaFirmaFormu,
+    ] = useState(false);
+
+    const [
+        dekoraterskaFirmaZaIzmenu,
+        setDekoraterskaFirmaZaIzmenu,
+    ] = useState(null);
+
+    const [
+        dekoraterskaFirmaZaBrisanje,
+        setDekoraterskaFirmaZaBrisanje,
+    ] = useState(null);
+
+    const [
+        dekoraterskaFirmaFormData,
+        setDekoraterskaFirmaFormData,
+    ] = useState({
+        naziv: '',
+        telefon: '',
+        portfolio: '',
+        opis: '',
+        paketIds: [],
+    });
+
+    // =========================
     // FOTOGRAF
+    // =========================
 
     const [prikaziFotografFormu, setPrikaziFotografFormu] =
         useState(false);
@@ -88,6 +132,10 @@ function UpravljanjePonudomPage() {
         paketIds: [],
     });
 
+    // =========================
+    // UČITAVANJE
+    // =========================
+
     useEffect(() => {
         async function loadPage() {
             setIsLoading(true);
@@ -98,17 +146,20 @@ function UpravljanjePonudomPage() {
                     restoranResult,
                     paketiResult,
                     keteringResult,
+                    dekoraterskeFirmeResult,
                     fotografiResult,
                 ] = await Promise.all([
                     getRestoranById(restoranId),
                     getPaketiByRestoranId(restoranId),
                     getKeteringByRestoranId(restoranId),
+                    getDekoraterskeFirmeByRestoranId(restoranId),
                     getFotografiByRestoranId(restoranId),
                 ]);
 
                 setRestoran(restoranResult);
                 setPaketi(paketiResult);
                 setKeteringFirme(keteringResult);
+                setDekoraterskeFirme(dekoraterskeFirmeResult);
                 setFotografi(fotografiResult);
             } catch (error) {
                 setError(error.message);
@@ -130,7 +181,8 @@ function UpravljanjePonudomPage() {
             .map(
                 (paketId) =>
                     paketi.find(
-                        (paket) => paket.paketId === paketId,
+                        (paket) =>
+                            paket.paketId === paketId,
                     )?.naziv,
             )
             .filter(Boolean)
@@ -258,7 +310,8 @@ function UpravljanjePonudomPage() {
             setPaketi((prev) =>
                 prev.filter(
                     (paket) =>
-                        paket.paketId !== obrisaniPaketId,
+                        paket.paketId !==
+                        obrisaniPaketId,
                 ),
             );
 
@@ -267,6 +320,17 @@ function UpravljanjePonudomPage() {
                     ...ketering,
                     paketIds:
                         ketering.paketIds?.filter(
+                            (id) =>
+                                id !== obrisaniPaketId,
+                        ) ?? [],
+                })),
+            );
+
+            setDekoraterskeFirme((prev) =>
+                prev.map((firma) => ({
+                    ...firma,
+                    paketIds:
+                        firma.paketIds?.filter(
                             (id) =>
                                 id !== obrisaniPaketId,
                         ) ?? [],
@@ -439,6 +503,162 @@ function UpravljanjePonudomPage() {
             );
 
             setKeteringZaBrisanje(null);
+        } catch (error) {
+            setActionError(error.message);
+        } finally {
+            setDeleteLoading(false);
+        }
+    }
+
+    // =========================
+    // DEKORATERSKE FIRME
+    // =========================
+
+    function handleDekoraterskaFirmaChange(event) {
+        const { name, value } = event.target;
+
+        setDekoraterskaFirmaFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    }
+
+    function handleDekoraterskaFirmaPaketCheckbox(paketId) {
+        setDekoraterskaFirmaFormData((prev) => {
+            const izabran =
+                prev.paketIds.includes(paketId);
+
+            return {
+                ...prev,
+                paketIds: izabran
+                    ? prev.paketIds.filter(
+                        (id) => id !== paketId,
+                    )
+                    : [
+                        ...prev.paketIds,
+                        paketId,
+                    ],
+            };
+        });
+    }
+
+    function handleDodajDekoraterskuFirmu() {
+        setActionError('');
+        setDekoraterskaFirmaZaIzmenu(null);
+
+        setDekoraterskaFirmaFormData({
+            naziv: '',
+            telefon: '',
+            portfolio: '',
+            opis: '',
+            paketIds: [],
+        });
+
+        setPrikaziDekoraterskaFirmaFormu(true);
+    }
+
+    function handleIzmeniDekoraterskuFirmu(firma) {
+        setActionError('');
+        setDekoraterskaFirmaZaIzmenu(firma);
+
+        setDekoraterskaFirmaFormData({
+            naziv: firma.naziv ?? '',
+            telefon: firma.telefon ?? '',
+            portfolio: firma.portfolio ?? '',
+            opis: firma.opis ?? '',
+            paketIds: firma.paketIds ?? [],
+        });
+
+        setPrikaziDekoraterskaFirmaFormu(true);
+    }
+
+    function handleOdustaniDekoraterskaFirma() {
+        if (isSaving) {
+            return;
+        }
+
+        setPrikaziDekoraterskaFirmaFormu(false);
+        setDekoraterskaFirmaZaIzmenu(null);
+        setActionError('');
+    }
+
+    async function handleDekoraterskaFirmaSubmit(event) {
+        event.preventDefault();
+
+        if (
+            dekoraterskaFirmaFormData.paketIds.length === 0
+        ) {
+            setActionError(
+                'Izaberite najmanje jedan paket.',
+            );
+            return;
+        }
+
+        setIsSaving(true);
+        setActionError('');
+
+        try {
+            if (dekoraterskaFirmaZaIzmenu) {
+                const izmenjenaFirma =
+                    await updateDekoraterskaFirma(
+                        restoranId,
+                        dekoraterskaFirmaZaIzmenu.uslugaId,
+                        dekoraterskaFirmaFormData,
+                    );
+
+                setDekoraterskeFirme((prev) =>
+                    prev.map((firma) =>
+                        firma.uslugaId ===
+                            izmenjenaFirma.uslugaId
+                            ? izmenjenaFirma
+                            : firma,
+                    ),
+                );
+            } else {
+                const novaFirma =
+                    await addDekoraterskaFirma(
+                        restoranId,
+                        dekoraterskaFirmaFormData,
+                    );
+
+                setDekoraterskeFirme((prev) => [
+                    ...prev,
+                    novaFirma,
+                ]);
+            }
+
+            setPrikaziDekoraterskaFirmaFormu(false);
+            setDekoraterskaFirmaZaIzmenu(null);
+        } catch (error) {
+            setActionError(error.message);
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
+    async function handleObrisiDekoraterskuFirmu() {
+        if (!dekoraterskaFirmaZaBrisanje) {
+            return;
+        }
+
+        setDeleteLoading(true);
+        setActionError('');
+
+        try {
+            await deleteDekoraterskaFirma(
+                restoranId,
+                dekoraterskaFirmaZaBrisanje.uslugaId,
+            );
+
+            setDekoraterskeFirme((prev) =>
+                prev.filter(
+                    (firma) =>
+                        firma.uslugaId !==
+                        dekoraterskaFirmaZaBrisanje.uslugaId,
+                ),
+            );
+
+            setDekoraterskaFirmaZaBrisanje(null);
         } catch (error) {
             setActionError(error.message);
         } finally {
@@ -734,7 +954,17 @@ function UpravljanjePonudomPage() {
                             </div>
                         </button>
 
-                        <div className="upravljanje-nav-item disabled">
+                        <button
+                            type="button"
+                            className={
+                                aktivnaSekcija === 'DEKORATERI'
+                                    ? 'upravljanje-nav-item aktivan'
+                                    : 'upravljanje-nav-item'
+                            }
+                            onClick={() =>
+                                promeniSekciju('DEKORATERI')
+                            }
+                        >
                             <div>
                                 <strong>
                                     Dekoraterske firme
@@ -744,7 +974,7 @@ function UpravljanjePonudomPage() {
                                     Upravljanje dekoraterskim firmama
                                 </small>
                             </div>
-                        </div>
+                        </button>
 
                         <button
                             type="button"
@@ -783,7 +1013,9 @@ function UpravljanjePonudomPage() {
 
                     <section className="upravljanje-content">
 
-                        {/* PAKETI */}
+                        {/* =========================
+                            PAKETI
+                        ========================= */}
 
                         {aktivnaSekcija === 'PAKETI' && (
                             <>
@@ -887,7 +1119,9 @@ function UpravljanjePonudomPage() {
                             </>
                         )}
 
-                        {/* KETERING */}
+                        {/* =========================
+                            KETERING
+                        ========================= */}
 
                         {aktivnaSekcija === 'KETERING' && (
                             <>
@@ -1030,7 +1264,156 @@ function UpravljanjePonudomPage() {
                             </>
                         )}
 
-                        {/* FOTOGRAFI */}
+                        {/* =========================
+                            DEKORATERSKE FIRME
+                        ========================= */}
+
+                        {aktivnaSekcija === 'DEKORATERI' && (
+                            <>
+                                <div className="management-section-header">
+                                    <div>
+                                        <span>
+                                            Ponuda restorana
+                                        </span>
+
+                                        <h2>
+                                            Dekoraterske firme
+                                        </h2>
+
+                                        <p>
+                                            Dodavanje, izmena i brisanje
+                                            dekoraterskih firmi koje mogu
+                                            biti deo ponude restorana.
+                                        </p>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        className="management-primary-button"
+                                        onClick={
+                                            handleDodajDekoraterskuFirmu
+                                        }
+                                    >
+                                        + Dodaj dekoratersku firmu
+                                    </button>
+                                </div>
+
+                                {dekoraterskeFirme.length === 0 ? (
+                                    <div className="management-empty">
+                                        <h3>
+                                            Nema dekoraterskih firmi
+                                        </h3>
+
+                                        <p>
+                                            Ovaj restoran trenutno nema
+                                            dekoraterske firme u ponudi.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="management-table-wrapper">
+                                        <table className="management-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Naziv</th>
+                                                    <th>Telefon</th>
+                                                    <th>Opis</th>
+                                                    <th>Paketi</th>
+                                                    <th>Akcije</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                {dekoraterskeFirme.map(
+                                                    (firma) => (
+                                                        <tr
+                                                            key={
+                                                                firma.uslugaId
+                                                            }
+                                                        >
+                                                            <td>
+                                                                <strong>
+                                                                    {
+                                                                        firma.naziv
+                                                                    }
+                                                                </strong>
+
+                                                                {firma.portfolio && (
+                                                                    <div>
+                                                                        <a
+                                                                            href={
+                                                                                firma.portfolio
+                                                                            }
+                                                                            target="_blank"
+                                                                            rel="noreferrer"
+                                                                        >
+                                                                            Portfolio
+                                                                        </a>
+                                                                    </div>
+                                                                )}
+                                                            </td>
+
+                                                            <td>
+                                                                {
+                                                                    firma.telefon
+                                                                }
+                                                            </td>
+
+                                                            <td className="management-description-cell">
+                                                                {firma.opis ||
+                                                                    '-'}
+                                                            </td>
+
+                                                            <td>
+                                                                {getNaziviPaketa(
+                                                                    firma.paketIds ??
+                                                                    [],
+                                                                ) || '-'}
+                                                            </td>
+
+                                                            <td>
+                                                                <div className="management-row-actions">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="management-edit-button"
+                                                                        onClick={() =>
+                                                                            handleIzmeniDekoraterskuFirmu(
+                                                                                firma,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Izmeni
+                                                                    </button>
+
+                                                                    <button
+                                                                        type="button"
+                                                                        className="management-delete-button"
+                                                                        onClick={() => {
+                                                                            setActionError(
+                                                                                '',
+                                                                            );
+
+                                                                            setDekoraterskaFirmaZaBrisanje(
+                                                                                firma,
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        Obriši
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ),
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {/* =========================
+                            FOTOGRAFI
+                        ========================= */}
 
                         {aktivnaSekcija === 'FOTOGRAFI' && (
                             <>
@@ -1185,9 +1568,11 @@ function UpravljanjePonudomPage() {
                         {actionError &&
                             !prikaziPaketFormu &&
                             !prikaziKeteringFormu &&
+                            !prikaziDekoraterskaFirmaFormu &&
                             !prikaziFotografFormu &&
                             !paketZaBrisanje &&
                             !keteringZaBrisanje &&
+                            !dekoraterskaFirmaZaBrisanje &&
                             !fotografZaBrisanje && (
                                 <div className="management-error management-error-bottom">
                                     {actionError}
@@ -1409,9 +1794,7 @@ function UpravljanjePonudomPage() {
                                     <div className="management-checkbox-list">
                                         {paketi.map((paket) => (
                                             <label
-                                                key={
-                                                    paket.paketId
-                                                }
+                                                key={paket.paketId}
                                                 className="management-checkbox-item"
                                             >
                                                 <input
@@ -1429,9 +1812,7 @@ function UpravljanjePonudomPage() {
                                                 />
 
                                                 <span>
-                                                    {
-                                                        paket.naziv
-                                                    }
+                                                    {paket.naziv}
                                                 </span>
                                             </label>
                                         ))}
@@ -1445,9 +1826,7 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-secondary-button"
                                 disabled={isSaving}
-                                onClick={
-                                    handleOdustaniKetering
-                                }
+                                onClick={handleOdustaniKetering}
                             >
                                 Odustani
                             </button>
@@ -1462,6 +1841,185 @@ function UpravljanjePonudomPage() {
                                     : keteringZaIzmenu
                                         ? 'Sačuvaj izmene'
                                         : 'Dodaj ketering firmu'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            {/* =========================
+                MODAL - DEKORATERSKA FIRMA
+            ========================= */}
+
+            {prikaziDekoraterskaFirmaFormu && (
+                <div className="management-modal-overlay">
+                    <form
+                        className="management-form-modal"
+                        onSubmit={
+                            handleDekoraterskaFirmaSubmit
+                        }
+                    >
+                        <div className="management-form-header">
+                            <span>
+                                {dekoraterskaFirmaZaIzmenu
+                                    ? 'Izmena'
+                                    : 'Dodavanje'}
+                            </span>
+
+                            <h2>
+                                {dekoraterskaFirmaZaIzmenu
+                                    ? 'Izmena dekoraterske firme'
+                                    : 'Nova dekoraterska firma'}
+                            </h2>
+
+                            <p>
+                                Unesite podatke o dekoraterskoj
+                                firmi i izaberite pakete u kojima
+                                će biti dostupna.
+                            </p>
+                        </div>
+
+                        {actionError && (
+                            <div className="management-error">
+                                {actionError}
+                            </div>
+                        )}
+
+                        <div className="management-form-grid">
+                            <div className="management-field">
+                                <label htmlFor="dekoraterNaziv">
+                                    Naziv
+                                </label>
+
+                                <input
+                                    id="dekoraterNaziv"
+                                    name="naziv"
+                                    value={
+                                        dekoraterskaFirmaFormData.naziv
+                                    }
+                                    onChange={
+                                        handleDekoraterskaFirmaChange
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div className="management-field">
+                                <label htmlFor="dekoraterTelefon">
+                                    Telefon
+                                </label>
+
+                                <input
+                                    id="dekoraterTelefon"
+                                    name="telefon"
+                                    value={
+                                        dekoraterskaFirmaFormData.telefon
+                                    }
+                                    onChange={
+                                        handleDekoraterskaFirmaChange
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div className="management-field management-full-field">
+                                <label htmlFor="dekoraterPortfolio">
+                                    Portfolio
+                                </label>
+
+                                <input
+                                    id="dekoraterPortfolio"
+                                    name="portfolio"
+                                    value={
+                                        dekoraterskaFirmaFormData.portfolio
+                                    }
+                                    onChange={
+                                        handleDekoraterskaFirmaChange
+                                    }
+                                    placeholder="https://..."
+                                />
+                            </div>
+
+                            <div className="management-field management-full-field">
+                                <label htmlFor="dekoraterOpis">
+                                    Opis
+                                </label>
+
+                                <textarea
+                                    id="dekoraterOpis"
+                                    name="opis"
+                                    rows="4"
+                                    value={
+                                        dekoraterskaFirmaFormData.opis
+                                    }
+                                    onChange={
+                                        handleDekoraterskaFirmaChange
+                                    }
+                                />
+                            </div>
+
+                            <div className="management-field management-full-field">
+                                <label>
+                                    Paketi
+                                </label>
+
+                                {paketi.length === 0 ? (
+                                    <div className="management-empty">
+                                        Restoran nema dostupnih paketa.
+                                    </div>
+                                ) : (
+                                    <div className="management-checkbox-list">
+                                        {paketi.map((paket) => (
+                                            <label
+                                                key={paket.paketId}
+                                                className="management-checkbox-item"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        dekoraterskaFirmaFormData.paketIds.includes(
+                                                            paket.paketId,
+                                                        )
+                                                    }
+                                                    onChange={() =>
+                                                        handleDekoraterskaFirmaPaketCheckbox(
+                                                            paket.paketId,
+                                                        )
+                                                    }
+                                                />
+
+                                                <span>
+                                                    {paket.naziv}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="management-form-actions">
+                            <button
+                                type="button"
+                                className="management-secondary-button"
+                                disabled={isSaving}
+                                onClick={
+                                    handleOdustaniDekoraterskaFirma
+                                }
+                            >
+                                Odustani
+                            </button>
+
+                            <button
+                                type="submit"
+                                className="management-primary-button"
+                                disabled={isSaving}
+                            >
+                                {isSaving
+                                    ? 'Čuvanje...'
+                                    : dekoraterskaFirmaZaIzmenu
+                                        ? 'Sačuvaj izmene'
+                                        : 'Dodaj dekoratersku firmu'}
                             </button>
                         </div>
                     </form>
@@ -1619,9 +2177,7 @@ function UpravljanjePonudomPage() {
                                     <div className="management-checkbox-list">
                                         {paketi.map((paket) => (
                                             <label
-                                                key={
-                                                    paket.paketId
-                                                }
+                                                key={paket.paketId}
                                                 className="management-checkbox-item"
                                             >
                                                 <input
@@ -1639,9 +2195,7 @@ function UpravljanjePonudomPage() {
                                                 />
 
                                                 <span>
-                                                    {
-                                                        paket.naziv
-                                                    }
+                                                    {paket.naziv}
                                                 </span>
                                             </label>
                                         ))}
@@ -1655,9 +2209,7 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-secondary-button"
                                 disabled={isSaving}
-                                onClick={
-                                    handleOdustaniFotograf
-                                }
+                                onClick={handleOdustaniFotograf}
                             >
                                 Odustani
                             </button>
@@ -1678,6 +2230,9 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
+            {/* =========================
+                BRISANJE PAKETA
+            ========================= */}
 
             {paketZaBrisanje && (
                 <div className="management-modal-overlay">
@@ -1733,7 +2288,9 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-   
+            {/* =========================
+                BRISANJE KETERING FIRME
+            ========================= */}
 
             {keteringZaBrisanje && (
                 <div className="management-modal-overlay">
@@ -1778,8 +2335,70 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-danger-button"
                                 disabled={deleteLoading}
+                                onClick={handleObrisiKetering}
+                            >
+                                {deleteLoading
+                                    ? 'Brisanje...'
+                                    : 'Obriši'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* =========================
+                BRISANJE DEKORATERSKE FIRME
+            ========================= */}
+
+            {dekoraterskaFirmaZaBrisanje && (
+                <div className="management-modal-overlay">
+                    <div className="management-confirm-modal">
+                        <div className="management-confirm-icon">
+                            !
+                        </div>
+
+                        <h2>
+                            Brisanje dekoraterske firme
+                        </h2>
+
+                        <p>
+                            Da li ste sigurni da želite da
+                            uklonite{' '}
+                            <strong>
+                                {
+                                    dekoraterskaFirmaZaBrisanje.naziv
+                                }
+                            </strong>{' '}
+                            iz ponude restorana?
+                        </p>
+
+                        {actionError && (
+                            <div className="management-error">
+                                {actionError}
+                            </div>
+                        )}
+
+                        <div className="management-confirm-actions">
+                            <button
+                                type="button"
+                                className="management-secondary-button"
+                                disabled={deleteLoading}
+                                onClick={() => {
+                                    setDekoraterskaFirmaZaBrisanje(
+                                        null,
+                                    );
+                                    setActionError('');
+                                }}
+                            >
+                                Odustani
+                            </button>
+
+                            <button
+                                type="button"
+                                className="management-danger-button"
+                                disabled={deleteLoading}
                                 onClick={
-                                    handleObrisiKetering
+                                    handleObrisiDekoraterskuFirmu
                                 }
                             >
                                 {deleteLoading
@@ -1791,7 +2410,9 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            
+            {/* =========================
+                BRISANJE FOTOGRAFA
+            ========================= */}
 
             {fotografZaBrisanje && (
                 <div className="management-modal-overlay">
@@ -1836,9 +2457,7 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-danger-button"
                                 disabled={deleteLoading}
-                                onClick={
-                                    handleObrisiFotograf
-                                }
+                                onClick={handleObrisiFotograf}
                             >
                                 {deleteLoading
                                     ? 'Brisanje...'

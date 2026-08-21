@@ -1,10 +1,10 @@
 ﻿const API_URL = import.meta.env.VITE_API_URL;
 
-export async function getKeteringByRestoranId(restoranId) {
+export async function getDekoraterskeFirmeByRestoranId(restoranId) {
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Ketering/restoran/${restoranId}`,
+        `${API_URL}/api/DekoraterskaFirma/restoran/${restoranId}`,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -18,27 +18,27 @@ export async function getKeteringByRestoranId(restoranId) {
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za pregled ketering firmi.',
+            'Nemate dozvolu za pregled dekoraterskih firmi.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom učitavanja ketering firmi.',
+            'Došlo je do greške prilikom učitavanja dekoraterskih firmi.',
         );
     }
 
     return response.json();
 }
 
-export async function addKetering(
+export async function addDekoraterskaFirma(
     restoranId,
     data,
 ) {
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Ketering/restoran/${restoranId}`,
+        `${API_URL}/api/DekoraterskaFirma/restoran/${restoranId}`,
         {
             method: 'POST',
             headers: {
@@ -55,7 +55,7 @@ export async function addKetering(
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za dodavanje ketering firme.',
+            'Nemate dozvolu za dodavanje dekoraterske firme.',
         );
     }
 
@@ -64,20 +64,20 @@ export async function addKetering(
 
         throw new Error(
             message ||
-            'Podaci ketering firme nisu ispravni.',
+            'Podaci dekoraterske firme nisu ispravni.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom dodavanja ketering firme.',
+            'Došlo je do greške prilikom dodavanja dekoraterske firme.',
         );
     }
 
     return response.json();
 }
 
-export async function updateKetering(
+export async function updateDekoraterskaFirma(
     restoranId,
     uslugaId,
     data,
@@ -85,7 +85,7 @@ export async function updateKetering(
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Ketering/restoran/${restoranId}/${uslugaId}`,
+        `${API_URL}/api/DekoraterskaFirma/restoran/${restoranId}/${uslugaId}`,
         {
             method: 'PUT',
             headers: {
@@ -102,13 +102,13 @@ export async function updateKetering(
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za izmenu ketering firme.',
+            'Nemate dozvolu za izmenu dekoraterske firme.',
         );
     }
 
     if (response.status === 404) {
         throw new Error(
-            'Ketering firma nije pronađena.',
+            'Dekoraterska firma nije pronađena.',
         );
     }
 
@@ -117,27 +117,27 @@ export async function updateKetering(
 
         throw new Error(
             message ||
-            'Podaci ketering firme nisu ispravni.',
+            'Podaci dekoraterske firme nisu ispravni.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom izmene ketering firme.',
+            'Došlo je do greške prilikom izmene dekoraterske firme.',
         );
     }
 
     return response.json();
 }
 
-export async function deleteKetering(
+export async function deleteDekoraterskaFirma(
     restoranId,
     uslugaId,
 ) {
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Ketering/restoran/${restoranId}/${uslugaId}`,
+        `${API_URL}/api/DekoraterskaFirma/restoran/${restoranId}/${uslugaId}`,
         {
             method: 'DELETE',
             headers: {
@@ -152,19 +152,19 @@ export async function deleteKetering(
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za brisanje ketering firme.',
+            'Nemate dozvolu za brisanje dekoraterske firme.',
         );
     }
 
     if (response.status === 404) {
         throw new Error(
-            'Ketering firma nije pronađena.',
+            'Dekoraterska firma nije pronađena.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom brisanja ketering firme.',
+            'Došlo je do greške prilikom brisanja dekoraterske firme.',
         );
     }
 }

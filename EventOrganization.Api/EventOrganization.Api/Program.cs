@@ -35,6 +35,8 @@ builder.Services.AddScoped<FotografRepository>();
 builder.Services.AddScoped<FotografService>();
 builder.Services.AddScoped<KeteringRepository>();
 builder.Services.AddScoped<KeteringService>();
+builder.Services.AddScoped<DekoraterskaFirmaRepository>();
+builder.Services.AddScoped<DekoraterskaFirmaService>();
 
 builder.Services.AddCors(options =>
 {
