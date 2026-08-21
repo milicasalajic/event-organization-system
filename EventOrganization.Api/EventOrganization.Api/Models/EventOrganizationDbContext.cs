@@ -249,7 +249,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("MUZICKI_IZVODJAC");
 
             entity.Property(e => e.UslugaId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("USLUGA_ID");
 

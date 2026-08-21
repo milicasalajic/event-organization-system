@@ -31,6 +31,13 @@ import {
     updateDekoraterskaFirma,
 } from '../api/dekoraterskaFirmaApi';
 
+import {
+    addMuzickiIzvodjac,
+    deleteMuzickiIzvodjac,
+    getMuzickiIzvodjaciByRestoranId,
+    updateMuzickiIzvodjac,
+} from '../api/muzickiIzvodjacApi';
+
 import './UpravljanjePonudomPage.css';
 
 function UpravljanjePonudomPage() {
@@ -40,8 +47,9 @@ function UpravljanjePonudomPage() {
     const [restoran, setRestoran] = useState(null);
     const [paketi, setPaketi] = useState([]);
     const [keteringFirme, setKeteringFirme] = useState([]);
-    const [fotografi, setFotografi] = useState([]);
     const [dekoraterskeFirme, setDekoraterskeFirme] = useState([]);
+    const [fotografi, setFotografi] = useState([]);
+    const [muzickiIzvodjaci, setMuzickiIzvodjaci] = useState([]);
 
     const [aktivnaSekcija, setAktivnaSekcija] = useState('PAKETI');
 
@@ -133,6 +141,36 @@ function UpravljanjePonudomPage() {
     });
 
     // =========================
+    // MUZIČKI IZVOĐAČ
+    // =========================
+
+    const [
+        prikaziMuzickiIzvodjacFormu,
+        setPrikaziMuzickiIzvodjacFormu,
+    ] = useState(false);
+
+    const [
+        muzickiIzvodjacZaIzmenu,
+        setMuzickiIzvodjacZaIzmenu,
+    ] = useState(null);
+
+    const [
+        muzickiIzvodjacZaBrisanje,
+        setMuzickiIzvodjacZaBrisanje,
+    ] = useState(null);
+
+    const [
+        muzickiIzvodjacFormData,
+        setMuzickiIzvodjacFormData,
+    ] = useState({
+        naziv: '',
+        telefon: '',
+        portfolio: '',
+        tipMuzicara: '',
+        paketIds: [],
+    });
+
+    // =========================
     // UČITAVANJE
     // =========================
 
@@ -148,12 +186,14 @@ function UpravljanjePonudomPage() {
                     keteringResult,
                     dekoraterskeFirmeResult,
                     fotografiResult,
+                    muzickiIzvodjaciResult,
                 ] = await Promise.all([
                     getRestoranById(restoranId),
                     getPaketiByRestoranId(restoranId),
                     getKeteringByRestoranId(restoranId),
                     getDekoraterskeFirmeByRestoranId(restoranId),
                     getFotografiByRestoranId(restoranId),
+                    getMuzickiIzvodjaciByRestoranId(restoranId),
                 ]);
 
                 setRestoran(restoranResult);
@@ -161,6 +201,7 @@ function UpravljanjePonudomPage() {
                 setKeteringFirme(keteringResult);
                 setDekoraterskeFirme(dekoraterskeFirmeResult);
                 setFotografi(fotografiResult);
+                setMuzickiIzvodjaci(muzickiIzvodjaciResult);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -310,8 +351,7 @@ function UpravljanjePonudomPage() {
             setPaketi((prev) =>
                 prev.filter(
                     (paket) =>
-                        paket.paketId !==
-                        obrisaniPaketId,
+                        paket.paketId !== obrisaniPaketId,
                 ),
             );
 
@@ -342,6 +382,17 @@ function UpravljanjePonudomPage() {
                     ...fotograf,
                     paketIds:
                         fotograf.paketIds?.filter(
+                            (id) =>
+                                id !== obrisaniPaketId,
+                        ) ?? [],
+                })),
+            );
+
+            setMuzickiIzvodjaci((prev) =>
+                prev.map((izvodjac) => ({
+                    ...izvodjac,
+                    paketIds:
+                        izvodjac.paketIds?.filter(
                             (id) =>
                                 id !== obrisaniPaketId,
                         ) ?? [],
@@ -585,9 +636,7 @@ function UpravljanjePonudomPage() {
     async function handleDekoraterskaFirmaSubmit(event) {
         event.preventDefault();
 
-        if (
-            dekoraterskaFirmaFormData.paketIds.length === 0
-        ) {
+        if (dekoraterskaFirmaFormData.paketIds.length === 0) {
             setActionError(
                 'Izaberite najmanje jedan paket.',
             );
@@ -832,6 +881,160 @@ function UpravljanjePonudomPage() {
     }
 
     // =========================
+    // MUZIČKI IZVOĐAČI
+    // =========================
+
+    function handleMuzickiIzvodjacChange(event) {
+        const { name, value } = event.target;
+
+        setMuzickiIzvodjacFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    }
+
+    function handleMuzickiIzvodjacPaketCheckbox(paketId) {
+        setMuzickiIzvodjacFormData((prev) => {
+            const izabran =
+                prev.paketIds.includes(paketId);
+
+            return {
+                ...prev,
+                paketIds: izabran
+                    ? prev.paketIds.filter(
+                        (id) => id !== paketId,
+                    )
+                    : [
+                        ...prev.paketIds,
+                        paketId,
+                    ],
+            };
+        });
+    }
+
+    function handleDodajMuzickogIzvodjaca() {
+        setActionError('');
+        setMuzickiIzvodjacZaIzmenu(null);
+
+        setMuzickiIzvodjacFormData({
+            naziv: '',
+            telefon: '',
+            portfolio: '',
+            tipMuzicara: '',
+            paketIds: [],
+        });
+
+        setPrikaziMuzickiIzvodjacFormu(true);
+    }
+
+    function handleIzmeniMuzickogIzvodjaca(izvodjac) {
+        setActionError('');
+        setMuzickiIzvodjacZaIzmenu(izvodjac);
+
+        setMuzickiIzvodjacFormData({
+            naziv: izvodjac.naziv ?? '',
+            telefon: izvodjac.telefon ?? '',
+            portfolio: izvodjac.portfolio ?? '',
+            tipMuzicara: izvodjac.tipMuzicara ?? '',
+            paketIds: izvodjac.paketIds ?? [],
+        });
+
+        setPrikaziMuzickiIzvodjacFormu(true);
+    }
+
+    function handleOdustaniMuzickiIzvodjac() {
+        if (isSaving) {
+            return;
+        }
+
+        setPrikaziMuzickiIzvodjacFormu(false);
+        setMuzickiIzvodjacZaIzmenu(null);
+        setActionError('');
+    }
+
+    async function handleMuzickiIzvodjacSubmit(event) {
+        event.preventDefault();
+
+        if (muzickiIzvodjacFormData.paketIds.length === 0) {
+            setActionError(
+                'Izaberite najmanje jedan paket.',
+            );
+            return;
+        }
+
+        setIsSaving(true);
+        setActionError('');
+
+        try {
+            if (muzickiIzvodjacZaIzmenu) {
+                const izmenjenIzvodjac =
+                    await updateMuzickiIzvodjac(
+                        restoranId,
+                        muzickiIzvodjacZaIzmenu.uslugaId,
+                        muzickiIzvodjacFormData,
+                    );
+
+                setMuzickiIzvodjaci((prev) =>
+                    prev.map((izvodjac) =>
+                        izvodjac.uslugaId ===
+                            izmenjenIzvodjac.uslugaId
+                            ? izmenjenIzvodjac
+                            : izvodjac,
+                    ),
+                );
+            } else {
+                const noviIzvodjac =
+                    await addMuzickiIzvodjac(
+                        restoranId,
+                        muzickiIzvodjacFormData,
+                    );
+
+                setMuzickiIzvodjaci((prev) => [
+                    ...prev,
+                    noviIzvodjac,
+                ]);
+            }
+
+            setPrikaziMuzickiIzvodjacFormu(false);
+            setMuzickiIzvodjacZaIzmenu(null);
+        } catch (error) {
+            setActionError(error.message);
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
+    async function handleObrisiMuzickogIzvodjaca() {
+        if (!muzickiIzvodjacZaBrisanje) {
+            return;
+        }
+
+        setDeleteLoading(true);
+        setActionError('');
+
+        try {
+            await deleteMuzickiIzvodjac(
+                restoranId,
+                muzickiIzvodjacZaBrisanje.uslugaId,
+            );
+
+            setMuzickiIzvodjaci((prev) =>
+                prev.filter(
+                    (izvodjac) =>
+                        izvodjac.uslugaId !==
+                        muzickiIzvodjacZaBrisanje.uslugaId,
+                ),
+            );
+
+            setMuzickiIzvodjacZaBrisanje(null);
+        } catch (error) {
+            setActionError(error.message);
+        } finally {
+            setDeleteLoading(false);
+        }
+    }
+
+    // =========================
     // LOADING / ERROR
     // =========================
 
@@ -998,7 +1201,19 @@ function UpravljanjePonudomPage() {
                             </div>
                         </button>
 
-                        <div className="upravljanje-nav-item disabled">
+                        <button
+                            type="button"
+                            className={
+                                aktivnaSekcija === 'MUZICKI_IZVODJACI'
+                                    ? 'upravljanje-nav-item aktivan'
+                                    : 'upravljanje-nav-item'
+                            }
+                            onClick={() =>
+                                promeniSekciju(
+                                    'MUZICKI_IZVODJACI',
+                                )
+                            }
+                        >
                             <div>
                                 <strong>
                                     Muzički izvođači
@@ -1008,14 +1223,12 @@ function UpravljanjePonudomPage() {
                                     Upravljanje izvođačima
                                 </small>
                             </div>
-                        </div>
+                        </button>
                     </aside>
 
                     <section className="upravljanje-content">
 
-                        {/* =========================
-                            PAKETI
-                        ========================= */}
+                        {/* PAKETI */}
 
                         {aktivnaSekcija === 'PAKETI' && (
                             <>
@@ -1025,9 +1238,7 @@ function UpravljanjePonudomPage() {
                                             Ponuda restorana
                                         </span>
 
-                                        <h2>
-                                            Paketi
-                                        </h2>
+                                        <h2>Paketi</h2>
 
                                         <p>
                                             Dodavanje, izmena i brisanje
@@ -1046,9 +1257,7 @@ function UpravljanjePonudomPage() {
 
                                 {paketi.length === 0 ? (
                                     <div className="management-empty">
-                                        <h3>
-                                            Nema paketa
-                                        </h3>
+                                        <h3>Nema paketa</h3>
 
                                         <p>
                                             Ovaj restoran trenutno nema
@@ -1068,15 +1277,22 @@ function UpravljanjePonudomPage() {
 
                                             <tbody>
                                                 {paketi.map((paket) => (
-                                                    <tr key={paket.paketId}>
+                                                    <tr
+                                                        key={
+                                                            paket.paketId
+                                                        }
+                                                    >
                                                         <td>
                                                             <strong>
-                                                                {paket.naziv}
+                                                                {
+                                                                    paket.naziv
+                                                                }
                                                             </strong>
                                                         </td>
 
                                                         <td className="management-description-cell">
-                                                            {paket.opis || '-'}
+                                                            {paket.opis ||
+                                                                '-'}
                                                         </td>
 
                                                         <td>
@@ -1100,7 +1316,6 @@ function UpravljanjePonudomPage() {
                                                                         setActionError(
                                                                             '',
                                                                         );
-
                                                                         setPaketZaBrisanje(
                                                                             paket,
                                                                         );
@@ -1119,9 +1334,7 @@ function UpravljanjePonudomPage() {
                             </>
                         )}
 
-                        {/* =========================
-                            KETERING
-                        ========================= */}
+                        {/* KETERING */}
 
                         {aktivnaSekcija === 'KETERING' && (
                             <>
@@ -1264,9 +1477,7 @@ function UpravljanjePonudomPage() {
                             </>
                         )}
 
-                        {/* =========================
-                            DEKORATERSKE FIRME
-                        ========================= */}
+                        {/* DEKORATERSKE FIRME */}
 
                         {aktivnaSekcija === 'DEKORATERI' && (
                             <>
@@ -1411,9 +1622,7 @@ function UpravljanjePonudomPage() {
                             </>
                         )}
 
-                        {/* =========================
-                            FOTOGRAFI
-                        ========================= */}
+                        {/* FOTOGRAFI */}
 
                         {aktivnaSekcija === 'FOTOGRAFI' && (
                             <>
@@ -1565,15 +1774,165 @@ function UpravljanjePonudomPage() {
                             </>
                         )}
 
+                        {/* MUZIČKI IZVOĐAČI */}
+
+                        {aktivnaSekcija ===
+                            'MUZICKI_IZVODJACI' && (
+                                <>
+                                    <div className="management-section-header">
+                                        <div>
+                                            <span>
+                                                Ponuda restorana
+                                            </span>
+
+                                            <h2>
+                                                Muzički izvođači
+                                            </h2>
+
+                                            <p>
+                                                Dodavanje, izmena i brisanje
+                                                muzičkih izvođača koji se mogu
+                                                angažovati prilikom
+                                                organizacije događaja.
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            className="management-primary-button"
+                                            onClick={
+                                                handleDodajMuzickogIzvodjaca
+                                            }
+                                        >
+                                            + Dodaj izvođača
+                                        </button>
+                                    </div>
+
+                                    {muzickiIzvodjaci.length === 0 ? (
+                                        <div className="management-empty">
+                                            <h3>
+                                                Nema muzičkih izvođača
+                                            </h3>
+
+                                            <p>
+                                                Ovaj restoran trenutno nema
+                                                muzičke izvođače u ponudi.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="management-table-wrapper">
+                                            <table className="management-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Naziv</th>
+                                                        <th>Telefon</th>
+                                                        <th>Tip</th>
+                                                        <th>Paketi</th>
+                                                        <th>Akcije</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    {muzickiIzvodjaci.map(
+                                                        (izvodjac) => (
+                                                            <tr
+                                                                key={
+                                                                    izvodjac.uslugaId
+                                                                }
+                                                            >
+                                                                <td>
+                                                                    <strong>
+                                                                        {
+                                                                            izvodjac.naziv
+                                                                        }
+                                                                    </strong>
+
+                                                                    {izvodjac.portfolio && (
+                                                                        <div>
+                                                                            <a
+                                                                                href={
+                                                                                    izvodjac.portfolio
+                                                                                }
+                                                                                target="_blank"
+                                                                                rel="noreferrer"
+                                                                            >
+                                                                                Portfolio
+                                                                            </a>
+                                                                        </div>
+                                                                    )}
+                                                                </td>
+
+                                                                <td>
+                                                                    {
+                                                                        izvodjac.telefon
+                                                                    }
+                                                                </td>
+
+                                                                <td>
+                                                                    {
+                                                                        izvodjac.tipMuzicara
+                                                                    }
+                                                                </td>
+
+                                                                <td>
+                                                                    {getNaziviPaketa(
+                                                                        izvodjac.paketIds ??
+                                                                        [],
+                                                                    ) || '-'}
+                                                                </td>
+
+                                                                <td>
+                                                                    <div className="management-row-actions">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="management-edit-button"
+                                                                            onClick={() =>
+                                                                                handleIzmeniMuzickogIzvodjaca(
+                                                                                    izvodjac,
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            Izmeni
+                                                                        </button>
+
+                                                                        <button
+                                                                            type="button"
+                                                                            className="management-delete-button"
+                                                                            onClick={() => {
+                                                                                setActionError(
+                                                                                    '',
+                                                                                );
+
+                                                                                setMuzickiIzvodjacZaBrisanje(
+                                                                                    izvodjac,
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            Obriši
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        ),
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
                         {actionError &&
                             !prikaziPaketFormu &&
                             !prikaziKeteringFormu &&
                             !prikaziDekoraterskaFirmaFormu &&
                             !prikaziFotografFormu &&
+                            !prikaziMuzickiIzvodjacFormu &&
                             !paketZaBrisanje &&
                             !keteringZaBrisanje &&
                             !dekoraterskaFirmaZaBrisanje &&
-                            !fotografZaBrisanje && (
+                            !fotografZaBrisanje &&
+                            !muzickiIzvodjacZaBrisanje && (
                                 <div className="management-error management-error-bottom">
                                     {actionError}
                                 </div>
@@ -1582,9 +1941,7 @@ function UpravljanjePonudomPage() {
                 </div>
             </main>
 
-            {/* =========================
-                MODAL - PAKET
-            ========================= */}
+            {/* MODAL - PAKET */}
 
             {prikaziPaketFormu && (
                 <div className="management-modal-overlay">
@@ -1672,9 +2029,7 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            {/* =========================
-                MODAL - KETERING
-            ========================= */}
+            {/* MODAL - KETERING */}
 
             {prikaziKeteringFormu && (
                 <div className="management-modal-overlay">
@@ -1717,12 +2072,8 @@ function UpravljanjePonudomPage() {
                                 <input
                                     id="keteringNaziv"
                                     name="naziv"
-                                    value={
-                                        keteringFormData.naziv
-                                    }
-                                    onChange={
-                                        handleKeteringChange
-                                    }
+                                    value={keteringFormData.naziv}
+                                    onChange={handleKeteringChange}
                                     required
                                 />
                             </div>
@@ -1735,12 +2086,8 @@ function UpravljanjePonudomPage() {
                                 <input
                                     id="keteringTelefon"
                                     name="telefon"
-                                    value={
-                                        keteringFormData.telefon
-                                    }
-                                    onChange={
-                                        handleKeteringChange
-                                    }
+                                    value={keteringFormData.telefon}
+                                    onChange={handleKeteringChange}
                                     required
                                 />
                             </div>
@@ -1753,12 +2100,8 @@ function UpravljanjePonudomPage() {
                                 <input
                                     id="keteringPortfolio"
                                     name="portfolio"
-                                    value={
-                                        keteringFormData.portfolio
-                                    }
-                                    onChange={
-                                        handleKeteringChange
-                                    }
+                                    value={keteringFormData.portfolio}
+                                    onChange={handleKeteringChange}
                                     placeholder="https://..."
                                 />
                             </div>
@@ -1772,52 +2115,38 @@ function UpravljanjePonudomPage() {
                                     id="keteringOpis"
                                     name="opis"
                                     rows="4"
-                                    value={
-                                        keteringFormData.opis
-                                    }
-                                    onChange={
-                                        handleKeteringChange
-                                    }
+                                    value={keteringFormData.opis}
+                                    onChange={handleKeteringChange}
                                 />
                             </div>
 
                             <div className="management-field management-full-field">
-                                <label>
-                                    Paketi
-                                </label>
+                                <label>Paketi</label>
 
-                                {paketi.length === 0 ? (
-                                    <div className="management-empty">
-                                        Restoran nema dostupnih paketa.
-                                    </div>
-                                ) : (
-                                    <div className="management-checkbox-list">
-                                        {paketi.map((paket) => (
-                                            <label
-                                                key={paket.paketId}
-                                                className="management-checkbox-item"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={
-                                                        keteringFormData.paketIds.includes(
-                                                            paket.paketId,
-                                                        )
-                                                    }
-                                                    onChange={() =>
-                                                        handleKeteringPaketCheckbox(
-                                                            paket.paketId,
-                                                        )
-                                                    }
-                                                />
+                                <div className="management-checkbox-list">
+                                    {paketi.map((paket) => (
+                                        <label
+                                            key={paket.paketId}
+                                            className="management-checkbox-item"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={
+                                                    keteringFormData.paketIds.includes(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                                onChange={() =>
+                                                    handleKeteringPaketCheckbox(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                            />
 
-                                                <span>
-                                                    {paket.naziv}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
+                                            <span>{paket.naziv}</span>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -1847,17 +2176,13 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            {/* =========================
-                MODAL - DEKORATERSKA FIRMA
-            ========================= */}
+            {/* MODAL - DEKORATERSKA FIRMA */}
 
             {prikaziDekoraterskaFirmaFormu && (
                 <div className="management-modal-overlay">
                     <form
                         className="management-form-modal"
-                        onSubmit={
-                            handleDekoraterskaFirmaSubmit
-                        }
+                        onSubmit={handleDekoraterskaFirmaSubmit}
                     >
                         <div className="management-form-header">
                             <span>
@@ -1873,9 +2198,9 @@ function UpravljanjePonudomPage() {
                             </h2>
 
                             <p>
-                                Unesite podatke o dekoraterskoj
-                                firmi i izaberite pakete u kojima
-                                će biti dostupna.
+                                Unesite podatke o dekoraterskoj firmi
+                                i izaberite pakete u kojima će biti
+                                dostupna.
                             </p>
                         </div>
 
@@ -1959,42 +2284,32 @@ function UpravljanjePonudomPage() {
                             </div>
 
                             <div className="management-field management-full-field">
-                                <label>
-                                    Paketi
-                                </label>
+                                <label>Paketi</label>
 
-                                {paketi.length === 0 ? (
-                                    <div className="management-empty">
-                                        Restoran nema dostupnih paketa.
-                                    </div>
-                                ) : (
-                                    <div className="management-checkbox-list">
-                                        {paketi.map((paket) => (
-                                            <label
-                                                key={paket.paketId}
-                                                className="management-checkbox-item"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={
-                                                        dekoraterskaFirmaFormData.paketIds.includes(
-                                                            paket.paketId,
-                                                        )
-                                                    }
-                                                    onChange={() =>
-                                                        handleDekoraterskaFirmaPaketCheckbox(
-                                                            paket.paketId,
-                                                        )
-                                                    }
-                                                />
+                                <div className="management-checkbox-list">
+                                    {paketi.map((paket) => (
+                                        <label
+                                            key={paket.paketId}
+                                            className="management-checkbox-item"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={
+                                                    dekoraterskaFirmaFormData.paketIds.includes(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                                onChange={() =>
+                                                    handleDekoraterskaFirmaPaketCheckbox(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                            />
 
-                                                <span>
-                                                    {paket.naziv}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
+                                            <span>{paket.naziv}</span>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -2026,9 +2341,7 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            {/* =========================
-                MODAL - FOTOGRAF
-            ========================= */}
+            {/* MODAL - FOTOGRAF */}
 
             {prikaziFotografFormu && (
                 <div className="management-modal-overlay">
@@ -2071,12 +2384,8 @@ function UpravljanjePonudomPage() {
                                 <input
                                     id="fotografNaziv"
                                     name="naziv"
-                                    value={
-                                        fotografFormData.naziv
-                                    }
-                                    onChange={
-                                        handleFotografChange
-                                    }
+                                    value={fotografFormData.naziv}
+                                    onChange={handleFotografChange}
                                     required
                                 />
                             </div>
@@ -2089,12 +2398,8 @@ function UpravljanjePonudomPage() {
                                 <input
                                     id="fotografTelefon"
                                     name="telefon"
-                                    value={
-                                        fotografFormData.telefon
-                                    }
-                                    onChange={
-                                        handleFotografChange
-                                    }
+                                    value={fotografFormData.telefon}
+                                    onChange={handleFotografChange}
                                     required
                                 />
                             </div>
@@ -2107,12 +2412,8 @@ function UpravljanjePonudomPage() {
                                 <input
                                     id="fotografPortfolio"
                                     name="portfolio"
-                                    value={
-                                        fotografFormData.portfolio
-                                    }
-                                    onChange={
-                                        handleFotografChange
-                                    }
+                                    value={fotografFormData.portfolio}
+                                    onChange={handleFotografChange}
                                     placeholder="https://..."
                                 />
                             </div>
@@ -2128,12 +2429,8 @@ function UpravljanjePonudomPage() {
                                     type="number"
                                     min="1"
                                     step="1"
-                                    value={
-                                        fotografFormData.cenaFoto
-                                    }
-                                    onChange={
-                                        handleFotografChange
-                                    }
+                                    value={fotografFormData.cenaFoto}
+                                    onChange={handleFotografChange}
                                     required
                                 />
                             </div>
@@ -2146,12 +2443,8 @@ function UpravljanjePonudomPage() {
                                 <select
                                     id="tipFoto"
                                     name="tipFoto"
-                                    value={
-                                        fotografFormData.tipFoto
-                                    }
-                                    onChange={
-                                        handleFotografChange
-                                    }
+                                    value={fotografFormData.tipFoto}
+                                    onChange={handleFotografChange}
                                     required
                                 >
                                     <option value="FOTOGRAFIJA">
@@ -2165,42 +2458,32 @@ function UpravljanjePonudomPage() {
                             </div>
 
                             <div className="management-field management-full-field">
-                                <label>
-                                    Paketi
-                                </label>
+                                <label>Paketi</label>
 
-                                {paketi.length === 0 ? (
-                                    <div className="management-empty">
-                                        Restoran nema dostupnih paketa.
-                                    </div>
-                                ) : (
-                                    <div className="management-checkbox-list">
-                                        {paketi.map((paket) => (
-                                            <label
-                                                key={paket.paketId}
-                                                className="management-checkbox-item"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={
-                                                        fotografFormData.paketIds.includes(
-                                                            paket.paketId,
-                                                        )
-                                                    }
-                                                    onChange={() =>
-                                                        handleFotografPaketCheckbox(
-                                                            paket.paketId,
-                                                        )
-                                                    }
-                                                />
+                                <div className="management-checkbox-list">
+                                    {paketi.map((paket) => (
+                                        <label
+                                            key={paket.paketId}
+                                            className="management-checkbox-item"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={
+                                                    fotografFormData.paketIds.includes(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                                onChange={() =>
+                                                    handleFotografPaketCheckbox(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                            />
 
-                                                <span>
-                                                    {paket.naziv}
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
+                                            <span>{paket.naziv}</span>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -2230,9 +2513,172 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            {/* =========================
-                BRISANJE PAKETA
-            ========================= */}
+            {/* MODAL - MUZIČKI IZVOĐAČ */}
+
+            {prikaziMuzickiIzvodjacFormu && (
+                <div className="management-modal-overlay">
+                    <form
+                        className="management-form-modal"
+                        onSubmit={handleMuzickiIzvodjacSubmit}
+                    >
+                        <div className="management-form-header">
+                            <span>
+                                {muzickiIzvodjacZaIzmenu
+                                    ? 'Izmena'
+                                    : 'Dodavanje'}
+                            </span>
+
+                            <h2>
+                                {muzickiIzvodjacZaIzmenu
+                                    ? 'Izmena muzičkog izvođača'
+                                    : 'Novi muzički izvođač'}
+                            </h2>
+
+                            <p>
+                                Unesite podatke o muzičkom izvođaču
+                                i izaberite pakete u kojima će biti
+                                dostupan.
+                            </p>
+                        </div>
+
+                        {actionError && (
+                            <div className="management-error">
+                                {actionError}
+                            </div>
+                        )}
+
+                        <div className="management-form-grid">
+                            <div className="management-field">
+                                <label htmlFor="muzicarNaziv">
+                                    Naziv
+                                </label>
+
+                                <input
+                                    id="muzicarNaziv"
+                                    name="naziv"
+                                    value={
+                                        muzickiIzvodjacFormData.naziv
+                                    }
+                                    onChange={
+                                        handleMuzickiIzvodjacChange
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div className="management-field">
+                                <label htmlFor="muzicarTelefon">
+                                    Telefon
+                                </label>
+
+                                <input
+                                    id="muzicarTelefon"
+                                    name="telefon"
+                                    value={
+                                        muzickiIzvodjacFormData.telefon
+                                    }
+                                    onChange={
+                                        handleMuzickiIzvodjacChange
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div className="management-field management-full-field">
+                                <label htmlFor="muzicarPortfolio">
+                                    Portfolio
+                                </label>
+
+                                <input
+                                    id="muzicarPortfolio"
+                                    name="portfolio"
+                                    value={
+                                        muzickiIzvodjacFormData.portfolio
+                                    }
+                                    onChange={
+                                        handleMuzickiIzvodjacChange
+                                    }
+                                    placeholder="https://..."
+                                />
+                            </div>
+
+                            <div className="management-field management-full-field">
+                                <label htmlFor="tipMuzicara">
+                                    Tip izvođača
+                                </label>
+
+                                <input
+                                    id="tipMuzicara"
+                                    name="tipMuzicara"
+                                    value={
+                                        muzickiIzvodjacFormData.tipMuzicara
+                                    }
+                                    onChange={
+                                        handleMuzickiIzvodjacChange
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div className="management-field management-full-field">
+                                <label>Paketi</label>
+
+                                <div className="management-checkbox-list">
+                                    {paketi.map((paket) => (
+                                        <label
+                                            key={paket.paketId}
+                                            className="management-checkbox-item"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={
+                                                    muzickiIzvodjacFormData.paketIds.includes(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                                onChange={() =>
+                                                    handleMuzickiIzvodjacPaketCheckbox(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                            />
+
+                                            <span>{paket.naziv}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="management-form-actions">
+                            <button
+                                type="button"
+                                className="management-secondary-button"
+                                disabled={isSaving}
+                                onClick={
+                                    handleOdustaniMuzickiIzvodjac
+                                }
+                            >
+                                Odustani
+                            </button>
+
+                            <button
+                                type="submit"
+                                className="management-primary-button"
+                                disabled={isSaving}
+                            >
+                                {isSaving
+                                    ? 'Čuvanje...'
+                                    : muzickiIzvodjacZaIzmenu
+                                        ? 'Sačuvaj izmene'
+                                        : 'Dodaj izvođača'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            {/* BRISANJE PAKETA */}
 
             {paketZaBrisanje && (
                 <div className="management-modal-overlay">
@@ -2241,17 +2687,11 @@ function UpravljanjePonudomPage() {
                             !
                         </div>
 
-                        <h2>
-                            Brisanje paketa
-                        </h2>
+                        <h2>Brisanje paketa</h2>
 
                         <p>
-                            Da li ste sigurni da želite da
-                            obrišete paket{' '}
-                            <strong>
-                                {paketZaBrisanje.naziv}
-                            </strong>
-                            ?
+                            Da li ste sigurni da želite da obrišete paket{' '}
+                            <strong>{paketZaBrisanje.naziv}</strong>?
                         </p>
 
                         {actionError && (
@@ -2288,9 +2728,7 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            {/* =========================
-                BRISANJE KETERING FIRME
-            ========================= */}
+            {/* BRISANJE KETERING FIRME */}
 
             {keteringZaBrisanje && (
                 <div className="management-modal-overlay">
@@ -2304,8 +2742,7 @@ function UpravljanjePonudomPage() {
                         </h2>
 
                         <p>
-                            Da li ste sigurni da želite da
-                            uklonite{' '}
+                            Da li ste sigurni da želite da uklonite{' '}
                             <strong>
                                 {keteringZaBrisanje.naziv}
                             </strong>{' '}
@@ -2346,9 +2783,7 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            {/* =========================
-                BRISANJE DEKORATERSKE FIRME
-            ========================= */}
+            {/* BRISANJE DEKORATERSKE FIRME */}
 
             {dekoraterskaFirmaZaBrisanje && (
                 <div className="management-modal-overlay">
@@ -2362,12 +2797,9 @@ function UpravljanjePonudomPage() {
                         </h2>
 
                         <p>
-                            Da li ste sigurni da želite da
-                            uklonite{' '}
+                            Da li ste sigurni da želite da uklonite{' '}
                             <strong>
-                                {
-                                    dekoraterskaFirmaZaBrisanje.naziv
-                                }
+                                {dekoraterskaFirmaZaBrisanje.naziv}
                             </strong>{' '}
                             iz ponude restorana?
                         </p>
@@ -2384,9 +2816,7 @@ function UpravljanjePonudomPage() {
                                 className="management-secondary-button"
                                 disabled={deleteLoading}
                                 onClick={() => {
-                                    setDekoraterskaFirmaZaBrisanje(
-                                        null,
-                                    );
+                                    setDekoraterskaFirmaZaBrisanje(null);
                                     setActionError('');
                                 }}
                             >
@@ -2410,9 +2840,7 @@ function UpravljanjePonudomPage() {
                 </div>
             )}
 
-            {/* =========================
-                BRISANJE FOTOGRAFA
-            ========================= */}
+            {/* BRISANJE FOTOGRAFA */}
 
             {fotografZaBrisanje && (
                 <div className="management-modal-overlay">
@@ -2421,13 +2849,10 @@ function UpravljanjePonudomPage() {
                             !
                         </div>
 
-                        <h2>
-                            Brisanje fotografa
-                        </h2>
+                        <h2>Brisanje fotografa</h2>
 
                         <p>
-                            Da li ste sigurni da želite da
-                            uklonite{' '}
+                            Da li ste sigurni da želite da uklonite{' '}
                             <strong>
                                 {fotografZaBrisanje.naziv}
                             </strong>{' '}
@@ -2458,6 +2883,63 @@ function UpravljanjePonudomPage() {
                                 className="management-danger-button"
                                 disabled={deleteLoading}
                                 onClick={handleObrisiFotograf}
+                            >
+                                {deleteLoading
+                                    ? 'Brisanje...'
+                                    : 'Obriši'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* BRISANJE MUZIČKOG IZVOĐAČA */}
+
+            {muzickiIzvodjacZaBrisanje && (
+                <div className="management-modal-overlay">
+                    <div className="management-confirm-modal">
+                        <div className="management-confirm-icon">
+                            !
+                        </div>
+
+                        <h2>
+                            Brisanje muzičkog izvođača
+                        </h2>
+
+                        <p>
+                            Da li ste sigurni da želite da uklonite{' '}
+                            <strong>
+                                {muzickiIzvodjacZaBrisanje.naziv}
+                            </strong>{' '}
+                            iz ponude restorana?
+                        </p>
+
+                        {actionError && (
+                            <div className="management-error">
+                                {actionError}
+                            </div>
+                        )}
+
+                        <div className="management-confirm-actions">
+                            <button
+                                type="button"
+                                className="management-secondary-button"
+                                disabled={deleteLoading}
+                                onClick={() => {
+                                    setMuzickiIzvodjacZaBrisanje(null);
+                                    setActionError('');
+                                }}
+                            >
+                                Odustani
+                            </button>
+
+                            <button
+                                type="button"
+                                className="management-danger-button"
+                                disabled={deleteLoading}
+                                onClick={
+                                    handleObrisiMuzickogIzvodjaca
+                                }
                             >
                                 {deleteLoading
                                     ? 'Brisanje...'

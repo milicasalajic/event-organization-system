@@ -37,6 +37,8 @@ builder.Services.AddScoped<KeteringRepository>();
 builder.Services.AddScoped<KeteringService>();
 builder.Services.AddScoped<DekoraterskaFirmaRepository>();
 builder.Services.AddScoped<DekoraterskaFirmaService>();
+builder.Services.AddScoped<MuzickiIzvodjacRepository>();
+builder.Services.AddScoped<MuzickiIzvodjacService>();
 
 builder.Services.AddCors(options =>
 {
