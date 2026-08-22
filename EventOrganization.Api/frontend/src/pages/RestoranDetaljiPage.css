@@ -671,3 +671,23 @@
         gap: 15px 22px;
     }
 }
+.restoran-cenovnik-button {
+    border: none;
+    background: #3f5c4a;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .restoran-cenovnik-button:hover {
+        background: #324a3b;
+        transform: translateY(-1px);
+    }
+
+    .restoran-cenovnik-button:active {
+        transform: translateY(0);
+    }

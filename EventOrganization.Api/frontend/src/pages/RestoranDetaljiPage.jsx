@@ -447,6 +447,19 @@ function RestoranDetaljiPage() {
                                 Upravljanje ponudom
                             </button>
                         )}
+                        {jeRadnik && (
+                            <button
+                                type="button"
+                                className="restoran-cenovnik-button"
+                                onClick={() =>
+                                    navigate(
+                                        `/restorani/${restoranId}/cenovnik`,
+                                    )
+                                }
+                            >
+                                Cenovnik
+                            </button>
+                        )}
                     </div>
                 )}
 

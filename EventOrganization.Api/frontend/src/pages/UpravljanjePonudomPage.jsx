@@ -1308,18 +1308,6 @@ function UpravljanjePonudomPage() {
                             </div>
                         </button>
 
-                        <div className="upravljanje-nav-item disabled">
-                            <div>
-                                <strong>
-                                    Cenovnik
-                                </strong>
-
-                                <small>
-                                    Upravljanje cenama
-                                </small>
-                            </div>
-                        </div>
-
                         <button
                             type="button"
                             className={
