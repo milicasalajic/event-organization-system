@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RestoranDetaljiPage from './pages/RestoranDetaljiPage.jsx';
 import ProfilPage from './pages/ProfilPage';
 import RezervacijeRestoranaPage from './pages/RezervacijeRestoranaPage.jsx';
+import UpravljanjePonudomPage from './pages/UpravljanjePonudomPage';
 function App() {
     return (
         <Routes>
@@ -67,6 +68,18 @@ function App() {
                         ]}
                     >
                         <RezervacijeRestoranaPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/restorani/:restoranId/upravljanje-ponudom"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            'MENADZER',
+                        ]}
+                    >
+                        <UpravljanjePonudomPage />
                     </ProtectedRoute>
                 }
             />

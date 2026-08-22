@@ -452,3 +452,21 @@
     letter-spacing: 0.4px;
     text-transform: uppercase;
 }
+.upravljanje-ponudom-button {
+    min-width: 230px;
+    padding: 15px 30px;
+    background: #718979;
+    border: 1px solid #718979;
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+    .upravljanje-ponudom-button:hover {
+        background: #607766;
+        transform: translateY(-1px);
+    }

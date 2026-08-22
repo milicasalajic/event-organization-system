@@ -1,67 +1,32 @@
-﻿using System.Security.Claims;
-using EventOrganization.Api.DTOs.Sale;
+﻿using EventOrganization.Api.DTOs.Fotografi;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EventOrganization.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SalaController : ControllerBase
+[Authorize(Roles = "MENADZER")]
+public class FotografController : ControllerBase
 {
-    private readonly SalaService _salaService;
+    private readonly FotografService _fotografService;
     private readonly RestoranService _restoranService;
 
-    public SalaController(
-        SalaService salaService,
+    public FotografController(
+        FotografService fotografService,
         RestoranService restoranService)
     {
-        _salaService = salaService;
-        _restoranService = restoranService;
+        _fotografService =
+            fotografService;
+
+        _restoranService =
+            restoranService;
     }
 
-    [Authorize]
-    [HttpGet("restoran/{restoranId}/paket/{paketId}")]
-    public async Task<ActionResult<List<SalaDto>>> GetByPaketId(
-        decimal restoranId,
-        decimal paketId,
-        CancellationToken cancellationToken)
-    {
-        var korisnikIdClaim = User.FindFirst(
-            ClaimTypes.NameIdentifier)?.Value;
-
-        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
-        {
-            return Unauthorized();
-        }
-
-        var uloga = User.FindFirst(
-            ClaimTypes.Role)?.Value;
-
-        if (uloga is "MENADZER" or "OPERATER")
-        {
-            var korisnikRadiURestoranu =
-                await _restoranService.KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
-
-            if (!korisnikRadiURestoranu)
-            {
-                return Forbid();
-            }
-        }
-
-        var sale = await _salaService.GetByPaketId(
-            restoranId,
-            paketId,
-            cancellationToken);
-
-        return Ok(sale);
-    }
     [HttpGet("restoran/{restoranId}")]
-    public async Task<ActionResult<List<SalaDto>>> GetByRestoranId(
+    public async Task<ActionResult<List<FotografDto>>> GetByRestoranId(
         decimal restoranId,
         CancellationToken cancellationToken)
     {
@@ -87,18 +52,19 @@ public class SalaController : ControllerBase
             return Forbid();
         }
 
-        var sale =
-            await _salaService.GetByRestoranId(
+        var fotografi =
+            await _fotografService.GetByRestoranId(
                 restoranId,
                 cancellationToken);
 
-        return Ok(sale);
+        return Ok(fotografi);
     }
+
     [HttpPost("restoran/{restoranId}")]
-    public async Task<ActionResult<SalaDto>> Add(
-          decimal restoranId,
-          DodavanjeSaleDto request,
-          CancellationToken cancellationToken)
+    public async Task<ActionResult<FotografDto>> Add(
+        decimal restoranId,
+        DodavanjeFotografaDto request,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -124,13 +90,13 @@ public class SalaController : ControllerBase
 
         try
         {
-            var sala =
-                await _salaService.Add(
+            var fotograf =
+                await _fotografService.Add(
                     restoranId,
                     request,
                     cancellationToken);
 
-            return Ok(sala);
+            return Ok(fotograf);
         }
         catch (ArgumentException exception)
         {
@@ -138,12 +104,13 @@ public class SalaController : ControllerBase
                 exception.Message);
         }
     }
-    [HttpPut("restoran/{restoranId}/{salaId}")]
-    public async Task<ActionResult<SalaDto>> Update(
-       decimal restoranId,
-       decimal salaId,
-       IzmenaSaleDto request,
-       CancellationToken cancellationToken)
+
+    [HttpPut("restoran/{restoranId}/{uslugaId}")]
+    public async Task<ActionResult<FotografDto>> Update(
+        decimal restoranId,
+        decimal uslugaId,
+        IzmenaFotografaDto request,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -169,20 +136,20 @@ public class SalaController : ControllerBase
 
         try
         {
-            var sala =
-                await _salaService.Update(
+            var fotograf =
+                await _fotografService.Update(
                     restoranId,
-                    salaId,
+                    uslugaId,
                     request,
                     cancellationToken);
 
-            if (sala is null)
+            if (fotograf is null)
             {
                 return NotFound(
-                    "Sala nije pronađena.");
+                    "Fotograf nije pronađen.");
             }
 
-            return Ok(sala);
+            return Ok(fotograf);
         }
         catch (ArgumentException exception)
         {
@@ -195,11 +162,12 @@ public class SalaController : ControllerBase
                 exception.Message);
         }
     }
-    [HttpDelete("restoran/{restoranId}/{salaId}")]
+
+    [HttpDelete("restoran/{restoranId}/{uslugaId}")]
     public async Task<IActionResult> Delete(
-         decimal restoranId,
-         decimal salaId,
-         CancellationToken cancellationToken)
+        decimal restoranId,
+        decimal uslugaId,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -223,16 +191,16 @@ public class SalaController : ControllerBase
             return Forbid();
         }
 
-        var obrisana =
-            await _salaService.Delete(
+        var obrisan =
+            await _fotografService.Delete(
                 restoranId,
-                salaId,
+                uslugaId,
                 cancellationToken);
 
-        if (!obrisana)
+        if (!obrisan)
         {
             return NotFound(
-                "Sala nije pronađena.");
+                "Fotograf nije pronađen.");
         }
 
         return NoContent();

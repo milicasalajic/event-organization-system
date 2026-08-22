@@ -100,11 +100,11 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("DEKORATERSKA_FIRMA");
 
             entity.Property(e => e.UslugaId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
-                .HasColumnName("USLUGA_ID");
+                .HasColumnName("USLUGA_ID");             
 
-            entity.Property(e => e.Opis)
+           entity.Property(e => e.Opis)
                 .HasMaxLength(512)
                 .IsUnicode(false)
                 .HasColumnName("OPIS");
@@ -124,7 +124,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("FOTOGRAF");
 
             entity.Property(e => e.UslugaId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("USLUGA_ID");
 
@@ -153,7 +153,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("KETERING_FIRMA");
 
             entity.Property(e => e.UslugaId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("USLUGA_ID");
 
@@ -249,7 +249,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("MUZICKI_IZVODJAC");
 
             entity.Property(e => e.UslugaId)
-                .ValueGeneratedOnAdd()
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("USLUGA_ID");
 
@@ -484,6 +484,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("SALA");
 
             entity.Property(e => e.SalaId)
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("SALA_ID");
 

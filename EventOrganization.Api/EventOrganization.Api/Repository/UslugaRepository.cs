@@ -20,10 +20,14 @@ public class UslugaRepository
     {
         return _context.Usluge
             .AsNoTracking()
-            .Include(usluga => usluga.Fotograf)
-            .Include(usluga => usluga.KeteringFirma)
-            .Include(usluga => usluga.DekoraterskaFirma)
-            .Include(usluga => usluga.MuzickiIzvodjac)
+            .Include(usluga =>
+                usluga.Fotograf)
+            .Include(usluga =>
+                usluga.KeteringFirma)
+            .Include(usluga =>
+                usluga.DekoraterskaFirma)
+            .Include(usluga =>
+                usluga.MuzickiIzvodjac)
             .Where(usluga =>
                 usluga.Paketi.Any(paket =>
                     paket.PaketId == paketId &&

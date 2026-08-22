@@ -6,7 +6,7 @@ namespace EventOrganization.Api.Models;
 
 public partial class Fotograf
 {
-    public decimal? CenaFoto { get; set; }
+    public decimal CenaFoto { get; set; }
 
     public decimal UslugaId { get; set; }
 

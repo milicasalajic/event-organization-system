@@ -1,12 +1,11 @@
 ﻿const API_URL = import.meta.env.VITE_API_URL;
 
-export async function getPaketiByRestoranId(restoranId) {
+export async function getFotografiByRestoranId(restoranId) {
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Paket/restoran/${restoranId}`,
+        `${API_URL}/api/Fotograf/restoran/${restoranId}`,
         {
-            method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -19,26 +18,27 @@ export async function getPaketiByRestoranId(restoranId) {
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za pregled paketa ovog restorana.',
+            'Nemate dozvolu za pregled fotografa.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom učitavanja paketa.',
+            'Došlo je do greške prilikom učitavanja fotografa.',
         );
     }
 
     return response.json();
 }
-export async function addPaket(
+
+export async function addFotograf(
     restoranId,
     data,
 ) {
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Paket/restoran/${restoranId}`,
+        `${API_URL}/api/Fotograf/restoran/${restoranId}`,
         {
             method: 'POST',
             headers: {
@@ -55,7 +55,7 @@ export async function addPaket(
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za dodavanje paketa.',
+            'Nemate dozvolu za dodavanje fotografa.',
         );
     }
 
@@ -64,27 +64,28 @@ export async function addPaket(
 
         throw new Error(
             message ||
-            'Podaci paketa nisu ispravni.',
+            'Podaci fotografa nisu ispravni.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom dodavanja paketa.',
+            'Došlo je do greške prilikom dodavanja fotografa.',
         );
     }
 
     return response.json();
 }
-export async function updatePaket(
+
+export async function updateFotograf(
     restoranId,
-    paketId,
+    uslugaId,
     data,
 ) {
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Paket/restoran/${restoranId}/${paketId}`,
+        `${API_URL}/api/Fotograf/restoran/${restoranId}/${uslugaId}`,
         {
             method: 'PUT',
             headers: {
@@ -101,13 +102,13 @@ export async function updatePaket(
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za izmenu paketa.',
+            'Nemate dozvolu za izmenu fotografa.',
         );
     }
 
     if (response.status === 404) {
         throw new Error(
-            'Paket nije pronađen.',
+            'Fotograf nije pronađen.',
         );
     }
 
@@ -116,26 +117,27 @@ export async function updatePaket(
 
         throw new Error(
             message ||
-            'Podaci paketa nisu ispravni.',
+            'Podaci fotografa nisu ispravni.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom izmene paketa.',
+            'Došlo je do greške prilikom izmene fotografa.',
         );
     }
 
     return response.json();
 }
-export async function deletePaket(
+
+export async function deleteFotograf(
     restoranId,
-    paketId,
+    uslugaId,
 ) {
     const token = localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Paket/restoran/${restoranId}/${paketId}`,
+        `${API_URL}/api/Fotograf/restoran/${restoranId}/${uslugaId}`,
         {
             method: 'DELETE',
             headers: {
@@ -150,19 +152,19 @@ export async function deletePaket(
 
     if (response.status === 403) {
         throw new Error(
-            'Nemate dozvolu za brisanje paketa.',
+            'Nemate dozvolu za brisanje fotografa.',
         );
     }
 
     if (response.status === 404) {
         throw new Error(
-            'Paket nije pronađen.',
+            'Fotograf nije pronađen.',
         );
     }
 
     if (!response.ok) {
         throw new Error(
-            'Došlo je do greške prilikom brisanja paketa.',
+            'Došlo je do greške prilikom brisanja fotografa.',
         );
     }
 }

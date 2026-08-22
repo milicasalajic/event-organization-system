@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using EventOrganization.Api.DTOs.Sale;
+using EventOrganization.Api.DTOs.Usluge;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,60 +8,22 @@ namespace EventOrganization.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SalaController : ControllerBase
+[Authorize(Roles = "MENADZER")]
+public class KeteringController : ControllerBase
 {
-    private readonly SalaService _salaService;
+    private readonly KeteringService _keteringService;
     private readonly RestoranService _restoranService;
 
-    public SalaController(
-        SalaService salaService,
+    public KeteringController(
+        KeteringService keteringService,
         RestoranService restoranService)
     {
-        _salaService = salaService;
+        _keteringService = keteringService;
         _restoranService = restoranService;
     }
 
-    [Authorize]
-    [HttpGet("restoran/{restoranId}/paket/{paketId}")]
-    public async Task<ActionResult<List<SalaDto>>> GetByPaketId(
-        decimal restoranId,
-        decimal paketId,
-        CancellationToken cancellationToken)
-    {
-        var korisnikIdClaim = User.FindFirst(
-            ClaimTypes.NameIdentifier)?.Value;
-
-        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
-        {
-            return Unauthorized();
-        }
-
-        var uloga = User.FindFirst(
-            ClaimTypes.Role)?.Value;
-
-        if (uloga is "MENADZER" or "OPERATER")
-        {
-            var korisnikRadiURestoranu =
-                await _restoranService.KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
-
-            if (!korisnikRadiURestoranu)
-            {
-                return Forbid();
-            }
-        }
-
-        var sale = await _salaService.GetByPaketId(
-            restoranId,
-            paketId,
-            cancellationToken);
-
-        return Ok(sale);
-    }
     [HttpGet("restoran/{restoranId}")]
-    public async Task<ActionResult<List<SalaDto>>> GetByRestoranId(
+    public async Task<ActionResult<List<KeteringFirmaDto>>> GetByRestoranId(
         decimal restoranId,
         CancellationToken cancellationToken)
     {
@@ -87,18 +49,19 @@ public class SalaController : ControllerBase
             return Forbid();
         }
 
-        var sale =
-            await _salaService.GetByRestoranId(
+        var keteringFirme =
+            await _keteringService.GetByRestoranId(
                 restoranId,
                 cancellationToken);
 
-        return Ok(sale);
+        return Ok(keteringFirme);
     }
+
     [HttpPost("restoran/{restoranId}")]
-    public async Task<ActionResult<SalaDto>> Add(
-          decimal restoranId,
-          DodavanjeSaleDto request,
-          CancellationToken cancellationToken)
+    public async Task<ActionResult<KeteringFirmaDto>> Add(
+        decimal restoranId,
+        DodavanjeKeteringFirmeDto request,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -124,13 +87,13 @@ public class SalaController : ControllerBase
 
         try
         {
-            var sala =
-                await _salaService.Add(
+            var keteringFirma =
+                await _keteringService.Add(
                     restoranId,
                     request,
                     cancellationToken);
 
-            return Ok(sala);
+            return Ok(keteringFirma);
         }
         catch (ArgumentException exception)
         {
@@ -138,12 +101,13 @@ public class SalaController : ControllerBase
                 exception.Message);
         }
     }
-    [HttpPut("restoran/{restoranId}/{salaId}")]
-    public async Task<ActionResult<SalaDto>> Update(
-       decimal restoranId,
-       decimal salaId,
-       IzmenaSaleDto request,
-       CancellationToken cancellationToken)
+
+    [HttpPut("restoran/{restoranId}/{uslugaId}")]
+    public async Task<ActionResult<KeteringFirmaDto>> Update(
+        decimal restoranId,
+        decimal uslugaId,
+        IzmenaKeteringFirmeDto request,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -169,20 +133,20 @@ public class SalaController : ControllerBase
 
         try
         {
-            var sala =
-                await _salaService.Update(
+            var keteringFirma =
+                await _keteringService.Update(
                     restoranId,
-                    salaId,
+                    uslugaId,
                     request,
                     cancellationToken);
 
-            if (sala is null)
+            if (keteringFirma is null)
             {
                 return NotFound(
-                    "Sala nije pronađena.");
+                    "Ketering firma nije pronađena.");
             }
 
-            return Ok(sala);
+            return Ok(keteringFirma);
         }
         catch (ArgumentException exception)
         {
@@ -195,11 +159,12 @@ public class SalaController : ControllerBase
                 exception.Message);
         }
     }
-    [HttpDelete("restoran/{restoranId}/{salaId}")]
+
+    [HttpDelete("restoran/{restoranId}/{uslugaId}")]
     public async Task<IActionResult> Delete(
-         decimal restoranId,
-         decimal salaId,
-         CancellationToken cancellationToken)
+        decimal restoranId,
+        decimal uslugaId,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -223,16 +188,16 @@ public class SalaController : ControllerBase
             return Forbid();
         }
 
-        var obrisana =
-            await _salaService.Delete(
+        var obrisan =
+            await _keteringService.Delete(
                 restoranId,
-                salaId,
+                uslugaId,
                 cancellationToken);
 
-        if (!obrisana)
+        if (!obrisan)
         {
             return NotFound(
-                "Sala nije pronađena.");
+                "Ketering firma nije pronađena.");
         }
 
         return NoContent();

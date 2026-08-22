@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using EventOrganization.Api.DTOs.Sale;
+using EventOrganization.Api.DTOs.DekoraterskeFirme;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,62 +8,31 @@ namespace EventOrganization.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SalaController : ControllerBase
+[Authorize(Roles = "MENADZER")]
+public class DekoraterskaFirmaController : ControllerBase
 {
-    private readonly SalaService _salaService;
-    private readonly RestoranService _restoranService;
+    private readonly DekoraterskaFirmaService
+        _dekoraterskaFirmaService;
 
-    public SalaController(
-        SalaService salaService,
+    private readonly RestoranService
+        _restoranService;
+
+    public DekoraterskaFirmaController(
+        DekoraterskaFirmaService dekoraterskaFirmaService,
         RestoranService restoranService)
     {
-        _salaService = salaService;
-        _restoranService = restoranService;
+        _dekoraterskaFirmaService =
+            dekoraterskaFirmaService;
+
+        _restoranService =
+            restoranService;
     }
 
-    [Authorize]
-    [HttpGet("restoran/{restoranId}/paket/{paketId}")]
-    public async Task<ActionResult<List<SalaDto>>> GetByPaketId(
-        decimal restoranId,
-        decimal paketId,
-        CancellationToken cancellationToken)
-    {
-        var korisnikIdClaim = User.FindFirst(
-            ClaimTypes.NameIdentifier)?.Value;
-
-        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
-        {
-            return Unauthorized();
-        }
-
-        var uloga = User.FindFirst(
-            ClaimTypes.Role)?.Value;
-
-        if (uloga is "MENADZER" or "OPERATER")
-        {
-            var korisnikRadiURestoranu =
-                await _restoranService.KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
-
-            if (!korisnikRadiURestoranu)
-            {
-                return Forbid();
-            }
-        }
-
-        var sale = await _salaService.GetByPaketId(
-            restoranId,
-            paketId,
-            cancellationToken);
-
-        return Ok(sale);
-    }
     [HttpGet("restoran/{restoranId}")]
-    public async Task<ActionResult<List<SalaDto>>> GetByRestoranId(
-        decimal restoranId,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<List<DekoraterskaFirmaDto>>>
+        GetByRestoranId(
+            decimal restoranId,
+            CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -87,18 +56,19 @@ public class SalaController : ControllerBase
             return Forbid();
         }
 
-        var sale =
-            await _salaService.GetByRestoranId(
+        var dekoraterskeFirme =
+            await _dekoraterskaFirmaService.GetByRestoranId(
                 restoranId,
                 cancellationToken);
 
-        return Ok(sale);
+        return Ok(dekoraterskeFirme);
     }
+
     [HttpPost("restoran/{restoranId}")]
-    public async Task<ActionResult<SalaDto>> Add(
-          decimal restoranId,
-          DodavanjeSaleDto request,
-          CancellationToken cancellationToken)
+    public async Task<ActionResult<DekoraterskaFirmaDto>> Add(
+        decimal restoranId,
+        DodavanjeDekoraterskeFirmeDto request,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -124,13 +94,13 @@ public class SalaController : ControllerBase
 
         try
         {
-            var sala =
-                await _salaService.Add(
+            var dekoraterskaFirma =
+                await _dekoraterskaFirmaService.Add(
                     restoranId,
                     request,
                     cancellationToken);
 
-            return Ok(sala);
+            return Ok(dekoraterskaFirma);
         }
         catch (ArgumentException exception)
         {
@@ -138,12 +108,13 @@ public class SalaController : ControllerBase
                 exception.Message);
         }
     }
-    [HttpPut("restoran/{restoranId}/{salaId}")]
-    public async Task<ActionResult<SalaDto>> Update(
-       decimal restoranId,
-       decimal salaId,
-       IzmenaSaleDto request,
-       CancellationToken cancellationToken)
+
+    [HttpPut("restoran/{restoranId}/{uslugaId}")]
+    public async Task<ActionResult<DekoraterskaFirmaDto>> Update(
+        decimal restoranId,
+        decimal uslugaId,
+        IzmenaDekoraterskeFirmeDto request,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -169,20 +140,20 @@ public class SalaController : ControllerBase
 
         try
         {
-            var sala =
-                await _salaService.Update(
+            var dekoraterskaFirma =
+                await _dekoraterskaFirmaService.Update(
                     restoranId,
-                    salaId,
+                    uslugaId,
                     request,
                     cancellationToken);
 
-            if (sala is null)
+            if (dekoraterskaFirma is null)
             {
                 return NotFound(
-                    "Sala nije pronađena.");
+                    "Dekoraterska firma nije pronađena.");
             }
 
-            return Ok(sala);
+            return Ok(dekoraterskaFirma);
         }
         catch (ArgumentException exception)
         {
@@ -195,11 +166,12 @@ public class SalaController : ControllerBase
                 exception.Message);
         }
     }
-    [HttpDelete("restoran/{restoranId}/{salaId}")]
+
+    [HttpDelete("restoran/{restoranId}/{uslugaId}")]
     public async Task<IActionResult> Delete(
-         decimal restoranId,
-         decimal salaId,
-         CancellationToken cancellationToken)
+        decimal restoranId,
+        decimal uslugaId,
+        CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
             User.FindFirst(
@@ -224,15 +196,15 @@ public class SalaController : ControllerBase
         }
 
         var obrisana =
-            await _salaService.Delete(
+            await _dekoraterskaFirmaService.Delete(
                 restoranId,
-                salaId,
+                uslugaId,
                 cancellationToken);
 
         if (!obrisana)
         {
             return NotFound(
-                "Sala nije pronađena.");
+                "Dekoraterska firma nije pronađena.");
         }
 
         return NoContent();
