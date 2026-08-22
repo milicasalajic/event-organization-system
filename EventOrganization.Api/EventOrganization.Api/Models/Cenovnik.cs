@@ -7,7 +7,7 @@ public partial class Cenovnik
 {
     public decimal CenovnikId { get; set; }
 
-    public short Iznos { get; set; }
+    public decimal Iznos { get; set; }
 
     public DateTime DatumIzmene { get; set; }
 

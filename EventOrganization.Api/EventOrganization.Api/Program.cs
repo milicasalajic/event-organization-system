@@ -39,6 +39,8 @@ builder.Services.AddScoped<DekoraterskaFirmaRepository>();
 builder.Services.AddScoped<DekoraterskaFirmaService>();
 builder.Services.AddScoped<MuzickiIzvodjacRepository>();
 builder.Services.AddScoped<MuzickiIzvodjacService>();
+builder.Services.AddScoped<CenovnikRepository>();
+builder.Services.AddScoped<CenovnikService>();
 
 builder.Services.AddCors(options =>
 {

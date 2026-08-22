@@ -8,6 +8,7 @@ import RestoranDetaljiPage from './pages/RestoranDetaljiPage.jsx';
 import ProfilPage from './pages/ProfilPage';
 import RezervacijeRestoranaPage from './pages/RezervacijeRestoranaPage.jsx';
 import UpravljanjePonudomPage from './pages/UpravljanjePonudomPage';
+import CenovnikPage from './pages/CenovnikPage';
 function App() {
     return (
         <Routes>
@@ -80,6 +81,19 @@ function App() {
                         ]}
                     >
                         <UpravljanjePonudomPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/restorani/:restoranId/cenovnik"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[
+                            'MENADZER',
+                            'OPERATER',
+                        ]}
+                    >
+                        <CenovnikPage />
                     </ProtectedRoute>
                 }
             />

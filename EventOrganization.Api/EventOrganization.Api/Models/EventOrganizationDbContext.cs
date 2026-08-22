@@ -62,6 +62,7 @@ public partial class EventOrganizationDbContext : DbContext
             entity.ToTable("CENOVNIK");
 
             entity.Property(e => e.CenovnikId)
+                .ValueGeneratedNever()
                 .HasColumnType("NUMBER")
                 .HasColumnName("CENOVNIK_ID");
 

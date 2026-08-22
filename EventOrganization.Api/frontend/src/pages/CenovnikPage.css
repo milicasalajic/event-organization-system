@@ -1,0 +1,341 @@
+.cenovnik-page {
+    min-height: 100vh;
+    background: #f8f5f0;
+    padding: 40px 24px;
+}
+
+.cenovnik-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.cenovnik-nazad-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin-bottom: 28px;
+    color: #3f5c4a;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .cenovnik-nazad-button:hover {
+        text-decoration: underline;
+    }
+
+.cenovnik-header {
+    margin-bottom: 30px;
+}
+
+    .cenovnik-header span {
+        display: block;
+        margin-bottom: 6px;
+        color: #c8a96b;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .cenovnik-header h1 {
+        margin: 0 0 10px;
+        color: #3f5c4a;
+        font-size: 34px;
+    }
+
+    .cenovnik-header p {
+        margin: 0;
+        color: #6d6d6d;
+        font-size: 15px;
+    }
+
+.cenovnik-table-wrapper {
+    overflow-x: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+}
+
+.cenovnik-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .cenovnik-table th {
+        padding: 16px 18px;
+        background: #f1eee8;
+        color: #555555;
+        font-size: 13px;
+        font-weight: 700;
+        text-align: left;
+        border-bottom: 1px solid #e2ded7;
+    }
+
+    .cenovnik-table td {
+        padding: 17px 18px;
+        color: #444444;
+        font-size: 14px;
+        border-bottom: 1px solid #ece8e2;
+    }
+
+    .cenovnik-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .cenovnik-table tbody tr:hover {
+        background: #faf9f6;
+    }
+
+    .cenovnik-table .cenovnik-vazeca-row {
+        background: #edf5ef;
+    }
+
+        .cenovnik-table .cenovnik-vazeca-row:hover {
+            background: #e5efe7;
+        }
+
+.cenovnik-vazeca-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: #dce9df;
+    color: #3f5c4a;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cenovnik-istorijska-label {
+    color: #999999;
+    font-size: 13px;
+}
+
+.cenovnik-empty {
+    padding: 55px 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.05);
+}
+
+    .cenovnik-empty h2 {
+        margin: 0 0 8px;
+        color: #3f5c4a;
+        font-size: 22px;
+    }
+
+    .cenovnik-empty p {
+        margin: 0;
+        color: #777777;
+        font-size: 14px;
+    }
+
+.cenovnik-state {
+    max-width: 900px;
+    margin: 80px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 10px;
+    text-align: center;
+    color: #555555;
+}
+
+.cenovnik-state-error {
+    color: #a33a3a;
+}
+
+@media (max-width: 700px) {
+    .cenovnik-page {
+        padding: 24px 14px;
+    }
+
+    .cenovnik-header h1 {
+        font-size: 28px;
+    }
+
+    .cenovnik-table th,
+    .cenovnik-table td {
+        padding: 13px 12px;
+        white-space: nowrap;
+    }
+}
+.cenovnik-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+    .cenovnik-header-row .cenovnik-header {
+        margin-bottom: 0;
+    }
+
+.cenovnik-primary-button {
+    border: none;
+    background: #3f5c4a;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .cenovnik-primary-button:hover {
+        background: #324a3b;
+    }
+
+    .cenovnik-primary-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+.cenovnik-promeni-button {
+    border: none;
+    background: #3f5c4a;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .cenovnik-promeni-button:hover {
+        background: #324a3b;
+    }
+
+.cenovnik-buduca-row {
+    background: #fbf8ef;
+}
+
+.cenovnik-buduca-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: #f2ead2;
+    color: #806a33;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cenovnik-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.cenovnik-modal {
+    width: 100%;
+    max-width: 500px;
+    padding: 28px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.cenovnik-modal-header {
+    margin-bottom: 24px;
+}
+
+    .cenovnik-modal-header span {
+        color: #c8a96b;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .cenovnik-modal-header h2 {
+        margin: 5px 0 8px;
+        color: #3f5c4a;
+    }
+
+    .cenovnik-modal-header p {
+        margin: 0;
+        color: #777777;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+.cenovnik-trenutna-cena {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    background: #f1f5f2;
+    border-radius: 8px;
+}
+
+    .cenovnik-trenutna-cena span {
+        color: #666666;
+        font-size: 14px;
+    }
+
+    .cenovnik-trenutna-cena strong {
+        color: #3f5c4a;
+    }
+
+.cenovnik-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 18px;
+}
+
+    .cenovnik-field label {
+        color: #444444;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .cenovnik-field input,
+    .cenovnik-field select {
+        padding: 11px 12px;
+        border: 1px solid #d8d4cd;
+        border-radius: 7px;
+        background: #ffffff;
+        font-size: 14px;
+    }
+
+        .cenovnik-field input:focus,
+        .cenovnik-field select:focus {
+            outline: none;
+            border-color: #3f5c4a;
+        }
+
+.cenovnik-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.cenovnik-secondary-button {
+    border: 1px solid #d8d4cd;
+    background: #ffffff;
+    color: #555555;
+    padding: 10px 17px;
+    border-radius: 7px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cenovnik-action-error {
+    margin-bottom: 18px;
+    padding: 10px 12px;
+    background: #fff1f1;
+    border-radius: 7px;
+    color: #a33a3a;
+    font-size: 13px;
+}
