@@ -736,6 +736,18 @@ function PregledRezervacijaRestoranaPage() {
 
                                                                                 <div className="detalj-item">
                                                                                     <span>
+                                                                                        Sala
+                                                                                    </span>
+
+                                                                                    <strong>
+                                                                                        {detalji.rbrSSale != null
+                                                                                            ? `Sala ${detalji.rbrSSale}`
+                                                                                            : '-'}
+                                                                                    </strong>
+                                                                                </div>
+
+                                                                                <div className="detalj-item">
+                                                                                    <span>
                                                                                         Tip događaja
                                                                                     </span>
 

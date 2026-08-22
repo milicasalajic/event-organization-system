@@ -16,7 +16,9 @@ public class RezervacijaDetaljiDto
 
     public string NazivPaketa { get; set; } = null!;
 
-    public decimal RbrSSale { get; set; }
+    public decimal? SalaId { get; set; }
+
+    public decimal? RbrSSale { get; set; }
 
     public List<string> TipoviDogadjaja { get; set; } = [];
 

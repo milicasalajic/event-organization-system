@@ -127,7 +127,12 @@ public class RezervacijaService
                 rezervacija.StavkeRezervacije
                     .Select(stavka =>
                         stavka.Usluga.NazivU)
-                    .ToList()
+                    .ToList(),
+            SalaId =
+                rezervacija.SalaId,
+
+            RbrSSale =
+                rezervacija.Sala?.RbrS,
         };
     }
 

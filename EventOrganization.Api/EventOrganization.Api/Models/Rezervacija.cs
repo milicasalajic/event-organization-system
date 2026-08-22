@@ -33,4 +33,7 @@ public partial class Rezervacija
     public virtual ICollection<StavkaRezervacije> StavkeRezervacije { get; set; } = new List<StavkaRezervacije>();
 
     public virtual ICollection<TipDogadjaja> TipoviDogadjaja { get; set; } = new List<TipDogadjaja>();
+    public decimal? SalaId { get; set; }
+
+    public virtual Sala? Sala { get; set; }
 }

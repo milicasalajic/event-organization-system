@@ -29,16 +29,18 @@ public class RezervacijaRepository
             .ToListAsync(cancellationToken);
     }
     public Task<Rezervacija?> GetDetalji(
-    decimal restoranId,
-    decimal rezervacijaId,
-    CancellationToken cancellationToken = default)
+        decimal restoranId,
+        decimal rezervacijaId,
+        CancellationToken cancellationToken = default)
     {
         return _context.Rezervacije
             .AsNoTracking()
             .Include(rezervacija => rezervacija.Korisnik)
-    .ThenInclude(klijent => klijent.Korisnik)
+                .ThenInclude(klijent => klijent.Korisnik)
             .Include(rezervacija =>
                 rezervacija.Paket)
+            .Include(rezervacija =>
+                rezervacija.Sala)
             .Include(rezervacija =>
                 rezervacija.TipoviDogadjaja)
             .Include(rezervacija =>

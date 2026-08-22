@@ -446,6 +446,10 @@ public partial class EventOrganizationDbContext : DbContext
                 .HasColumnType("NUMBER")
                 .HasColumnName("PAKET_ID");
 
+            entity.Property(e => e.SalaId)
+                .HasColumnType("NUMBER")
+                .HasColumnName("SALA_ID");
+
             entity.Property(e => e.StatusRez)
                 .HasConversion<string>()
                 .HasMaxLength(20)
@@ -475,6 +479,11 @@ public partial class EventOrganizationDbContext : DbContext
                 .HasForeignKey(d => d.PaketId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("R_PAKET_FK");
+
+            entity.HasOne(d => d.Sala)
+                .WithMany()
+                .HasForeignKey(d => d.SalaId)
+                .HasConstraintName("R_SALA_FK");
         });
 
         modelBuilder.Entity<Sala>(entity =>
