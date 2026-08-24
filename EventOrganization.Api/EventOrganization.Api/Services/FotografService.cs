@@ -55,7 +55,19 @@ public class FotografService
         if (request.CenaFoto <= 0)
         {
             throw new ArgumentException(
-                "Cena fotografisanja mora biti veća od nule.");
+                "Cena fotografije mora biti veća od nule.");
+        }
+
+        if (request.Cena <= 0)
+        {
+            throw new ArgumentException(
+                "Cena usluge fotografa mora biti veća od nule.");
+        }
+
+        if (request.Cena > 99999)
+        {
+            throw new ArgumentException(
+                "Cena usluge fotografa ne može biti veća od 99999.");
         }
 
         if (!Enum.TryParse<TipFoto>(
@@ -110,6 +122,10 @@ public class FotografService
             await _fotografRepository.GetNextUslugaId(
                 cancellationToken);
 
+        var cenovnikId =
+            await _fotografRepository.GetNextCenovnikId(
+                cancellationToken);
+
         var usluga =
             new Usluga
             {
@@ -154,6 +170,25 @@ public class FotografService
                 paket);
         }
 
+        usluga.Cenovnici.Add(
+            new Cenovnik
+            {
+                CenovnikId =
+                    cenovnikId,
+
+                Iznos =
+                    request.Cena,
+
+                DatumIzmene =
+                    DateTime.Today,
+
+                UslugaId =
+                    uslugaId,
+
+                SalaId =
+                    null
+            });
+
         await _fotografRepository.Add(
             usluga,
             cancellationToken);
@@ -186,7 +221,7 @@ public class FotografService
         if (request.CenaFoto <= 0)
         {
             throw new ArgumentException(
-                "Cena fotografisanja mora biti veća od nule.");
+                "Cena fotografije mora biti veća od nule.");
         }
 
         if (!Enum.TryParse<TipFoto>(
@@ -357,6 +392,20 @@ public class FotografService
         Usluga usluga,
         decimal restoranId)
     {
+        var danas =
+            DateTime.Today;
+
+        var vazecaCena =
+            usluga.Cenovnici
+                .Where(cena =>
+                    cena.DatumIzmene.Date <=
+                    danas)
+                .OrderByDescending(cena =>
+                    cena.DatumIzmene)
+                .ThenByDescending(cena =>
+                    cena.CenovnikId)
+                .FirstOrDefault();
+
         return new FotografDto
         {
             UslugaId =
@@ -376,6 +425,9 @@ public class FotografService
 
             TipFoto =
                 usluga.Fotograf.TipFoto.ToString(),
+
+            Cena =
+                vazecaCena?.Iznos,
 
             PaketIds =
                 usluga.Paketi

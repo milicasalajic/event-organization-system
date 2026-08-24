@@ -14,5 +14,7 @@ public class FotografDto
 
     public string TipFoto { get; set; } = null!;
 
+    public decimal? Cena { get; set; }
+
     public List<decimal> PaketIds { get; set; } = [];
 }

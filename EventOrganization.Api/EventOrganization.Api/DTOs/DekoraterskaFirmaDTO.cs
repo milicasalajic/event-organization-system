@@ -12,5 +12,7 @@ public class DekoraterskaFirmaDto
 
     public string? Opis { get; set; }
 
+    public decimal? Cena { get; set; }
+
     public List<decimal> PaketIds { get; set; } = [];
 }

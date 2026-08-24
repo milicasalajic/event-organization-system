@@ -25,8 +25,10 @@ public class FotografRepository
             .SelectMany(paket =>
                 paket.Usluge)
             .Where(usluga =>
-                usluga.TipUsluge == TipUsluge.FOTOGRAF &&
-                usluga.Status == Status.AKTIVNO)
+                usluga.TipUsluge ==
+                    TipUsluge.FOTOGRAF &&
+                usluga.Status ==
+                    Status.AKTIVNO)
             .Select(usluga =>
                 usluga.UslugaId)
             .Distinct()
@@ -38,6 +40,8 @@ public class FotografRepository
                 usluga.Fotograf)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .Where(usluga =>
                 uslugaIds.Contains(
                     usluga.UslugaId))
@@ -54,11 +58,13 @@ public class FotografRepository
         var pronadjenaUslugaId =
             await _context.Paketi
                 .Where(paket =>
-                    paket.RestoranId == restoranId)
+                    paket.RestoranId ==
+                    restoranId)
                 .SelectMany(paket =>
                     paket.Usluge)
                 .Where(usluga =>
-                    usluga.UslugaId == uslugaId &&
+                    usluga.UslugaId ==
+                        uslugaId &&
                     usluga.TipUsluge ==
                         TipUsluge.FOTOGRAF)
                 .Select(usluga =>
@@ -76,6 +82,8 @@ public class FotografRepository
                 usluga.Fotograf)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .FirstOrDefaultAsync(
                 usluga =>
                     usluga.UslugaId ==
@@ -90,8 +98,10 @@ public class FotografRepository
     {
         return _context.Paketi
             .Where(paket =>
-                paket.RestoranId == restoranId &&
-                paket.Status == Status.AKTIVNO &&
+                paket.RestoranId ==
+                    restoranId &&
+                paket.Status ==
+                    Status.AKTIVNO &&
                 paketIds.Contains(
                     paket.PaketId))
             .ToListAsync(cancellationToken);
@@ -106,7 +116,8 @@ public class FotografRepository
         var uslugaId =
             await _context.Paketi
                 .Where(paket =>
-                    paket.RestoranId == restoranId)
+                    paket.RestoranId ==
+                    restoranId)
                 .SelectMany(paket =>
                     paket.Usluge)
                 .Where(usluga =>
@@ -114,7 +125,8 @@ public class FotografRepository
                         TipUsluge.FOTOGRAF &&
                     usluga.Status ==
                         Status.AKTIVNO &&
-                    usluga.NazivU == naziv &&
+                    usluga.NazivU ==
+                        naziv &&
                     (!izuzmiUslugaId.HasValue ||
                      usluga.UslugaId !=
                         izuzmiUslugaId.Value))
@@ -132,6 +144,17 @@ public class FotografRepository
         var maxId = await _context.Usluge
             .Select(usluga =>
                 (decimal?)usluga.UslugaId)
+            .MaxAsync(cancellationToken);
+
+        return (maxId ?? 0) + 1;
+    }
+
+    public async Task<decimal> GetNextCenovnikId(
+        CancellationToken cancellationToken = default)
+    {
+        var maxId = await _context.Cenovnici
+            .Select(cenovnik =>
+                (decimal?)cenovnik.CenovnikId)
             .MaxAsync(cancellationToken);
 
         return (maxId ?? 0) + 1;

@@ -5,4 +5,6 @@ public class DodavanjeSaleDto
     public decimal RbrS { get; set; }
 
     public decimal Kapacitet { get; set; }
+
+    public decimal CenaStolice { get; set; }
 }

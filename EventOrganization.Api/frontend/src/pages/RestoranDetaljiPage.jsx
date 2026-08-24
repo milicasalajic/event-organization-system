@@ -57,6 +57,14 @@ function formatEnumValue(value) {
         );
 }
 
+function formatCena(value) {
+    if (value == null) {
+        return 'Nije definisana';
+    }
+
+    return `${Number(value).toLocaleString('sr-RS')} RSD`;
+}
+
 function getLinkTekst(tipUsluge) {
     switch (tipUsluge) {
         case 'FOTOGRAF':
@@ -447,6 +455,7 @@ function RestoranDetaljiPage() {
                                 Upravljanje ponudom
                             </button>
                         )}
+
                         {jeRadnik && (
                             <button
                                 type="button"
@@ -657,13 +666,23 @@ function RestoranDetaljiPage() {
                                                                 <span>
                                                                     Kapacitet
                                                                 </span>
-                                                            </div>
 
-                                                            <b>
-                                                                {
-                                                                    sala.kapacitet
-                                                                }
-                                                            </b>
+                                                                <b>
+                                                                    {
+                                                                        sala.kapacitet
+                                                                    }
+                                                                </b>
+
+                                                                <span>
+                                                                    Cena stolice
+                                                                </span>
+
+                                                                <b>
+                                                                    {formatCena(
+                                                                        sala.cenaStolice,
+                                                                    )}
+                                                                </b>
+                                                            </div>
                                                         </div>
                                                     ),
                                                 )}
@@ -826,6 +845,18 @@ function RestoranDetaljiPage() {
                                                                         </div>
                                                                     )}
 
+                                                                    <div>
+                                                                        <span>
+                                                                            Cena usluge
+                                                                        </span>
+
+                                                                        <strong>
+                                                                            {formatCena(
+                                                                                usluga.cena,
+                                                                            )}
+                                                                        </strong>
+                                                                    </div>
+
                                                                     {usluga.tipFoto && (
                                                                         <div>
                                                                             <span>
@@ -846,12 +877,13 @@ function RestoranDetaljiPage() {
                                                                             <div>
                                                                                 <span>
                                                                                     Cena
+                                                                                    fotografije
                                                                                 </span>
 
                                                                                 <strong>
-                                                                                    {
-                                                                                        usluga.cenaFoto
-                                                                                    }
+                                                                                    {formatCena(
+                                                                                        usluga.cenaFoto,
+                                                                                    )}
                                                                                 </strong>
                                                                             </div>
                                                                         )}

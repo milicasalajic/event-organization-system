@@ -51,6 +51,18 @@ public class KeteringService
                 "Telefon ketering firme je obavezan.");
         }
 
+        if (request.Cena <= 0)
+        {
+            throw new ArgumentException(
+                "Cena ketering usluge mora biti veća od nule.");
+        }
+
+        if (request.Cena > 99999)
+        {
+            throw new ArgumentException(
+                "Cena ketering usluge ne može biti veća od 99999.");
+        }
+
         var paketIds =
             request.PaketIds
                 .Distinct()
@@ -92,6 +104,10 @@ public class KeteringService
 
         var uslugaId =
             await _keteringRepository.GetNextUslugaId(
+                cancellationToken);
+
+        var cenovnikId =
+            await _keteringRepository.GetNextCenovnikId(
                 cancellationToken);
 
         var usluga =
@@ -137,6 +153,25 @@ public class KeteringService
             usluga.Paketi.Add(
                 paket);
         }
+
+        usluga.Cenovnici.Add(
+            new Cenovnik
+            {
+                CenovnikId =
+                    cenovnikId,
+
+                Iznos =
+                    request.Cena,
+
+                DatumIzmene =
+                    DateTime.Today,
+
+                UslugaId =
+                    uslugaId,
+
+                SalaId =
+                    null
+            });
 
         await _keteringRepository.Add(
             usluga,
@@ -326,6 +361,20 @@ public class KeteringService
         Usluga usluga,
         decimal restoranId)
     {
+        var danas =
+            DateTime.Today;
+
+        var vazecaCena =
+            usluga.Cenovnici
+                .Where(cena =>
+                    cena.DatumIzmene.Date <=
+                    danas)
+                .OrderByDescending(cena =>
+                    cena.DatumIzmene)
+                .ThenByDescending(cena =>
+                    cena.CenovnikId)
+                .FirstOrDefault();
+
         return new KeteringFirmaDto
         {
             UslugaId =
@@ -342,6 +391,9 @@ public class KeteringService
 
             Opis =
                 usluga.KeteringFirma?.Opis,
+
+            Cena =
+                vazecaCena?.Iznos,
 
             PaketIds =
                 usluga.Paketi

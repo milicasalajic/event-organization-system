@@ -19,20 +19,26 @@ public class SalaRepository
         decimal paketId,
         CancellationToken cancellationToken = default)
     {
-        return _context.Paketi
+        return _context.Sale
             .AsNoTracking()
-            .Where(paket =>
-                paket.PaketId == paketId &&
-                paket.RestoranId == restoranId)
-            .SelectMany(paket => paket.Sale)
+            .Include(sala =>
+                sala.Cenovnici)
+            .Where(sala =>
+                sala.RestoranId == restoranId &&
+                sala.Paketi.Any(paket =>
+                    paket.PaketId == paketId &&
+                    paket.RestoranId == restoranId))
             .ToListAsync(cancellationToken);
     }
+
     public Task<List<Sala>> GetByRestoranId(
         decimal restoranId,
         CancellationToken cancellationToken = default)
     {
         return _context.Sale
             .AsNoTracking()
+            .Include(sala =>
+                sala.Cenovnici)
             .Where(sala =>
                 sala.RestoranId == restoranId &&
                 sala.Status == Status.AKTIVNO)
@@ -47,17 +53,20 @@ public class SalaRepository
         CancellationToken cancellationToken = default)
     {
         return _context.Sale
+            .Include(sala =>
+                sala.Cenovnici)
             .FirstOrDefaultAsync(
                 sala =>
                     sala.SalaId == salaId &&
                     sala.RestoranId == restoranId,
                 cancellationToken);
     }
+
     public async Task<bool> RbrSPostoji(
-    decimal restoranId,
-    decimal RbrS,
-    decimal? izuzmiSalaId = null,
-    CancellationToken cancellationToken = default)
+        decimal restoranId,
+        decimal RbrS,
+        decimal? izuzmiSalaId = null,
+        CancellationToken cancellationToken = default)
     {
         var salaId =
             await _context.Sale
@@ -86,6 +95,19 @@ public class SalaRepository
 
         return (maxId ?? 0) + 1;
     }
+
+    public async Task<decimal> GetNextCenovnikId(
+        CancellationToken cancellationToken = default)
+    {
+        var maxId =
+            await _context.Cenovnici
+                .Select(cenovnik =>
+                    (decimal?)cenovnik.CenovnikId)
+                .MaxAsync(cancellationToken);
+
+        return (maxId ?? 0) + 1;
+    }
+
     public async Task Add(
         Sala sala,
         CancellationToken cancellationToken = default)

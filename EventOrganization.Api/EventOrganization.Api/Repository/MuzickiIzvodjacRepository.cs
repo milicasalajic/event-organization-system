@@ -41,6 +41,8 @@ public class MuzickiIzvodjacRepository
                 usluga.MuzickiIzvodjac)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .Where(usluga =>
                 uslugaIds.Contains(
                     usluga.UslugaId))
@@ -80,6 +82,8 @@ public class MuzickiIzvodjacRepository
                 usluga.MuzickiIzvodjac)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .FirstOrDefaultAsync(
                 usluga =>
                     usluga.UslugaId ==
@@ -137,6 +141,17 @@ public class MuzickiIzvodjacRepository
         var maxId = await _context.Usluge
             .Select(usluga =>
                 (decimal?)usluga.UslugaId)
+            .MaxAsync(cancellationToken);
+
+        return (maxId ?? 0) + 1;
+    }
+
+    public async Task<decimal> GetNextCenovnikId(
+        CancellationToken cancellationToken = default)
+    {
+        var maxId = await _context.Cenovnici
+            .Select(cenovnik =>
+                (decimal?)cenovnik.CenovnikId)
             .MaxAsync(cancellationToken);
 
         return (maxId ?? 0) + 1;

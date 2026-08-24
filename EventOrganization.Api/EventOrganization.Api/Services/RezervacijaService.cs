@@ -227,4 +227,46 @@ public class RezervacijaService
         await _rezervacijaRepository.SaveChanges(
             cancellationToken);
     }
+    public async Task<List<DostupnaSalaDto>> GetDostupneSale(
+    decimal restoranId,
+    PretragaDostupnihSalaDto request,
+    CancellationToken cancellationToken = default)
+    {
+        if (request.BrGostiju <= 0)
+        {
+            throw new ArgumentException(
+                "Broj gostiju mora biti veći od nule.");
+        }
+
+        if (request.VremePocetka >= request.VremeZavrsetka)
+        {
+            throw new ArgumentException(
+                "Vreme završetka mora biti nakon vremena početka.");
+        }
+
+        if (request.VremePocetka <= DateTime.Now)
+        {
+            throw new ArgumentException(
+                "Termin rezervacije mora biti u budućnosti.");
+        }
+
+        var sale =
+            await _rezervacijaRepository.GetDostupneSale(
+                restoranId,
+                request.PaketId,
+                request.BrGostiju,
+                request.VremePocetka,
+                request.VremeZavrsetka,
+                cancellationToken);
+
+        return sale
+            .Select(sala =>
+                new DostupnaSalaDto
+                {
+                    SalaId = sala.SalaId,
+                    RbrS = sala.RbrS,
+                    Kapacitet = sala.Kapacitet
+                })
+            .ToList();
+    }
 }

@@ -26,8 +26,10 @@ public class KeteringRepository
             .SelectMany(paket =>
                 paket.Usluge)
             .Where(usluga =>
-                usluga.TipUsluge == TipUsluge.KETERING &&
-                usluga.Status == Status.AKTIVNO)
+                usluga.TipUsluge ==
+                    TipUsluge.KETERING &&
+                usluga.Status ==
+                    Status.AKTIVNO)
             .Select(usluga =>
                 usluga.UslugaId)
             .Distinct()
@@ -39,6 +41,8 @@ public class KeteringRepository
                 usluga.KeteringFirma)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .Where(usluga =>
                 uslugaIds.Contains(
                     usluga.UslugaId))
@@ -78,9 +82,12 @@ public class KeteringRepository
                 usluga.KeteringFirma)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .FirstOrDefaultAsync(
                 usluga =>
-                    usluga.UslugaId == uslugaId,
+                    usluga.UslugaId ==
+                    uslugaId,
                 cancellationToken);
     }
 
@@ -134,6 +141,17 @@ public class KeteringRepository
         var maxId = await _context.Usluge
             .Select(usluga =>
                 (decimal?)usluga.UslugaId)
+            .MaxAsync(cancellationToken);
+
+        return (maxId ?? 0) + 1;
+    }
+
+    public async Task<decimal> GetNextCenovnikId(
+        CancellationToken cancellationToken = default)
+    {
+        var maxId = await _context.Cenovnici
+            .Select(cenovnik =>
+                (decimal?)cenovnik.CenovnikId)
             .MaxAsync(cancellationToken);
 
         return (maxId ?? 0) + 1;

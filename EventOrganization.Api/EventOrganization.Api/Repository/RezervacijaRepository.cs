@@ -88,4 +88,39 @@ public class RezervacijaRepository
         return _context.SaveChangesAsync(
             cancellationToken);
     }
+    public async Task<List<Sala>> GetDostupneSale(
+    decimal restoranId,
+    decimal paketId,
+    decimal brGostiju,
+    DateTime vremePocetka,
+    DateTime vremeZavrsetka,
+    CancellationToken cancellationToken = default)
+    {
+        var zauzeteSalaIds =
+            await _context.Rezervacije
+                .AsNoTracking()
+                .Where(rezervacija =>
+                    rezervacija.SalaId != null &&
+                    rezervacija.StatusRez == StatusRez.POTVRDJENA &&
+                    rezervacija.VremePocetka < vremeZavrsetka &&
+                    rezervacija.VremeZavrsetka > vremePocetka)
+                .Select(rezervacija =>
+                    rezervacija.SalaId!.Value)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+
+        return await _context.Sale
+            .AsNoTracking()
+            .Where(sala =>
+                sala.RestoranId == restoranId &&
+                sala.Status == Status.AKTIVNO &&
+                sala.Kapacitet >= brGostiju &&
+                sala.Paketi.Any(paket =>
+                    paket.PaketId == paketId &&
+                    paket.RestoranId == restoranId &&
+                    paket.Status == Status.AKTIVNO) &&
+                !zauzeteSalaIds.Contains(sala.SalaId))
+            .OrderBy(sala => sala.RbrS)
+            .ToListAsync(cancellationToken);
+    }
 }

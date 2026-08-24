@@ -20,20 +20,17 @@ public class SalaService
         decimal paketId,
         CancellationToken cancellationToken = default)
     {
-        var sale = await _salaRepository.GetByPaketId(
-            restoranId,
-            paketId,
-            cancellationToken);
+        var sale =
+            await _salaRepository.GetByPaketId(
+                restoranId,
+                paketId,
+                cancellationToken);
 
         return sale
-            .Select(sala => new SalaDto
-            {
-                SalaId = sala.SalaId,
-                RbrS = sala.RbrS,
-                Kapacitet = sala.Kapacitet
-            })
+            .Select(MapToDto)
             .ToList();
     }
+
     public async Task<List<SalaDto>> GetByRestoranId(
         decimal restoranId,
         CancellationToken cancellationToken = default)
@@ -47,10 +44,11 @@ public class SalaService
             .Select(MapToDto)
             .ToList();
     }
+
     public async Task<SalaDto> Add(
-      decimal restoranId,
-      DodavanjeSaleDto request,
-      CancellationToken cancellationToken = default)
+        decimal restoranId,
+        DodavanjeSaleDto request,
+        CancellationToken cancellationToken = default)
     {
         if (request.RbrS <= 0)
         {
@@ -62,6 +60,18 @@ public class SalaService
         {
             throw new ArgumentException(
                 "Kapacitet sale mora biti veći od nule.");
+        }
+
+        if (request.CenaStolice <= 0)
+        {
+            throw new ArgumentException(
+                "Cena stolice mora biti veća od nule.");
+        }
+
+        if (request.CenaStolice > 99999)
+        {
+            throw new ArgumentException(
+                "Cena stolice ne može biti veća od 99999.");
         }
 
         var RbrSPostoji =
@@ -81,20 +91,54 @@ public class SalaService
             await _salaRepository.GetNextSalaId(
                 cancellationToken);
 
-        var sala = new Sala
-        {
-            SalaId = salaId,
-            RbrS = request.RbrS,
-            Kapacitet = request.Kapacitet,
-            RestoranId = restoranId,
-            Status = Status.AKTIVNO
-        };
+        var cenovnikId =
+            await _salaRepository.GetNextCenovnikId(
+                cancellationToken);
+
+        var sala =
+            new Sala
+            {
+                SalaId =
+                    salaId,
+
+                RbrS =
+                    request.RbrS,
+
+                Kapacitet =
+                    request.Kapacitet,
+
+                RestoranId =
+                    restoranId,
+
+                Status =
+                    Status.AKTIVNO
+            };
+
+        sala.Cenovnici.Add(
+            new Cenovnik
+            {
+                CenovnikId =
+                    cenovnikId,
+
+                Iznos =
+                    request.CenaStolice,
+
+                DatumIzmene =
+                    DateTime.Today,
+
+                SalaId =
+                    salaId,
+
+                UslugaId =
+                    null
+            });
 
         await _salaRepository.Add(
             sala,
             cancellationToken);
 
-        return MapToDto(sala);
+        return MapToDto(
+            sala);
     }
 
     public async Task<SalaDto?> Update(
@@ -126,7 +170,8 @@ public class SalaService
             return null;
         }
 
-        if (sala.Status == Status.NEAKTIVNO)
+        if (sala.Status ==
+            Status.NEAKTIVNO)
         {
             throw new InvalidOperationException(
                 "Neaktivnu salu nije moguće menjati.");
@@ -154,12 +199,14 @@ public class SalaService
         await _salaRepository.SaveChanges(
             cancellationToken);
 
-        return MapToDto(sala);
+        return MapToDto(
+            sala);
     }
+
     public async Task<bool> Delete(
-       decimal restoranId,
-       decimal salaId,
-       CancellationToken cancellationToken = default)
+        decimal restoranId,
+        decimal salaId,
+        CancellationToken cancellationToken = default)
     {
         var sala =
             await _salaRepository.GetForUpdate(
@@ -172,7 +219,8 @@ public class SalaService
             return false;
         }
 
-        if (sala.Status == Status.NEAKTIVNO)
+        if (sala.Status ==
+            Status.NEAKTIVNO)
         {
             return false;
         }
@@ -189,6 +237,20 @@ public class SalaService
     private static SalaDto MapToDto(
         Sala sala)
     {
+        var danas =
+            DateTime.Today;
+
+        var vazecaCena =
+            sala.Cenovnici
+                .Where(cena =>
+                    cena.DatumIzmene.Date <=
+                    danas)
+                .OrderByDescending(cena =>
+                    cena.DatumIzmene)
+                .ThenByDescending(cena =>
+                    cena.CenovnikId)
+                .FirstOrDefault();
+
         return new SalaDto
         {
             SalaId =
@@ -198,7 +260,10 @@ public class SalaService
                 sala.RbrS,
 
             Kapacitet =
-                sala.Kapacitet
+                sala.Kapacitet,
+
+            CenaStolice =
+                vazecaCena?.Iznos
         };
     }
 }

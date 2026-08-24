@@ -1,3 +1,5 @@
+using System;
+
 namespace EventOrganization.Api.DTOs.Usluge;
 
 public class UslugaDto
@@ -19,4 +21,5 @@ public class UslugaDto
     public string? TipFoto { get; set; }
 
     public string? TipMuzicara { get; set; }
+    public decimal? Cena { get; set; }
 }

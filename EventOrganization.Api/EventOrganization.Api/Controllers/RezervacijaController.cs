@@ -171,4 +171,26 @@ public class RezervacijaController : ControllerBase
                 exception.Message);
         }
     }
+    [Authorize(Roles = "KLIJENT")]
+    [HttpPost("restoran/{restoranId}/dostupne-sale")]
+    public async Task<ActionResult<List<DostupnaSalaDto>>> GetDostupneSale(
+    decimal restoranId,
+    PretragaDostupnihSalaDto request,
+    CancellationToken cancellationToken)
+    {
+        try
+        {
+            var sale =
+                await _rezervacijaService.GetDostupneSale(
+                    restoranId,
+                    request,
+                    cancellationToken);
+
+            return Ok(sale);
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+    }
 }

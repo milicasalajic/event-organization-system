@@ -24,38 +24,56 @@ public class UslugaService
                 paketId,
                 cancellationToken);
 
+        var danas = DateTime.Today;
+
         return usluge
-            .Select(usluga => new UslugaDto
+            .Select(usluga =>
             {
-                UslugaId =
-                    usluga.UslugaId,
+                var vazecaCena =
+                    usluga.Cenovnici
+                        .Where(cena =>
+                            cena.DatumIzmene.Date <= danas)
+                        .OrderByDescending(cena =>
+                            cena.DatumIzmene)
+                        .ThenByDescending(cena =>
+                            cena.CenovnikId)
+                        .FirstOrDefault();
 
-                Naziv =
-                    usluga.NazivU,
+                return new UslugaDto
+                {
+                    UslugaId =
+                        usluga.UslugaId,
 
-                Telefon =
-                    usluga.Telefon,
+                    Naziv =
+                        usluga.NazivU,
 
-                Portfolio =
-                    usluga.Portfolio,
+                    Telefon =
+                        usluga.Telefon,
 
-                TipUsluge =
-                    usluga.TipUsluge.ToString(),
+                    Portfolio =
+                        usluga.Portfolio,
 
-                Opis =
-                    usluga.KeteringFirma?.Opis ??
-                    usluga.DekoraterskaFirma?.Opis,
+                    TipUsluge =
+                        usluga.TipUsluge.ToString(),
 
-                CenaFoto =
-                    usluga.Fotograf?.CenaFoto,
+                    Opis =
+                        usluga.KeteringFirma?.Opis ??
+                        usluga.DekoraterskaFirma?.Opis,
 
-                TipFoto =
-                    usluga.Fotograf?
-                        .TipFoto.ToString(),
+                    CenaFoto =
+                        usluga.Fotograf?.CenaFoto,
 
-                TipMuzicara =
-                    usluga.MuzickiIzvodjac?
-                        .TipMuzicara.ToString()
+                    TipFoto =
+                        usluga.Fotograf?
+                            .TipFoto.ToString(),
+
+                    TipMuzicara =
+                        usluga.MuzickiIzvodjac?
+                            .TipMuzicara.ToString(),
+
+                    Cena =
+                        vazecaCena?.Iznos
+                };
             })
             .ToList();
     }

@@ -12,5 +12,7 @@ public class MuzickiIzvodjacDto
 
     public string TipMuzicara { get; set; } = null!;
 
+    public decimal? Cena { get; set; }
+
     public List<decimal> PaketIds { get; set; } = [];
 }

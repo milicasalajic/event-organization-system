@@ -26,8 +26,10 @@ public class DekoraterskaFirmaRepository
             .SelectMany(paket =>
                 paket.Usluge)
             .Where(usluga =>
-                usluga.TipUsluge == TipUsluge.DEKORATER &&
-                usluga.Status == Status.AKTIVNO)
+                usluga.TipUsluge ==
+                    TipUsluge.DEKORATER &&
+                usluga.Status ==
+                    Status.AKTIVNO)
             .Select(usluga =>
                 usluga.UslugaId)
             .Distinct()
@@ -39,6 +41,8 @@ public class DekoraterskaFirmaRepository
                 usluga.DekoraterskaFirma)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .Where(usluga =>
                 uslugaIds.Contains(
                     usluga.UslugaId))
@@ -78,6 +82,8 @@ public class DekoraterskaFirmaRepository
                 usluga.DekoraterskaFirma)
             .Include(usluga =>
                 usluga.Paketi)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .FirstOrDefaultAsync(
                 usluga =>
                     usluga.UslugaId ==
@@ -135,6 +141,17 @@ public class DekoraterskaFirmaRepository
         var maxId = await _context.Usluge
             .Select(usluga =>
                 (decimal?)usluga.UslugaId)
+            .MaxAsync(cancellationToken);
+
+        return (maxId ?? 0) + 1;
+    }
+
+    public async Task<decimal> GetNextCenovnikId(
+        CancellationToken cancellationToken = default)
+    {
+        var maxId = await _context.Cenovnici
+            .Select(cenovnik =>
+                (decimal?)cenovnik.CenovnikId)
             .MaxAsync(cancellationToken);
 
         return (maxId ?? 0) + 1;

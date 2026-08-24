@@ -28,6 +28,8 @@ public class UslugaRepository
                 usluga.DekoraterskaFirma)
             .Include(usluga =>
                 usluga.MuzickiIzvodjac)
+            .Include(usluga =>
+                usluga.Cenovnici)
             .Where(usluga =>
                 usluga.Paketi.Any(paket =>
                     paket.PaketId == paketId &&
