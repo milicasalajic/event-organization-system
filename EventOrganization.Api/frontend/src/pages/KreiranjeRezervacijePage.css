@@ -88,6 +88,11 @@
     font-weight: 600;
 }
 
+.obavezno {
+    color: #a94442;
+    font-weight: 700;
+}
+
 .rezervacija-field input,
 .rezervacija-field select,
 .rezervacija-field textarea {

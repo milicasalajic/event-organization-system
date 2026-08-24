@@ -36,6 +36,14 @@ const tipoviDogadjaja = [
     },
 ];
 
+const sati = Array.from(
+    { length: 24 },
+    (_, sat) => ({
+        value: sat,
+        naziv: `${String(sat).padStart(2, '0')}:00`,
+    }),
+);
+
 const naziviTipovaUsluga = {
     FOTOGRAF: 'Fotografi',
     KETERING: 'Ketering',
@@ -56,6 +64,13 @@ function formatCena(value) {
     }
 
     return `${Number(value).toLocaleString('sr-RS')} RSD`;
+}
+
+function napraviDatumVreme(
+    datum,
+    sat,
+) {
+    return `${datum}T${String(sat).padStart(2, '0')}:00:00`;
 }
 
 function grupisiUsluge(usluge) {
@@ -99,8 +114,13 @@ function KreiranjeRezervacijePage() {
         useState({
             tipDogadjaja: '',
             brGostiju: '',
-            vremePocetka: '',
-            vremeZavrsetka: '',
+
+            datumPocetka: '',
+            satPocetka: '',
+
+            datumZavrsetka: '',
+            satZavrsetka: '',
+
             salaId: '',
             paketId: '',
             uslugaIds: [],
@@ -200,9 +220,11 @@ function KreiranjeRezervacijePage() {
     function osnovniPodaciPopunjeni() {
         return Boolean(
             formData.tipDogadjaja !== '' &&
-            formData.brGostiju &&
-            formData.vremePocetka &&
-            formData.vremeZavrsetka,
+            Number(formData.brGostiju) > 0 &&
+            formData.datumPocetka &&
+            formData.satPocetka !== '' &&
+            formData.datumZavrsetka &&
+            formData.satZavrsetka !== '',
         );
     }
 
@@ -217,6 +239,18 @@ function KreiranjeRezervacijePage() {
             );
             return;
         }
+
+        const vremePocetka =
+            napraviDatumVreme(
+                formData.datumPocetka,
+                formData.satPocetka,
+            );
+
+        const vremeZavrsetka =
+            napraviDatumVreme(
+                formData.datumZavrsetka,
+                formData.satZavrsetka,
+            );
 
         setSaleLoading(true);
         setSaleProverene(false);
@@ -249,11 +283,9 @@ function KreiranjeRezervacijePage() {
                                 formData.brGostiju,
                             ),
 
-                        vremePocetka:
-                            formData.vremePocetka,
+                        vremePocetka,
 
-                        vremeZavrsetka:
-                            formData.vremeZavrsetka,
+                        vremeZavrsetka,
                     },
                 );
 
@@ -431,10 +463,16 @@ function KreiranjeRezervacijePage() {
                 ),
 
             vremePocetka:
-                formData.vremePocetka,
+                napraviDatumVreme(
+                    formData.datumPocetka,
+                    formData.satPocetka,
+                ),
 
             vremeZavrsetka:
-                formData.vremeZavrsetka,
+                napraviDatumVreme(
+                    formData.datumZavrsetka,
+                    formData.satZavrsetka,
+                ),
 
             salaId:
                 Number(
@@ -541,6 +579,7 @@ function KreiranjeRezervacijePage() {
     return (
         <div className="kreiranje-rezervacije-page">
             <main className="kreiranje-rezervacije-container">
+
                 <button
                     type="button"
                     className="rezervacija-nazad-button"
@@ -603,6 +642,7 @@ function KreiranjeRezervacijePage() {
                             onSubmit={
                                 handlePronadjiSale
                             }
+                            noValidate
                         >
                             <div className="rezervacija-card-heading">
                                 <span>
@@ -620,9 +660,13 @@ function KreiranjeRezervacijePage() {
                             </div>
 
                             <div className="rezervacija-form-grid">
+
                                 <div className="rezervacija-field">
                                     <label htmlFor="tipDogadjaja">
-                                        Tip događaja
+                                        Tip događaja{' '}
+                                        <span className="obavezno">
+                                            *
+                                        </span>
                                     </label>
 
                                     <select
@@ -634,7 +678,6 @@ function KreiranjeRezervacijePage() {
                                         onChange={
                                             handleOsnovniPodatakChange
                                         }
-                                        required
                                     >
                                         <option value="">
                                             Izaberite tip događaja
@@ -661,7 +704,10 @@ function KreiranjeRezervacijePage() {
 
                                 <div className="rezervacija-field">
                                     <label htmlFor="brGostiju">
-                                        Broj gostiju
+                                        Broj gostiju{' '}
+                                        <span className="obavezno">
+                                            *
+                                        </span>
                                     </label>
 
                                     <input
@@ -676,47 +722,133 @@ function KreiranjeRezervacijePage() {
                                         onChange={
                                             handleOsnovniPodatakChange
                                         }
-                                        required
                                     />
                                 </div>
 
                                 <div className="rezervacija-field">
-                                    <label htmlFor="vremePocetka">
-                                        Početak događaja
+                                    <label htmlFor="datumPocetka">
+                                        Datum početka{' '}
+                                        <span className="obavezno">
+                                            *
+                                        </span>
                                     </label>
 
                                     <input
-                                        id="vremePocetka"
-                                        name="vremePocetka"
-                                        type="datetime-local"
+                                        id="datumPocetka"
+                                        name="datumPocetka"
+                                        type="date"
                                         value={
-                                            formData.vremePocetka
+                                            formData.datumPocetka
                                         }
                                         onChange={
                                             handleOsnovniPodatakChange
                                         }
-                                        required
                                     />
                                 </div>
 
                                 <div className="rezervacija-field">
-                                    <label htmlFor="vremeZavrsetka">
-                                        Završetak događaja
+                                    <label htmlFor="satPocetka">
+                                        Vreme početka{' '}
+                                        <span className="obavezno">
+                                            *
+                                        </span>
                                     </label>
 
-                                    <input
-                                        id="vremeZavrsetka"
-                                        name="vremeZavrsetka"
-                                        type="datetime-local"
+                                    <select
+                                        id="satPocetka"
+                                        name="satPocetka"
                                         value={
-                                            formData.vremeZavrsetka
+                                            formData.satPocetka
                                         }
                                         onChange={
                                             handleOsnovniPodatakChange
                                         }
-                                        required
+                                    >
+                                        <option value="">
+                                            Izaberite sat
+                                        </option>
+
+                                        {sati.map(
+                                            (sat) => (
+                                                <option
+                                                    key={
+                                                        sat.value
+                                                    }
+                                                    value={
+                                                        sat.value
+                                                    }
+                                                >
+                                                    {
+                                                        sat.naziv
+                                                    }
+                                                </option>
+                                            ),
+                                        )}
+                                    </select>
+                                </div>
+
+                                <div className="rezervacija-field">
+                                    <label htmlFor="datumZavrsetka">
+                                        Datum završetka{' '}
+                                        <span className="obavezno">
+                                            *
+                                        </span>
+                                    </label>
+
+                                    <input
+                                        id="datumZavrsetka"
+                                        name="datumZavrsetka"
+                                        type="date"
+                                        value={
+                                            formData.datumZavrsetka
+                                        }
+                                        onChange={
+                                            handleOsnovniPodatakChange
+                                        }
                                     />
                                 </div>
+
+                                <div className="rezervacija-field">
+                                    <label htmlFor="satZavrsetka">
+                                        Vreme završetka{' '}
+                                        <span className="obavezno">
+                                            *
+                                        </span>
+                                    </label>
+
+                                    <select
+                                        id="satZavrsetka"
+                                        name="satZavrsetka"
+                                        value={
+                                            formData.satZavrsetka
+                                        }
+                                        onChange={
+                                            handleOsnovniPodatakChange
+                                        }
+                                    >
+                                        <option value="">
+                                            Izaberite sat
+                                        </option>
+
+                                        {sati.map(
+                                            (sat) => (
+                                                <option
+                                                    key={
+                                                        sat.value
+                                                    }
+                                                    value={
+                                                        sat.value
+                                                    }
+                                                >
+                                                    {
+                                                        sat.naziv
+                                                    }
+                                                </option>
+                                            ),
+                                        )}
+                                    </select>
+                                </div>
+
                             </div>
 
                             <div className="rezervacija-form-actions">
@@ -738,10 +870,8 @@ function KreiranjeRezervacijePage() {
                             dostupneSale.length ===
                             0 && (
                                 <div className="rezervacija-info">
-                                    Za izabrani broj
-                                    gostiju i termin
-                                    trenutno nema
-                                    dostupnih sala.
+                                    Za izabrani broj gostiju i termin
+                                    trenutno nema dostupnih sala.
                                 </div>
                             )}
 
@@ -754,14 +884,15 @@ function KreiranjeRezervacijePage() {
                                         </span>
 
                                         <h2>
-                                            Izaberite salu
+                                            Izaberite salu{' '}
+                                            <span className="obavezno">
+                                                *
+                                            </span>
                                         </h2>
 
                                         <p>
-                                            Prikazane su samo
-                                            sale dovoljnog
-                                            kapaciteta koje
-                                            nisu zauzete u
+                                            Prikazane su samo sale dovoljnog
+                                            kapaciteta koje nisu zauzete u
                                             izabranom terminu.
                                         </p>
                                     </div>
@@ -817,7 +948,10 @@ function KreiranjeRezervacijePage() {
                                                         </span>
 
                                                         <span>
-                                                            Cena stolice: {formatCena(sala.cenaStolice)}
+                                                            Cena stolice:{' '}
+                                                            {formatCena(
+                                                                sala.cenaStolice,
+                                                            )}
                                                         </span>
                                                     </label>
                                                 );
@@ -840,8 +974,7 @@ function KreiranjeRezervacijePage() {
 
                                     <p>
                                         Prikazani su paketi
-                                        dostupni za izabranu
-                                        salu.
+                                        dostupni za izabranu salu.
                                     </p>
                                 </div>
 
@@ -858,7 +991,10 @@ function KreiranjeRezervacijePage() {
                                 ) : (
                                     <div className="rezervacija-field rezervacija-full-field">
                                         <label htmlFor="paketId">
-                                            Paket
+                                            Paket{' '}
+                                            <span className="obavezno">
+                                                *
+                                            </span>
                                         </label>
 
                                         <select
@@ -1040,8 +1176,7 @@ function KreiranjeRezervacijePage() {
                                     </h2>
 
                                     <p>
-                                        Oba polja su
-                                        opciona.
+                                        Oba polja su opciona.
                                     </p>
                                 </div>
 
