@@ -9,6 +9,7 @@ import ProfilPage from './pages/ProfilPage';
 import RezervacijeRestoranaPage from './pages/RezervacijeRestoranaPage.jsx';
 import UpravljanjePonudomPage from './pages/UpravljanjePonudomPage';
 import CenovnikPage from './pages/CenovnikPage';
+import KreiranjeRezervacijePage  from './pages/KreiranjeRezervacijePage';
 function App() {
     return (
         <Routes>
@@ -94,6 +95,16 @@ function App() {
                         ]}
                     >
                         <CenovnikPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/restorani/:restoranId/nova-rezervacija"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={['KLIJENT']}
+                    >
+                        <KreiranjeRezervacijePage />
                     </ProtectedRoute>
                 }
             />

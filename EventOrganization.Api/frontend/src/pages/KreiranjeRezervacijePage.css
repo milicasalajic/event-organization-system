@@ -1,0 +1,264 @@
+.kreiranje-rezervacije-page {
+    min-height: 100vh;
+    padding: 42px 24px 70px;
+    background: #f8f5f0;
+}
+
+.kreiranje-rezervacije-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.rezervacija-nazad-button {
+    margin-bottom: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #3f5c4a;
+    font: inherit;
+    cursor: pointer;
+}
+
+.kreiranje-rezervacije-header {
+    margin-bottom: 30px;
+}
+
+    .kreiranje-rezervacije-header > span,
+    .rezervacija-card-heading > span {
+        display: block;
+        margin-bottom: 7px;
+        color: #c8a96b;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .kreiranje-rezervacije-header h1,
+    .rezervacija-card-heading h2 {
+        color: #3f5c4a;
+    }
+
+    .kreiranje-rezervacije-header h1 {
+        margin: 0 0 8px;
+        font-size: 2.2rem;
+    }
+
+    .kreiranje-rezervacije-header p,
+    .rezervacija-card-heading p {
+        margin: 0;
+        color: #77736d;
+    }
+
+.rezervacija-card {
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #e4ded5;
+    border-radius: 18px;
+    background: #ffffff;
+}
+
+.rezervacija-card-heading {
+    margin-bottom: 24px;
+}
+
+    .rezervacija-card-heading h2 {
+        margin: 0 0 8px;
+    }
+
+.rezervacija-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.rezervacija-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rezervacija-full-field {
+    grid-column: 1 / -1;
+}
+
+.rezervacija-field label {
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.rezervacija-field input,
+.rezervacija-field select,
+.rezervacija-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #e4ded5;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #2c2c2c;
+    font: inherit;
+}
+
+.rezervacija-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.rezervacija-primary-button {
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 10px;
+    background: #3f5c4a;
+    color: #ffffff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .rezervacija-primary-button:hover:not(:disabled) {
+        background: #31483a;
+    }
+
+    .rezervacija-primary-button:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
+
+.rezervacija-sale-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.rezervacija-sala-card,
+.rezervacija-usluga-card {
+    border: 1px solid #e4ded5;
+    border-radius: 14px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.rezervacija-sala-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+}
+
+    .rezervacija-sala-card input {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+
+    .rezervacija-sala-card.aktivna,
+    .rezervacija-usluga-card.aktivna {
+        border-color: #3f5c4a;
+        background: #f4f7f4;
+    }
+
+.rezervacija-usluge {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.rezervacija-usluge-grupa h3 {
+    margin: 0 0 12px;
+    color: #3f5c4a;
+}
+
+.rezervacija-usluge-lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.rezervacija-usluga-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+}
+
+    .rezervacija-usluga-card strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .rezervacija-usluga-card p {
+        margin: 0 0 6px;
+        color: #77736d;
+    }
+
+    .rezervacija-usluga-card span {
+        color: #3f5c4a;
+        font-weight: 600;
+    }
+
+.rezervacija-error,
+.rezervacija-info {
+    margin-bottom: 24px;
+    padding: 14px 16px;
+    border-radius: 10px;
+}
+
+.rezervacija-error {
+    background: #fdf2f2;
+    color: #a94442;
+}
+
+.rezervacija-info {
+    border: 1px solid #e4ded5;
+    background: #ffffff;
+    color: #77736d;
+}
+
+.obracun-red,
+.obracun-ukupno {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid #e4ded5;
+}
+
+.obracun-ukupno {
+    margin-top: 8px;
+    border-bottom: 0;
+    color: #3f5c4a;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.rezervacija-success,
+.rezervacija-page-state {
+    padding: 28px;
+    border: 1px solid #e4ded5;
+    border-radius: 18px;
+    background: #ffffff;
+}
+
+.rezervacija-success {
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .rezervacija-form-grid,
+    .rezervacija-sale-grid,
+    .rezervacija-usluge-lista {
+        grid-template-columns: 1fr;
+    }
+
+    .kreiranje-rezervacije-page {
+        padding: 28px 16px 50px;
+    }
+
+    .rezervacija-card {
+        padding: 20px;
+    }
+}

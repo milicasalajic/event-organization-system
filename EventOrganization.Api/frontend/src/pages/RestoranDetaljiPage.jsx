@@ -110,6 +110,14 @@ function RestoranDetaljiPage() {
         korisnik?.uloga ===
         'MENADZER';
 
+    const jeKlijent =
+        korisnik?.uloga ===
+        'KLIJENT';
+
+    const imaAkcije =
+        jeKlijent ||
+        jeRadnik;
+
     const [restoran, setRestoran] =
         useState(null);
 
@@ -309,8 +317,7 @@ function RestoranDetaljiPage() {
         return (
             <div className="restoran-detalji-page">
                 <div className="page-state">
-                    Učitavanje
-                    restorana...
+                    Učitavanje restorana...
                 </div>
             </div>
         );
@@ -382,9 +389,7 @@ function RestoranDetaljiPage() {
                         </span>
 
                         <h1>
-                            {
-                                restoran.naziv
-                            }
+                            {restoran.naziv}
                         </h1>
                     </div>
 
@@ -395,9 +400,7 @@ function RestoranDetaljiPage() {
                             </span>
 
                             <strong>
-                                {
-                                    restoran.adresa
-                                }
+                                {restoran.adresa}
                             </strong>
                         </div>
 
@@ -407,9 +410,7 @@ function RestoranDetaljiPage() {
                             </span>
 
                             <strong>
-                                {
-                                    restoran.grad
-                                }
+                                {restoran.grad}
                             </strong>
                         </div>
 
@@ -419,28 +420,42 @@ function RestoranDetaljiPage() {
                             </span>
 
                             <strong>
-                                {
-                                    restoran.telefon
-                                }
+                                {restoran.telefon}
                             </strong>
                         </div>
                     </div>
                 </section>
 
-                {jeRadnik && (
+                {imaAkcije && (
                     <div className="restoran-radnik-akcije">
 
-                        <button
-                            type="button"
-                            className="rezervacije-button"
-                            onClick={() =>
-                                navigate(
-                                    `/restorani/${restoranId}/rezervacije`,
-                                )
-                            }
-                        >
-                            Pregled rezervacija
-                        </button>
+                        {jeKlijent && (
+                            <button
+                                type="button"
+                                className="rezervacije-button"
+                                onClick={() =>
+                                    navigate(
+                                        `/restorani/${restoranId}/nova-rezervacija`,
+                                    )
+                                }
+                            >
+                                Nova rezervacija
+                            </button>
+                        )}
+
+                        {jeRadnik && (
+                            <button
+                                type="button"
+                                className="rezervacije-button"
+                                onClick={() =>
+                                    navigate(
+                                        `/restorani/${restoranId}/rezervacije`,
+                                    )
+                                }
+                            >
+                                Pregled rezervacija
+                            </button>
+                        )}
 
                         {jeMenadzer && (
                             <button
@@ -526,13 +541,9 @@ function RestoranDetaljiPage() {
                                         }
                                     >
                                         <div className="paket-option-top">
-
                                             <h3>
-                                                {
-                                                    paket.naziv
-                                                }
+                                                {paket.naziv}
                                             </h3>
-
                                         </div>
 
                                         <p>
@@ -564,17 +575,13 @@ function RestoranDetaljiPage() {
                                 </span>
 
                                 <h2>
-                                    {
-                                        aktivanPaket.naziv
-                                    }
+                                    {aktivanPaket.naziv}
                                 </h2>
                             </div>
 
                             {aktivanPaket.opis && (
                                 <p>
-                                    {
-                                        aktivanPaket.opis
-                                    }
+                                    {aktivanPaket.opis}
                                 </p>
                             )}
 
@@ -584,8 +591,7 @@ function RestoranDetaljiPage() {
                             aktivanPaketId
                         ] && (
                                 <div className="detalji-loading">
-                                    Učitavanje
-                                    detalja paketa...
+                                    Učitavanje detalja paketa...
                                 </div>
                             )}
 
@@ -614,15 +620,11 @@ function RestoranDetaljiPage() {
 
                                             <div>
                                                 <h3>
-                                                    Dostupne
-                                                    sale
+                                                    Dostupne sale
                                                 </h3>
 
                                                 <p>
-                                                    Sale koje
-                                                    možete
-                                                    izabrati uz
-                                                    ovaj paket.
+                                                    Sale koje možete izabrati uz ovaj paket.
                                                 </p>
                                             </div>
 
@@ -637,10 +639,7 @@ function RestoranDetaljiPage() {
                                         {saleAktivnogPaketa.length ===
                                             0 ? (
                                             <div className="empty-inline">
-                                                Paket
-                                                trenutno nema
-                                                dostupnih
-                                                sala.
+                                                Paket trenutno nema dostupnih sala.
                                             </div>
                                         ) : (
                                             <div className="sale-grid">
@@ -698,17 +697,11 @@ function RestoranDetaljiPage() {
 
                                             <div>
                                                 <h3>
-                                                    Dodatne
-                                                    usluge
+                                                    Dodatne usluge
                                                 </h3>
 
                                                 <p>
-                                                    Izaberite
-                                                    kategoriju
-                                                    i pogledajte
-                                                    dostupne
-                                                    pružaoce
-                                                    usluga.
+                                                    Izaberite kategoriju i pogledajte dostupne pružaoce usluga.
                                                 </p>
                                             </div>
 
@@ -723,10 +716,7 @@ function RestoranDetaljiPage() {
                                         {uslugeAktivnogPaketa.length ===
                                             0 ? (
                                             <div className="empty-inline">
-                                                Paket
-                                                trenutno nema
-                                                dodatnih
-                                                usluga.
+                                                Paket trenutno nema dodatnih usluga.
                                             </div>
                                         ) : (
                                             <>
@@ -860,8 +850,7 @@ function RestoranDetaljiPage() {
                                                                     {usluga.tipFoto && (
                                                                         <div>
                                                                             <span>
-                                                                                Vrsta
-                                                                                usluge
+                                                                                Vrsta usluge
                                                                             </span>
 
                                                                             <strong>
@@ -876,8 +865,7 @@ function RestoranDetaljiPage() {
                                                                         null && (
                                                                             <div>
                                                                                 <span>
-                                                                                    Cena
-                                                                                    fotografije
+                                                                                    Cena fotografije
                                                                                 </span>
 
                                                                                 <strong>
@@ -891,8 +879,7 @@ function RestoranDetaljiPage() {
                                                                     {usluga.tipMuzicara && (
                                                                         <div>
                                                                             <span>
-                                                                                Vrsta
-                                                                                izvođača
+                                                                                Vrsta izvođača
                                                                             </span>
 
                                                                             <strong>

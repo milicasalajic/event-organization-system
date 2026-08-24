@@ -41,6 +41,8 @@ builder.Services.AddScoped<MuzickiIzvodjacRepository>();
 builder.Services.AddScoped<MuzickiIzvodjacService>();
 builder.Services.AddScoped<CenovnikRepository>();
 builder.Services.AddScoped<CenovnikService>();
+builder.Services.AddScoped<RezervacijaRepository>();
+builder.Services.AddScoped<RezervacijaService>();
 
 builder.Services.AddCors(options =>
 {

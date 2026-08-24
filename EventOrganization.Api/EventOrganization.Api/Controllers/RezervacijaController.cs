@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using EventOrganization.Api.DTOs.Rezervacije;
+using EventOrganization.Api.Enums;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +11,11 @@ namespace EventOrganization.Api.Controllers;
 [Route("api/[controller]")]
 public class RezervacijaController : ControllerBase
 {
-    private readonly RezervacijaService _rezervacijaService;
-    private readonly RestoranService _restoranService;
+    private readonly RezervacijaService
+        _rezervacijaService;
+
+    private readonly RestoranService
+        _restoranService;
 
     public RezervacijaController(
         RezervacijaService rezervacijaService,
@@ -60,11 +64,13 @@ public class RezervacijaController : ControllerBase
                     restoranId,
                     cancellationToken);
 
-        return Ok(rezervacije);
+        return Ok(
+            rezervacije);
     }
 
     [Authorize(Roles = "MENADZER,OPERATER")]
-    [HttpGet("restoran/{restoranId}/{rezervacijaId}")]
+    [HttpGet(
+        "restoran/{restoranId}/{rezervacijaId}")]
     public async Task<ActionResult<RezervacijaDetaljiDto>>
         GetDetalji(
             decimal restoranId,
@@ -95,10 +101,11 @@ public class RezervacijaController : ControllerBase
         }
 
         var rezervacija =
-            await _rezervacijaService.GetDetalji(
-                restoranId,
-                rezervacijaId,
-                cancellationToken);
+            await _rezervacijaService
+                .GetDetalji(
+                    restoranId,
+                    rezervacijaId,
+                    cancellationToken);
 
         if (rezervacija is null)
         {
@@ -106,7 +113,8 @@ public class RezervacijaController : ControllerBase
                 "Rezervacija nije pronađena.");
         }
 
-        return Ok(rezervacija);
+        return Ok(
+            rezervacija);
     }
 
     [Authorize(Roles = "MENADZER,OPERATER")]
@@ -116,7 +124,7 @@ public class RezervacijaController : ControllerBase
         ObradiRezervaciju(
             decimal restoranId,
             decimal rezervacijaId,
-            ObradaRezervacijeDto request,
+            StatusRez noviStatus,
             CancellationToken cancellationToken)
     {
         var korisnikIdClaim =
@@ -149,7 +157,7 @@ public class RezervacijaController : ControllerBase
                     .ObradiRezervaciju(
                         restoranId,
                         rezervacijaId,
-                        request,
+                        noviStatus,
                         cancellationToken);
 
             if (rezervacija is null)
@@ -158,7 +166,61 @@ public class RezervacijaController : ControllerBase
                     "Rezervacija nije pronađena.");
             }
 
-            return Ok(rezervacija);
+            return Ok(
+                rezervacija);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(
+                exception.Message);
+        }
+    }
+
+    [Authorize(Roles = "KLIJENT")]
+    [HttpPost(
+        "restoran/{restoranId}/dostupne-sale")]
+    public async Task<ActionResult<List<DostupnaSalaDto>>>
+        GetDostupneSale(
+            decimal restoranId,
+            PretragaDostupnihSalaDto request,
+            CancellationToken cancellationToken)
+    {
+        try
+        {
+            var sale =
+                await _rezervacijaService
+                    .GetDostupneSale(
+                        restoranId,
+                        request,
+                        cancellationToken);
+
+            return Ok(
+                sale);
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(
+                exception.Message);
+        }
+    }
+
+    [Authorize(Roles = "KLIJENT")]
+    [HttpPost("obracun")]
+    public async Task<ActionResult<decimal>>
+        Obracun(
+            KreiranjeRezervacijeDto request,
+            CancellationToken cancellationToken)
+    {
+        try
+        {
+            var ukupnaCena =
+                await _rezervacijaService
+                    .Obracun(
+                        request,
+                        cancellationToken);
+
+            return Ok(
+                ukupnaCena);
         }
         catch (ArgumentException exception)
         {
@@ -171,26 +233,46 @@ public class RezervacijaController : ControllerBase
                 exception.Message);
         }
     }
+
     [Authorize(Roles = "KLIJENT")]
-    [HttpPost("restoran/{restoranId}/dostupne-sale")]
-    public async Task<ActionResult<List<DostupnaSalaDto>>> GetDostupneSale(
-    decimal restoranId,
-    PretragaDostupnihSalaDto request,
-    CancellationToken cancellationToken)
+    [HttpPost]
+    public async Task<ActionResult<KreiranjeRezervacijeResponseDto>>
+        KreirajRezervaciju(
+            KreiranjeRezervacijeDto request,
+            CancellationToken cancellationToken)
     {
+        var korisnikIdClaim =
+            User.FindFirst(
+                ClaimTypes.NameIdentifier)?.Value;
+
+        if (!decimal.TryParse(
+                korisnikIdClaim,
+                out var korisnikId))
+        {
+            return Unauthorized();
+        }
+
         try
         {
-            var sale =
-                await _rezervacijaService.GetDostupneSale(
-                    restoranId,
-                    request,
-                    cancellationToken);
+            var rezervacija =
+                await _rezervacijaService
+                    .KreirajRezervaciju(
+                        korisnikId,
+                        request,
+                        cancellationToken);
 
-            return Ok(sale);
+            return Ok(
+                rezervacija);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(exception.Message);
+            return BadRequest(
+                exception.Message);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(
+                exception.Message);
         }
     }
 }

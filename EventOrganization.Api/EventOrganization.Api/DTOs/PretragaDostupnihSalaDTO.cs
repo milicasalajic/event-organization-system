@@ -1,8 +1,10 @@
+using EventOrganization.Api.Enums;
+
 namespace EventOrganization.Api.DTOs.Rezervacije;
 
 public class PretragaDostupnihSalaDto
 {
-    public decimal PaketId { get; set; }
+    public Dogadjaj TipDogadjaja { get; set; }
 
     public decimal BrGostiju { get; set; }
 
