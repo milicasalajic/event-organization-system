@@ -10,11 +10,18 @@ public class MuzickiIzvodjacService
     private readonly MuzickiIzvodjacRepository
         _muzickiIzvodjacRepository;
 
+    private readonly CenovnikRepository
+        _cenovnikRepository;
+
     public MuzickiIzvodjacService(
-        MuzickiIzvodjacRepository muzickiIzvodjacRepository)
+        MuzickiIzvodjacRepository muzickiIzvodjacRepository,
+        CenovnikRepository cenovnikRepository)
     {
         _muzickiIzvodjacRepository =
             muzickiIzvodjacRepository;
+
+        _cenovnikRepository =
+            cenovnikRepository;
     }
 
     public async Task<List<MuzickiIzvodjacDto>> GetByRestoranId(
@@ -26,18 +33,184 @@ public class MuzickiIzvodjacService
                 restoranId,
                 cancellationToken);
 
-        return usluge
-            .Select(usluga =>
-                MapToDto(
+        var rezultat =
+            new List<MuzickiIzvodjacDto>();
+
+        foreach (var usluga in usluge)
+        {
+            rezultat.Add(
+                await MapToDto(
                     usluga,
-                    restoranId))
-            .ToList();
+                    restoranId,
+                    cancellationToken));
+        }
+
+        return rezultat;
     }
 
     public async Task<MuzickiIzvodjacDto> Add(
         decimal restoranId,
         DodavanjeMuzickogIzvodjacaDto request,
         CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatke(
+            request);
+
+        var tipMuzicara =
+            ParseTipMuzicara(
+                request.TipMuzicara);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            null,
+            cancellationToken);
+
+        var paketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        var uslugaId =
+            await _muzickiIzvodjacRepository.GetNextUslugaId(
+                cancellationToken);
+
+        var cenovnikId =
+            await _cenovnikRepository.GetNextCenovnikId(
+                cancellationToken);
+
+        var usluga =
+            KreirajMuzickogIzvodjaca(
+                uslugaId,
+                cenovnikId,
+                naziv,
+                request,
+                tipMuzicara);
+
+        PoveziPakete(
+            usluga,
+            paketi);
+
+        await _muzickiIzvodjacRepository.Add(
+            usluga,
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<MuzickiIzvodjacDto?> Update(
+        decimal restoranId,
+        decimal uslugaId,
+        IzmenaMuzickogIzvodjacaDto request,
+        CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatkeIzmene(
+            request);
+
+        var tipMuzicara =
+            ParseTipMuzicara(
+                request.TipMuzicara);
+
+        var usluga =
+            await _muzickiIzvodjacRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return null;
+        }
+
+        ValidirajMuzickogIzvodjacaZaIzmenu(
+            usluga);
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            uslugaId,
+            cancellationToken);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var noviPaketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        IzmeniPodatkeMuzickogIzvodjaca(
+            usluga,
+            request,
+            naziv,
+            tipMuzicara);
+
+        IzmeniPakete(
+            usluga,
+            noviPaketi,
+            restoranId);
+
+        await _muzickiIzvodjacRepository.SaveChanges(
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<bool> Delete(
+        decimal restoranId,
+        decimal uslugaId,
+        CancellationToken cancellationToken = default)
+    {
+        var usluga =
+            await _muzickiIzvodjacRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return false;
+        }
+
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
+
+        if (usluga.Paketi.Count == 0)
+        {
+            usluga.Status =
+                Status.NEAKTIVNO;
+        }
+
+        await _muzickiIzvodjacRepository.SaveChanges(
+            cancellationToken);
+
+        return true;
+    }
+
+    private static void ValidirajPodatke(
+        DodavanjeMuzickogIzvodjacaDto request)
     {
         if (string.IsNullOrWhiteSpace(
                 request.Naziv))
@@ -72,34 +245,70 @@ public class MuzickiIzvodjacService
                 "Cena muzičkog izvođača ne može biti veća od 99999.");
         }
 
+        if (request.PaketIds.Count == 0)
+        {
+            throw new ArgumentException(
+                "Muzički izvođač mora biti povezan sa najmanje jednim paketom.");
+        }
+    }
+
+    private static void ValidirajPodatkeIzmene(
+        IzmenaMuzickogIzvodjacaDto request)
+    {
+        if (string.IsNullOrWhiteSpace(
+                request.Naziv))
+        {
+            throw new ArgumentException(
+                "Naziv muzičkog izvođača je obavezan.");
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                request.Telefon))
+        {
+            throw new ArgumentException(
+                "Telefon muzičkog izvođača je obavezan.");
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                request.TipMuzicara))
+        {
+            throw new ArgumentException(
+                "Tip muzičkog izvođača je obavezan.");
+        }
+
+        if (request.PaketIds.Count == 0)
+        {
+            throw new ArgumentException(
+                "Muzički izvođač mora biti povezan sa najmanje jednim paketom.");
+        }
+    }
+
+    private static TipMuzicara ParseTipMuzicara(
+        string tipMuzicara)
+    {
         if (!Enum.TryParse<TipMuzicara>(
-                request.TipMuzicara,
+                tipMuzicara,
                 true,
-                out var tipMuzicara))
+                out var rezultat))
         {
             throw new ArgumentException(
                 "Tip muzičkog izvođača nije ispravan.");
         }
 
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
+        return rezultat;
+    }
 
-        if (paketIds.Count == 0)
-        {
-            throw new ArgumentException(
-                "Muzički izvođač mora biti povezan sa najmanje jednim paketom.");
-        }
-
-        var naziv =
-            request.Naziv.Trim();
-
+    private async Task ValidirajNaziv(
+        decimal restoranId,
+        string naziv,
+        decimal? izuzmiUslugaId,
+        CancellationToken cancellationToken)
+    {
         var nazivPostoji =
             await _muzickiIzvodjacRepository.NazivPostoji(
                 restoranId,
                 naziv,
-                null,
+                izuzmiUslugaId,
                 cancellationToken);
 
         if (nazivPostoji)
@@ -107,27 +316,53 @@ public class MuzickiIzvodjacService
             throw new ArgumentException(
                 "Muzički izvođač sa ovim nazivom već postoji u ponudi restorana.");
         }
+    }
 
+    private async Task<List<Paket>> UcitajIValidirajPakete(
+        decimal restoranId,
+        List<decimal> paketIds,
+        CancellationToken cancellationToken)
+    {
         var paketi =
             await _muzickiIzvodjacRepository.GetPaketiZaRestoran(
                 restoranId,
                 paketIds,
                 cancellationToken);
 
-        if (paketi.Count != paketIds.Count)
+        if (paketi.Count !=
+            paketIds.Count)
         {
             throw new ArgumentException(
                 "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
         }
 
-        var uslugaId =
-            await _muzickiIzvodjacRepository.GetNextUslugaId(
-                cancellationToken);
+        return paketi;
+    }
 
-        var cenovnikId =
-            await _muzickiIzvodjacRepository.GetNextCenovnikId(
-                cancellationToken);
+    private static void ValidirajMuzickogIzvodjacaZaIzmenu(
+        Usluga usluga)
+    {
+        if (usluga.Status ==
+            Status.NEAKTIVNO)
+        {
+            throw new InvalidOperationException(
+                "Neaktivnog muzičkog izvođača nije moguće menjati.");
+        }
 
+        if (usluga.MuzickiIzvodjac is null)
+        {
+            throw new InvalidOperationException(
+                "Podaci muzičkog izvođača nisu pronađeni.");
+        }
+    }
+
+    private static Usluga KreirajMuzickogIzvodjaca(
+        decimal uslugaId,
+        decimal cenovnikId,
+        string naziv,
+        DodavanjeMuzickogIzvodjacaDto request,
+        TipMuzicara tipMuzicara)
+    {
         var usluga =
             new Usluga
             {
@@ -163,12 +398,6 @@ public class MuzickiIzvodjacService
                     }
             };
 
-        foreach (var paket in paketi)
-        {
-            usluga.Paketi.Add(
-                paket);
-        }
-
         usluga.Cenovnici.Add(
             new Cenovnik
             {
@@ -179,7 +408,7 @@ public class MuzickiIzvodjacService
                     request.Cena,
 
                 DatumIzmene =
-                    DateTime.Today,
+                    DateTime.Now,
 
                 UslugaId =
                     uslugaId,
@@ -188,108 +417,15 @@ public class MuzickiIzvodjacService
                     null
             });
 
-        await _muzickiIzvodjacRepository.Add(
-            usluga,
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
+        return usluga;
     }
 
-    public async Task<MuzickiIzvodjacDto?> Update(
-        decimal restoranId,
-        decimal uslugaId,
+    private static void IzmeniPodatkeMuzickogIzvodjaca(
+        Usluga usluga,
         IzmenaMuzickogIzvodjacaDto request,
-        CancellationToken cancellationToken = default)
+        string naziv,
+        TipMuzicara tipMuzicara)
     {
-        if (string.IsNullOrWhiteSpace(
-                request.Naziv))
-        {
-            throw new ArgumentException(
-                "Naziv muzičkog izvođača je obavezan.");
-        }
-
-        if (string.IsNullOrWhiteSpace(
-                request.Telefon))
-        {
-            throw new ArgumentException(
-                "Telefon muzičkog izvođača je obavezan.");
-        }
-
-        if (string.IsNullOrWhiteSpace(
-                request.TipMuzicara))
-        {
-            throw new ArgumentException(
-                "Tip muzičkog izvođača je obavezan.");
-        }
-
-        if (!Enum.TryParse<TipMuzicara>(
-                request.TipMuzicara,
-                true,
-                out var tipMuzicara))
-        {
-            throw new ArgumentException(
-                "Tip muzičkog izvođača nije ispravan.");
-        }
-
-        var usluga =
-            await _muzickiIzvodjacRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return null;
-        }
-
-        if (usluga.Status ==
-            Status.NEAKTIVNO)
-        {
-            throw new InvalidOperationException(
-                "Neaktivnog muzičkog izvođača nije moguće menjati.");
-        }
-
-        var naziv =
-            request.Naziv.Trim();
-
-        var nazivPostoji =
-            await _muzickiIzvodjacRepository.NazivPostoji(
-                restoranId,
-                naziv,
-                uslugaId,
-                cancellationToken);
-
-        if (nazivPostoji)
-        {
-            throw new ArgumentException(
-                "Muzički izvođač sa ovim nazivom već postoji u ponudi restorana.");
-        }
-
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
-
-        if (paketIds.Count == 0)
-        {
-            throw new ArgumentException(
-                "Muzički izvođač mora biti povezan sa najmanje jednim paketom.");
-        }
-
-        var noviPaketi =
-            await _muzickiIzvodjacRepository.GetPaketiZaRestoran(
-                restoranId,
-                paketIds,
-                cancellationToken);
-
-        if (noviPaketi.Count != paketIds.Count)
-        {
-            throw new ArgumentException(
-                "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
-        }
-
         usluga.NazivU =
             naziv;
 
@@ -302,27 +438,29 @@ public class MuzickiIzvodjacService
                 ? null
                 : request.Portfolio.Trim();
 
-        if (usluga.MuzickiIzvodjac is null)
-        {
-            throw new InvalidOperationException(
-                "Podaci muzičkog izvođača nisu pronađeni.");
-        }
-
-        usluga.MuzickiIzvodjac.TipMuzicara =
+        usluga.MuzickiIzvodjac!.TipMuzicara =
             tipMuzicara;
+    }
 
-        var stariPaketiRestorana =
-            usluga.Paketi
-                .Where(paket =>
-                    paket.RestoranId ==
-                    restoranId)
-                .ToList();
-
-        foreach (var paket in stariPaketiRestorana)
+    private static void PoveziPakete(
+        Usluga usluga,
+        List<Paket> paketi)
+    {
+        foreach (var paket in paketi)
         {
-            usluga.Paketi.Remove(
+            usluga.Paketi.Add(
                 paket);
         }
+    }
+
+    private static void IzmeniPakete(
+        Usluga usluga,
+        List<Paket> noviPaketi,
+        decimal restoranId)
+    {
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
 
         foreach (var paket in noviPaketi)
         {
@@ -335,31 +473,12 @@ public class MuzickiIzvodjacService
                     paket);
             }
         }
-
-        await _muzickiIzvodjacRepository.SaveChanges(
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
     }
 
-    public async Task<bool> Delete(
-        decimal restoranId,
-        decimal uslugaId,
-        CancellationToken cancellationToken = default)
+    private static void UkloniPaketeRestorana(
+        Usluga usluga,
+        decimal restoranId)
     {
-        var usluga =
-            await _muzickiIzvodjacRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return false;
-        }
-
         var paketiRestorana =
             usluga.Paketi
                 .Where(paket =>
@@ -372,36 +491,18 @@ public class MuzickiIzvodjacService
             usluga.Paketi.Remove(
                 paket);
         }
-
-        if (usluga.Paketi.Count == 0)
-        {
-            usluga.Status =
-                Status.NEAKTIVNO;
-        }
-
-        await _muzickiIzvodjacRepository.SaveChanges(
-            cancellationToken);
-
-        return true;
     }
 
-    private static MuzickiIzvodjacDto MapToDto(
+    private async Task<MuzickiIzvodjacDto> MapToDto(
         Usluga usluga,
-        decimal restoranId)
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var danas =
-            DateTime.Today;
-
         var vazecaCena =
-            usluga.Cenovnici
-                .Where(cena =>
-                    cena.DatumIzmene.Date <=
-                    danas)
-                .OrderByDescending(cena =>
-                    cena.DatumIzmene)
-                .ThenByDescending(cena =>
-                    cena.CenovnikId)
-                .FirstOrDefault();
+            await _cenovnikRepository.GetVazecaCenaUsluge(
+                usluga.UslugaId,
+                DateTime.Now,
+                cancellationToken);
 
         return new MuzickiIzvodjacDto
         {

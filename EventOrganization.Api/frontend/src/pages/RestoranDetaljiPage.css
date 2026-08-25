@@ -1,693 +1,574 @@
 .restoran-detalji-page {
     min-height: 100vh;
-    padding: 40px 24px 70px;
-    background: #f7f4ef;
-    color: #2d312e;
+    padding: 40px 24px 80px;
+    background: #f8f5f0;
+    color: #2c2c2c;
 }
-
-    .restoran-detalji-page * {
-        box-sizing: border-box;
-    }
 
 .restoran-detalji-container {
     width: 100%;
-    max-width: 1180px;
+    max-width: 1050px;
     margin: 0 auto;
 }
 
-
-/* =========================================================
-   RESTORAN
-   ========================================================= */
-
-.restoran-hero {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
-    padding: 30px 34px;
-    background: #ffffff;
-    border: 1px solid #e5dfd6;
-    border-top: 4px solid #607a68;
-    border-radius: 12px;
-    box-shadow: 0 4px 18px rgba(34, 43, 37, 0.04);
+.restoran-nazad-button {
+    margin-bottom: 34px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #3f5c4a;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.restoran-kicker,
-.section-kicker {
+    .restoran-nazad-button:hover {
+        color: #31483a;
+    }
+
+/* RESTORAN */
+
+.restoran-zaglavlje {
+    padding: 25px 0 30px;
+    text-align: center;
+}
+
+.restoran-kicker {
     display: block;
-    margin-bottom: 6px;
-    color: #9b8151;
-    font-size: 11px;
+    margin-bottom: 8px;
+    color: #c8a96b;
+    font-size: 0.76rem;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
 }
 
-.restoran-hero h1 {
+.restoran-zaglavlje h1 {
     margin: 0;
-    color: #29352d;
-    font-size: 32px;
-    line-height: 1.15;
+    color: #31483a;
+    font-size: 3rem;
+    line-height: 1.1;
 }
 
-.restoran-meta {
+.restoran-kontakt {
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 17px;
+    color: #77736d;
 }
 
-.restoran-meta-item {
-    min-width: 145px;
-    padding: 5px 24px;
-    border-left: 1px solid #e8e3dc;
+.restoran-adresa-link,
+.restoran-telefon-link {
+    color: #77736d;
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-    .restoran-meta-item:first-child {
-        border-left: none;
+    .restoran-adresa-link:hover,
+    .restoran-telefon-link:hover {
+        color: #3f5c4a;
+        text-decoration: underline;
     }
 
-    .restoran-meta-item span {
-        display: block;
-        margin-bottom: 5px;
-        color: #8a867f;
-        font-size: 11px;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
+.restoran-dot {
+    color: #c8a96b;
+}
+
+.restoran-radno-vreme {
+    display: block;
+    margin-top: 8px;
+    color: #77736d;
+    font-size: 0.9rem;
+}
+
+/* REZERVACIJA */
+
+.restoran-rezervacija-akcija {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0 55px;
+}
+
+.restoran-rezervisi-button {
+    min-width: 260px;
+    padding: 15px 34px;
+    border: 0;
+    border-radius: 12px;
+    background: #3f5c4a;
+    color: #ffffff;
+    box-shadow: 0 10px 24px rgba(63, 92, 74, 0.2);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .restoran-rezervisi-button:hover {
+        background: #31483a;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(63, 92, 74, 0.25);
     }
 
-    .restoran-meta-item strong {
-        color: #3c403d;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-
-/* =========================================================
-   GLAVNA AKCIJA RADNIKA - REZERVACIJE
-   ========================================================= */
+/* RADNIK */
 
 .restoran-radnik-akcije {
     display: flex;
     justify-content: center;
-    margin-top: 26px;
-}
-
-.rezervacije-button {
-    min-width: 260px;
-    padding: 15px 34px;
-    background: #2f4738;
-    border: 1px solid #2f4738;
-    border-radius: 9px;
-    color: #ffffff;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.25px;
-    cursor: pointer;
-    box-shadow: 0 6px 17px rgba(47, 71, 56, 0.2);
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-    .rezervacije-button:hover {
-        background: #24372c;
-        border-color: #24372c;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(47, 71, 56, 0.27);
-    }
-
-
-/* =========================================================
-   NASLOVI SEKCIJA
-   ========================================================= */
-
-.paketi-sekcija {
-    margin-top: 38px;
-}
-
-/* Kada postoji dugme za rezervacije,
-   malo smanjujemo razmak do paketa. */
-.restoran-radnik-akcije + .paketi-sekcija {
-    margin-top: 30px;
-}
-
-.section-heading,
-.subsection-heading {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.section-heading {
-    margin-bottom: 16px;
-}
-
-    .section-heading h2,
-    .paket-detalji-header h2 {
-        margin: 0;
-        color: #29352d;
-        font-size: 24px;
-    }
-
-.section-count,
-.subsection-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px 10px;
-    background: #eee9e1;
-    border-radius: 6px;
-    color: #68645e;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   PAKETI
-   ========================================================= */
-
-.paketi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.paket-option {
-    position: relative;
-    min-height: 145px;
-    padding: 20px;
-    background: #ffffff;
-    border: 1px solid #e3ddd4;
-    border-radius: 10px;
-    text-align: left;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
-}
-
-    .paket-option:hover {
-        transform: translateY(-2px);
-        border-color: #bca475;
-        box-shadow: 0 6px 18px rgba(42, 50, 45, 0.06);
-    }
-
-    /* Aktivni paket je namerno svetliji od
-   glavnog dugmeta za rezervacije. */
-
-    .paket-option.aktivan {
-        background: #718979;
-        border-color: #718979;
-        box-shadow: 0 7px 18px rgba(92, 119, 101, 0.14);
-    }
-
-.paket-option-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.paket-option h3 {
-    margin: 0;
-    color: #334239;
-    font-size: 17px;
-}
-
-.paket-option p {
-    margin: 10px 0 28px;
-    color: #77736d;
-    font-size: 13px;
-    line-height: 1.55;
-}
-
-.paket-pregled {
-    position: absolute;
-    bottom: 18px;
-    left: 20px;
-    color: #8f7545;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.2px;
-}
-
-.paket-option.aktivan h3,
-.paket-option.aktivan p,
-.paket-option.aktivan .paket-pregled {
-    color: #ffffff;
-}
-
-.paket-option.aktivan p {
-    opacity: 0.85;
-}
-
-.paket-option.aktivan .paket-pregled {
-    opacity: 0.95;
-}
-
-
-/* =========================================================
-   DETALJI PAKETA
-   ========================================================= */
-
-.paket-detalji-panel {
-    margin-top: 18px;
-    overflow: hidden;
-    background: #ffffff;
-    border: 1px solid #e3ddd4;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(35, 43, 38, 0.04);
-}
-
-.paket-detalji-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
-    padding: 24px 28px;
-    border-bottom: 1px solid #ebe6df;
-}
-
-    .paket-detalji-header p {
-        max-width: 600px;
-        margin: 0;
-        color: #77736d;
-        font-size: 13px;
-        line-height: 1.6;
-    }
-
-
-/* =========================================================
-   SALE
-   ========================================================= */
-
-.sale-blok,
-.usluge-blok {
-    padding: 24px 28px;
-}
-
-.sale-blok {
-    border-bottom: 1px solid #ebe6df;
-}
-
-.subsection-heading {
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-    .subsection-heading h3 {
-        margin: 0;
-        color: #364139;
-        font-size: 18px;
-    }
-
-    .subsection-heading p {
-        margin: 4px 0 0;
-        color: #8a867f;
-        font-size: 12px;
-    }
-
-.sale-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    flex-wrap: wrap;
     gap: 10px;
+    margin: 5px 0 50px;
 }
 
-.sala-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 70px;
-    padding: 14px 16px;
-    background: #faf8f4;
-    border: 1px solid #e8e2d9;
-    border-radius: 8px;
+    .restoran-radnik-akcije button {
+        padding: 11px 17px;
+        border: 1px solid #d8d2c9;
+        border-radius: 9px;
+        background: #ffffff;
+        color: #3f5c4a;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .restoran-radnik-akcije button:hover {
+            border-color: #3f5c4a;
+        }
+
+/* PONUDA */
+
+.restoran-ponuda {
+    margin-top: 20px;
 }
 
-    .sala-item div {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .sala-item strong {
-        color: #3f4b43;
-        font-size: 14px;
-    }
-
-    .sala-item span {
-        color: #969087;
-        font-size: 11px;
-    }
-
-    .sala-item b {
-        color: #9b7e48;
-        font-size: 21px;
-    }
-
-
-/* =========================================================
-   TABOVI USLUGA
-   ========================================================= */
-
-.usluge-tabs {
-    display: flex;
-    gap: 7px;
-    margin-bottom: 15px;
-    padding-bottom: 2px;
-    overflow-x: auto;
+.ponuda-card {
+    padding: 40px 42px 44px;
+    border: 1px solid #e4ded5;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 14px 38px rgba(63, 92, 74, 0.09);
 }
 
-.usluga-tab {
+.ponuda-naslov {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.ponuda-naslov-jedan {
+    margin: 0;
+    color: #c8a96b;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* PAKETI */
+
+.paketi-izbor {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    padding: 10px 14px;
-    background: #f7f4ef;
-    border: 1px solid #e5dfd6;
-    border-radius: 7px;
-    color: #625f59;
-    font-family: inherit;
-    font-size: 13px;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 27px;
+}
+
+.paket-dugme {
+    min-width: 135px;
+    padding: 11px 24px;
+    border: 1px solid #ddd6cc;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #5f5c57;
+    font: inherit;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-    .usluga-tab:hover {
-        border-color: #9cad9f;
-        color: #4f6957;
+    .paket-dugme:hover {
+        border-color: #3f5c4a;
+        color: #3f5c4a;
+        transform: translateY(-1px);
     }
 
-    /* Svetlija zelena od glavne akcije */
-
-    .usluga-tab.aktivan {
-        background: #789080;
-        border-color: #789080;
+    .paket-dugme.aktivan {
+        border-color: #3f5c4a;
+        background: #3f5c4a;
         color: #ffffff;
     }
 
-    .usluga-tab span {
-        min-width: 20px;
-        padding: 2px 6px;
-        background: rgba(0, 0, 0, 0.07);
-        border-radius: 4px;
-        text-align: center;
-        font-size: 10px;
-    }
-
-    .usluga-tab.aktivan span {
-        background: rgba(255, 255, 255, 0.18);
-    }
-
-
-/* =========================================================
-   LISTA USLUGA
-   ========================================================= */
-
-.usluge-lista-nova {
-    overflow: hidden;
-    border: 1px solid #e8e2d9;
-    border-radius: 9px;
+.izabrani-paket {
+    max-width: 650px;
+    margin: 0 auto;
+    text-align: center;
 }
 
-.usluga-red {
-    padding: 20px 22px;
-    background: #ffffff;
-    border-bottom: 1px solid #eee9e2;
-    transition: background-color 0.2s ease;
-}
-
-    .usluga-red:last-child {
-        border-bottom: none;
-    }
-
-    .usluga-red:hover {
-        background: #fdfcf9;
-    }
-
-.usluga-red-main {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 30px;
-}
-
-.usluga-tekst {
-    min-width: 0;
-    flex: 1;
-}
-
-    .usluga-tekst h4 {
+    .izabrani-paket h3 {
         margin: 0;
-        color: #344139;
-        font-size: 16px;
-        font-weight: 700;
+        color: #31483a;
+        font-size: 1.45rem;
     }
 
-    .usluga-tekst p {
-        max-width: 700px;
-        margin: 6px 0 0;
-        color: #7c7770;
-        font-size: 12px;
+    .izabrani-paket p {
+        margin: 8px 0 0;
+        color: #77736d;
         line-height: 1.55;
     }
 
-
-/* =========================================================
-   DUGME KA PORTFOLIJU / PONUDI
-   ========================================================= */
-
-.portfolio-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    flex-shrink: 0;
-    min-width: 150px;
-    padding: 11px 16px;
-    background: #789080;
-    border: 1px solid #789080;
-    border-radius: 7px;
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+.ponuda-divider {
+    width: 100%;
+    height: 1px;
+    margin: 36px 0;
+    background: #eee9e1;
 }
 
-    .portfolio-link:hover {
-        background: #657c6c;
-        border-color: #657c6c;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(83, 106, 90, 0.17);
-    }
+/* NASLOVI */
 
-.portfolio-link-icon {
-    font-size: 15px;
-    line-height: 1;
+.ponuda-podnaslov {
+    margin-bottom: 20px;
 }
 
-
-/* =========================================================
-   INFORMACIJE O USLUZI
-   ========================================================= */
-
-.usluga-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 34px;
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid #f0ece6;
-}
-
-    .usluga-meta div {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        min-width: 115px;
-    }
-
-    .usluga-meta span {
-        color: #99938b;
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 0.4px;
+    .ponuda-podnaslov > span {
+        display: block;
+        margin-bottom: 4px;
+        color: #c8a96b;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
     }
 
-    .usluga-meta strong {
-        color: #57534e;
-        font-size: 12px;
-        font-weight: 600;
+    .ponuda-podnaslov h3 {
+        margin: 0;
+        color: #31483a;
+        font-size: 1.7rem;
     }
 
+/* SALE */
 
-/* =========================================================
-   STATES
-   ========================================================= */
-
-.page-state,
-.empty-state,
-.empty-inline,
-.detalji-loading,
-.detalji-error {
-    padding: 22px;
-    border-radius: 8px;
-    font-size: 13px;
+.sale-lista {
+    display: grid;
+    grid-template-columns: repeat( 3, minmax(0, 1fr) );
+    gap: 14px;
 }
 
-.page-state {
-    max-width: 1180px;
-    margin: 0 auto;
-    background: #ffffff;
-    border: 1px solid #e5dfd6;
+.sala-card {
+    padding: 18px 19px;
+    border: 1px solid #e4ded5;
+    border-radius: 13px;
+    background: #faf9f6;
 }
 
-.page-state-error,
-.detalji-error {
-    color: #9d3e38;
-    background: #fff4f2;
-    border: 1px solid #eccbc7;
-}
-
-.empty-state,
-.empty-inline {
-    color: #817c74;
-    background: #faf8f4;
-    border: 1px solid #e7e1d8;
-}
-
-.detalji-loading {
-    margin: 22px 28px;
-    color: #747069;
-    background: #faf8f4;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 950px) {
-    .restoran-hero {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 24px;
+    .sala-card:hover {
+        border-color: #c8a96b;
     }
 
-    .restoran-meta {
-        width: 100%;
+    .sala-card > strong {
+        display: block;
+        margin-bottom: 14px;
+        color: #31483a;
+        font-size: 1.15rem;
     }
 
-    .restoran-meta-item {
-        flex: 1;
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
-    .paketi-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .sale-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 650px) {
-    .restoran-detalji-page {
-        padding: 20px 14px 50px;
-    }
-
-    .restoran-hero {
-        padding: 24px 20px;
-    }
-
-        .restoran-hero h1 {
-            font-size: 27px;
-        }
-
-    .restoran-meta {
-        flex-direction: column;
-    }
-
-    .restoran-meta-item {
-        padding: 10px 0;
-        border-top: 1px solid #e8e3dc;
-        border-left: none;
-    }
-
-        .restoran-meta-item:first-child {
-            border-top: none;
-        }
-
-    .restoran-radnik-akcije {
-        margin-top: 22px;
-    }
-
-    .rezervacije-button {
-        width: 100%;
-        min-width: 0;
-        padding: 14px 22px;
-    }
-
-    .restoran-radnik-akcije + .paketi-sekcija {
-        margin-top: 28px;
-    }
-
-    .paketi-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .paket-detalji-header {
-        align-items: flex-start;
-        flex-direction: column;
+    .sala-card > div {
+        display: flex;
+        justify-content: space-between;
         gap: 10px;
-        padding: 22px 18px;
+        padding: 7px 0;
+        border-top: 1px solid #ebe6de;
     }
 
-    .sale-blok,
-    .usluge-blok {
-        padding: 20px 18px;
+    .sala-card span {
+        color: #77736d;
+        font-size: 0.8rem;
     }
 
-    .sale-grid {
-        grid-template-columns: 1fr 1fr;
+    .sala-card b {
+        color: #3f5c4a;
+        font-size: 0.84rem;
     }
 
-    .usluga-red-main {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 14px;
-    }
+/* USLUGE */
 
-    .portfolio-link {
-        min-width: 0;
-        align-self: flex-start;
-    }
-
-    .usluga-meta {
-        gap: 15px 22px;
-    }
+.usluge-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
 }
-.restoran-cenovnik-button {
-    border: none;
-    background: #3f5c4a;
-    color: #ffffff;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
+
+.usluga-tab {
+    padding: 8px 16px;
+    border: 1px solid #ddd7ce;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #77736d;
+    font: inherit;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
 }
 
-    .restoran-cenovnik-button:hover {
-        background: #324a3b;
+    .usluga-tab:hover {
+        border-color: #3f5c4a;
+        color: #3f5c4a;
+    }
+
+    .usluga-tab.aktivan {
+        border-color: #3f5c4a;
+        background: #edf2ee;
+        color: #3f5c4a;
+        font-weight: 700;
+    }
+
+.usluge-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.usluga-card {
+    padding: 20px 21px;
+    border: 1px solid #e4ded5;
+    border-radius: 13px;
+    background: #faf9f6;
+}
+
+.usluga-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+    .usluga-header h4 {
+        margin: 0;
+        color: #31483a;
+        font-size: 1.1rem;
+    }
+
+    .usluga-header p {
+        margin: 6px 0 0;
+        color: #77736d;
+        line-height: 1.45;
+    }
+
+.usluga-cena {
+    flex-shrink: 0;
+    color: #3f5c4a;
+    font-size: 1rem;
+}
+
+.usluga-detalji {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-top: 14px;
+    color: #77736d;
+    font-size: 0.84rem;
+}
+
+    .usluga-detalji strong {
+        color: #2c2c2c;
+    }
+
+/* LINK PREVIEW */
+
+.portfolio-preview {
+    display: grid;
+    grid-template-columns: 185px 1fr auto;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 18px;
+    overflow: hidden;
+    border: 1px solid #ded8cf;
+    border-radius: 13px;
+    background: #ffffff;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .portfolio-preview:hover {
+        border-color: #c8a96b;
+        box-shadow: 0 8px 22px rgba(63, 92, 74, 0.1);
         transform: translateY(-1px);
     }
 
-    .restoran-cenovnik-button:active {
-        transform: translateY(0);
+    .portfolio-preview.bez-slike {
+        grid-template-columns: 1fr auto;
     }
+
+    .portfolio-preview img {
+        width: 185px;
+        height: 125px;
+        object-fit: cover;
+        align-self: stretch;
+        background: #eeeae3;
+    }
+
+.portfolio-preview-tekst {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 15px 18px;
+}
+
+    .portfolio-preview-tekst > span {
+        color: #c8a96b;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .portfolio-preview-tekst strong {
+        overflow: hidden;
+        color: #31483a;
+        font-size: 0.98rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+.portfolio-preview-opis {
+    display: -webkit-box;
+    margin: 2px 0 1px;
+    overflow: hidden;
+    color: #77736d;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.portfolio-preview-tekst small {
+    overflow: hidden;
+    color: #98928a;
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.portfolio-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 55px;
+    color: #3f5c4a;
+    font-size: 1.35rem;
+}
+
+/* STANJA */
+
+.restoran-empty,
+.restoran-empty-inner,
+.restoran-info-message,
+.restoran-error-message,
+.restoran-page-state {
+    padding: 18px;
+    border-radius: 10px;
+}
+
+.restoran-empty,
+.restoran-empty-inner,
+.restoran-info-message {
+    border: 1px solid #e4ded5;
+    background: #faf9f6;
+    color: #77736d;
+}
+
+.restoran-info-message,
+.restoran-error-message {
+    margin-top: 30px;
+}
+
+.restoran-error-message,
+.restoran-page-error {
+    background: #fdf2f2;
+    color: #a94442;
+}
+
+.restoran-page-state {
+    width: min( 900px, calc(100% - 48px) );
+    margin: 40px auto;
+    background: #ffffff;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 750px) {
+    .restoran-zaglavlje h1 {
+        font-size: 2.3rem;
+    }
+
+    .sale-lista {
+        grid-template-columns: 1fr;
+    }
+
+    .portfolio-preview {
+        grid-template-columns: 135px 1fr 48px;
+    }
+
+        .portfolio-preview img {
+            width: 135px;
+            height: 110px;
+        }
+}
+
+@media (max-width: 600px) {
+    .ponuda-card {
+        padding: 29px 20px 32px;
+    }
+
+    .ponuda-naslov h2 {
+        font-size: 1.85rem;
+    }
+
+    .paket-dugme {
+        min-width: 115px;
+        padding: 10px 17px;
+    }
+}
+
+@media (max-width: 520px) {
+    .restoran-detalji-page {
+        padding: 25px 15px 55px;
+    }
+
+    .restoran-kontakt {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .restoran-dot {
+        display: none;
+    }
+
+    .usluga-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .portfolio-preview {
+        grid-template-columns: 1fr 45px;
+    }
+
+        .portfolio-preview:not(.bez-slike) {
+            grid-template-columns: 1fr;
+        }
+
+        .portfolio-preview img {
+            width: 100%;
+            height: 170px;
+        }
+
+        .portfolio-preview:not(.bez-slike)
+        .portfolio-arrow {
+            display: none;
+        }
+}

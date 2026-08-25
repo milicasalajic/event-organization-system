@@ -8,12 +8,17 @@ namespace EventOrganization.Api.Services;
 public class FotografService
 {
     private readonly FotografRepository _fotografRepository;
+    private readonly CenovnikRepository _cenovnikRepository;
 
     public FotografService(
-        FotografRepository fotografRepository)
+        FotografRepository fotografRepository,
+        CenovnikRepository cenovnikRepository)
     {
         _fotografRepository =
             fotografRepository;
+
+        _cenovnikRepository =
+            cenovnikRepository;
     }
 
     public async Task<List<FotografDto>> GetByRestoranId(
@@ -25,18 +30,184 @@ public class FotografService
                 restoranId,
                 cancellationToken);
 
-        return usluge
-            .Select(usluga =>
-                MapToDto(
+        var rezultat =
+            new List<FotografDto>();
+
+        foreach (var usluga in usluge)
+        {
+            rezultat.Add(
+                await MapToDto(
                     usluga,
-                    restoranId))
-            .ToList();
+                    restoranId,
+                    cancellationToken));
+        }
+
+        return rezultat;
     }
 
     public async Task<FotografDto> Add(
         decimal restoranId,
         DodavanjeFotografaDto request,
         CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatke(
+            request);
+
+        var tipFoto =
+            ParseTipFoto(
+                request.TipFoto);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            null,
+            cancellationToken);
+
+        var paketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        var uslugaId =
+            await _fotografRepository.GetNextUslugaId(
+                cancellationToken);
+
+        var cenovnikId =
+            await _cenovnikRepository.GetNextCenovnikId(
+                cancellationToken);
+
+        var usluga =
+            KreirajFotografa(
+                uslugaId,
+                cenovnikId,
+                naziv,
+                request,
+                tipFoto);
+
+        PoveziPakete(
+            usluga,
+            paketi);
+
+        await _fotografRepository.Add(
+            usluga,
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<FotografDto?> Update(
+        decimal restoranId,
+        decimal uslugaId,
+        IzmenaFotografaDto request,
+        CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatkeIzmene(
+            request);
+
+        var tipFoto =
+            ParseTipFoto(
+                request.TipFoto);
+
+        var usluga =
+            await _fotografRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return null;
+        }
+
+        ValidirajFotografaZaIzmenu(
+            usluga);
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            uslugaId,
+            cancellationToken);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var noviPaketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        IzmeniPodatkeFotografa(
+            usluga,
+            request,
+            naziv,
+            tipFoto);
+
+        IzmeniPakete(
+            usluga,
+            noviPaketi,
+            restoranId);
+
+        await _fotografRepository.SaveChanges(
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<bool> Delete(
+        decimal restoranId,
+        decimal uslugaId,
+        CancellationToken cancellationToken = default)
+    {
+        var usluga =
+            await _fotografRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return false;
+        }
+
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
+
+        if (usluga.Paketi.Count == 0)
+        {
+            usluga.Status =
+                Status.NEAKTIVNO;
+        }
+
+        await _fotografRepository.SaveChanges(
+            cancellationToken);
+
+        return true;
+    }
+
+    private static void ValidirajPodatke(
+        DodavanjeFotografaDto request)
     {
         if (string.IsNullOrWhiteSpace(
                 request.Naziv))
@@ -70,34 +241,69 @@ public class FotografService
                 "Cena usluge fotografa ne može biti veća od 99999.");
         }
 
+        if (request.PaketIds.Count == 0)
+        {
+            throw new ArgumentException(
+                "Fotograf mora biti povezan sa najmanje jednim paketom.");
+        }
+    }
+
+    private static void ValidirajPodatkeIzmene(
+        IzmenaFotografaDto request)
+    {
+        if (string.IsNullOrWhiteSpace(
+                request.Naziv))
+        {
+            throw new ArgumentException(
+                "Naziv fotografa je obavezan.");
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                request.Telefon))
+        {
+            throw new ArgumentException(
+                "Telefon fotografa je obavezan.");
+        }
+
+        if (request.CenaFoto <= 0)
+        {
+            throw new ArgumentException(
+                "Cena fotografije mora biti veća od nule.");
+        }
+
+        if (request.PaketIds.Count == 0)
+        {
+            throw new ArgumentException(
+                "Fotograf mora biti povezan sa najmanje jednim paketom.");
+        }
+    }
+
+    private static TipFoto ParseTipFoto(
+        string tipFoto)
+    {
         if (!Enum.TryParse<TipFoto>(
-                request.TipFoto,
+                tipFoto,
                 true,
-                out var tipFoto))
+                out var rezultat))
         {
             throw new ArgumentException(
                 "Tip fotografije nije ispravan.");
         }
 
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
+        return rezultat;
+    }
 
-        if (paketIds.Count == 0)
-        {
-            throw new ArgumentException(
-                "Fotograf mora biti povezan sa najmanje jednim paketom.");
-        }
-
-        var naziv =
-            request.Naziv.Trim();
-
+    private async Task ValidirajNaziv(
+        decimal restoranId,
+        string naziv,
+        decimal? izuzmiUslugaId,
+        CancellationToken cancellationToken)
+    {
         var nazivPostoji =
             await _fotografRepository.NazivPostoji(
                 restoranId,
                 naziv,
-                null,
+                izuzmiUslugaId,
                 cancellationToken);
 
         if (nazivPostoji)
@@ -105,27 +311,53 @@ public class FotografService
             throw new ArgumentException(
                 "Fotograf sa ovim nazivom već postoji u ponudi restorana.");
         }
+    }
 
+    private async Task<List<Paket>> UcitajIValidirajPakete(
+        decimal restoranId,
+        List<decimal> paketIds,
+        CancellationToken cancellationToken)
+    {
         var paketi =
             await _fotografRepository.GetPaketiZaRestoran(
                 restoranId,
                 paketIds,
                 cancellationToken);
 
-        if (paketi.Count != paketIds.Count)
+        if (paketi.Count !=
+            paketIds.Count)
         {
             throw new ArgumentException(
                 "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
         }
 
-        var uslugaId =
-            await _fotografRepository.GetNextUslugaId(
-                cancellationToken);
+        return paketi;
+    }
 
-        var cenovnikId =
-            await _fotografRepository.GetNextCenovnikId(
-                cancellationToken);
+    private static void ValidirajFotografaZaIzmenu(
+        Usluga usluga)
+    {
+        if (usluga.Status ==
+            Status.NEAKTIVNO)
+        {
+            throw new InvalidOperationException(
+                "Neaktivnog fotografa nije moguće menjati.");
+        }
 
+        if (usluga.Fotograf is null)
+        {
+            throw new InvalidOperationException(
+                "Podaci fotografa nisu pronađeni.");
+        }
+    }
+
+    private static Usluga KreirajFotografa(
+        decimal uslugaId,
+        decimal cenovnikId,
+        string naziv,
+        DodavanjeFotografaDto request,
+        TipFoto tipFoto)
+    {
         var usluga =
             new Usluga
             {
@@ -164,12 +396,6 @@ public class FotografService
                     }
             };
 
-        foreach (var paket in paketi)
-        {
-            usluga.Paketi.Add(
-                paket);
-        }
-
         usluga.Cenovnici.Add(
             new Cenovnik
             {
@@ -180,7 +406,7 @@ public class FotografService
                     request.Cena,
 
                 DatumIzmene =
-                    DateTime.Today,
+                    DateTime.Now,
 
                 UslugaId =
                     uslugaId,
@@ -189,107 +415,15 @@ public class FotografService
                     null
             });
 
-        await _fotografRepository.Add(
-            usluga,
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
+        return usluga;
     }
 
-    public async Task<FotografDto?> Update(
-        decimal restoranId,
-        decimal uslugaId,
+    private static void IzmeniPodatkeFotografa(
+        Usluga usluga,
         IzmenaFotografaDto request,
-        CancellationToken cancellationToken = default)
+        string naziv,
+        TipFoto tipFoto)
     {
-        if (string.IsNullOrWhiteSpace(
-                request.Naziv))
-        {
-            throw new ArgumentException(
-                "Naziv fotografa je obavezan.");
-        }
-
-        if (string.IsNullOrWhiteSpace(
-                request.Telefon))
-        {
-            throw new ArgumentException(
-                "Telefon fotografa je obavezan.");
-        }
-
-        if (request.CenaFoto <= 0)
-        {
-            throw new ArgumentException(
-                "Cena fotografije mora biti veća od nule.");
-        }
-
-        if (!Enum.TryParse<TipFoto>(
-                request.TipFoto,
-                true,
-                out var tipFoto))
-        {
-            throw new ArgumentException(
-                "Tip fotografije nije ispravan.");
-        }
-
-        var usluga =
-            await _fotografRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return null;
-        }
-
-        if (usluga.Status ==
-            Status.NEAKTIVNO)
-        {
-            throw new InvalidOperationException(
-                "Neaktivnog fotografa nije moguće menjati.");
-        }
-
-        var naziv =
-            request.Naziv.Trim();
-
-        var nazivPostoji =
-            await _fotografRepository.NazivPostoji(
-                restoranId,
-                naziv,
-                uslugaId,
-                cancellationToken);
-
-        if (nazivPostoji)
-        {
-            throw new ArgumentException(
-                "Fotograf sa ovim nazivom već postoji u ponudi restorana.");
-        }
-
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
-
-        if (paketIds.Count == 0)
-        {
-            throw new ArgumentException(
-                "Fotograf mora biti povezan sa najmanje jednim paketom.");
-        }
-
-        var noviPaketi =
-            await _fotografRepository.GetPaketiZaRestoran(
-                restoranId,
-                paketIds,
-                cancellationToken);
-
-        if (noviPaketi.Count != paketIds.Count)
-        {
-            throw new ArgumentException(
-                "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
-        }
-
         usluga.NazivU =
             naziv;
 
@@ -302,30 +436,32 @@ public class FotografService
                 ? null
                 : request.Portfolio.Trim();
 
-        if (usluga.Fotograf is null)
-        {
-            throw new InvalidOperationException(
-                "Podaci fotografa nisu pronađeni.");
-        }
-
-        usluga.Fotograf.CenaFoto =
+        usluga.Fotograf!.CenaFoto =
             request.CenaFoto;
 
         usluga.Fotograf.TipFoto =
             tipFoto;
+    }
 
-        var stariPaketiRestorana =
-            usluga.Paketi
-                .Where(paket =>
-                    paket.RestoranId ==
-                    restoranId)
-                .ToList();
-
-        foreach (var paket in stariPaketiRestorana)
+    private static void PoveziPakete(
+        Usluga usluga,
+        List<Paket> paketi)
+    {
+        foreach (var paket in paketi)
         {
-            usluga.Paketi.Remove(
+            usluga.Paketi.Add(
                 paket);
         }
+    }
+
+    private static void IzmeniPakete(
+        Usluga usluga,
+        List<Paket> noviPaketi,
+        decimal restoranId)
+    {
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
 
         foreach (var paket in noviPaketi)
         {
@@ -338,31 +474,12 @@ public class FotografService
                     paket);
             }
         }
-
-        await _fotografRepository.SaveChanges(
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
     }
 
-    public async Task<bool> Delete(
-        decimal restoranId,
-        decimal uslugaId,
-        CancellationToken cancellationToken = default)
+    private static void UkloniPaketeRestorana(
+        Usluga usluga,
+        decimal restoranId)
     {
-        var usluga =
-            await _fotografRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return false;
-        }
-
         var paketiRestorana =
             usluga.Paketi
                 .Where(paket =>
@@ -375,36 +492,18 @@ public class FotografService
             usluga.Paketi.Remove(
                 paket);
         }
-
-        if (usluga.Paketi.Count == 0)
-        {
-            usluga.Status =
-                Status.NEAKTIVNO;
-        }
-
-        await _fotografRepository.SaveChanges(
-            cancellationToken);
-
-        return true;
     }
 
-    private static FotografDto MapToDto(
+    private async Task<FotografDto> MapToDto(
         Usluga usluga,
-        decimal restoranId)
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var danas =
-            DateTime.Today;
-
         var vazecaCena =
-            usluga.Cenovnici
-                .Where(cena =>
-                    cena.DatumIzmene.Date <=
-                    danas)
-                .OrderByDescending(cena =>
-                    cena.DatumIzmene)
-                .ThenByDescending(cena =>
-                    cena.CenovnikId)
-                .FirstOrDefault();
+            await _cenovnikRepository.GetVazecaCenaUsluge(
+                usluga.UslugaId,
+                DateTime.Now,
+                cancellationToken);
 
         return new FotografDto
         {
@@ -433,7 +532,9 @@ public class FotografService
                 usluga.Paketi
                     .Where(paket =>
                         paket.RestoranId ==
-                        restoranId)
+                            restoranId &&
+                        paket.Status ==
+                            Status.AKTIVNO)
                     .Select(paket =>
                         paket.PaketId)
                     .ToList()

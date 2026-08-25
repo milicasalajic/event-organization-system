@@ -46,7 +46,7 @@ public class RestoranController : ControllerBase
         var uloga = User.FindFirst(
             ClaimTypes.Role)?.Value;
 
-        if (uloga is "MENADZER" or "OPERATER")
+        if (uloga is "MENADZER" or "OPERATER")//provera da li stvarno korisnik radi u restoranu
         {
             var korisnikRadiURestoranu =
                 await _restoranService.KorisnikRadiURestoranu(

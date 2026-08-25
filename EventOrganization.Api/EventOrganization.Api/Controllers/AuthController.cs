@@ -34,20 +34,4 @@ public class AuthController : ControllerBase
 
         return Ok(result);
     }
-
-   /* [Authorize]
-    [HttpGet("test")]
-    public IActionResult Test()
-    {
-        return Ok(new
-        {
-            Poruka = "JWT je validan.",
-            KorisnikId = User.FindFirst(
-                System.Security.Claims.ClaimTypes.NameIdentifier)?.Value,
-            Email = User.FindFirst(
-                System.Security.Claims.ClaimTypes.Email)?.Value,
-            Uloga = User.FindFirst(
-                System.Security.Claims.ClaimTypes.Role)?.Value
-        });
-    }*/
 }

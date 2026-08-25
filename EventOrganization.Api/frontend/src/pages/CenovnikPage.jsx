@@ -720,17 +720,7 @@ function CenovnikPage() {
                         </p>
                     </div>
 
-                    {jeMenadzer && (
-                        <button
-                            type="button"
-                            className="cenovnik-primary-button"
-                            onClick={
-                                handleEvidentirajCenu
-                            }
-                        >
-                            + Evidentiraj cenu
-                        </button>
-                    )}
+
                 </div>
 
                 {actionError &&
@@ -829,7 +819,7 @@ function CenovnikPage() {
                                                         ).toLocaleString(
                                                             'sr-RS',
                                                         )}{' '}
-                                                        RSD
+                                                        EUR
                                                     </strong>
                                                 </td>
 
@@ -1133,7 +1123,7 @@ function CenovnikPage() {
                                 ).toLocaleString(
                                     'sr-RS',
                                 )}{' '}
-                                RSD
+                                EUR
                             </strong>
                         </div>
 

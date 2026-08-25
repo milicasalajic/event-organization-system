@@ -14,27 +14,11 @@ public class FotografRepository
         _context = context;
     }
 
-    public async Task<List<Usluga>> GetByRestoranId(
-        decimal restoranId,
-        CancellationToken cancellationToken = default)
+    public Task<List<Usluga>> GetByRestoranId(
+    decimal restoranId,
+    CancellationToken cancellationToken = default)
     {
-        var uslugaIds = await _context.Paketi
-            .AsNoTracking()
-            .Where(paket =>
-                paket.RestoranId == restoranId)
-            .SelectMany(paket =>
-                paket.Usluge)
-            .Where(usluga =>
-                usluga.TipUsluge ==
-                    TipUsluge.FOTOGRAF &&
-                usluga.Status ==
-                    Status.AKTIVNO)
-            .Select(usluga =>
-                usluga.UslugaId)
-            .Distinct()
-            .ToListAsync(cancellationToken);
-
-        return await _context.Usluge
+        return _context.Usluge
             .AsNoTracking()
             .Include(usluga =>
                 usluga.Fotograf)
@@ -43,11 +27,17 @@ public class FotografRepository
             .Include(usluga =>
                 usluga.Cenovnici)
             .Where(usluga =>
-                uslugaIds.Contains(
-                    usluga.UslugaId))
+                usluga.TipUsluge ==
+                    TipUsluge.FOTOGRAF &&
+                usluga.Status ==
+                    Status.AKTIVNO &&
+                usluga.Paketi.Any(paket =>
+                    paket.RestoranId ==
+                        restoranId))
             .OrderBy(usluga =>
                 usluga.NazivU)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(
+                cancellationToken);
     }
 
     public async Task<Usluga?> GetForUpdate(

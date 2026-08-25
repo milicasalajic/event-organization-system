@@ -61,11 +61,15 @@ function RestoraniPage() {
     });
 
     const korisnikJson =
-        localStorage.getItem('korisnik');
+        localStorage.getItem(
+            'korisnik',
+        );
 
     const korisnik =
         korisnikJson
-            ? JSON.parse(korisnikJson)
+            ? JSON.parse(
+                korisnikJson,
+            )
             : null;
 
     const jeAdministrator =
@@ -75,7 +79,8 @@ function RestoraniPage() {
     const aktivniRestorani =
         restorani.filter(
             (restoran) =>
-                restoran.status === 'AKTIVNO',
+                restoran.status ===
+                'AKTIVNO',
         );
 
     const neaktivniRestorani =
@@ -93,9 +98,13 @@ function RestoraniPage() {
                 const result =
                     await getAllRestorani();
 
-                setRestorani(result);
+                setRestorani(
+                    result,
+                );
             } catch (error) {
-                setError(error.message);
+                setError(
+                    error.message,
+                );
             } finally {
                 setIsLoading(false);
             }
@@ -176,6 +185,7 @@ function RestoraniPage() {
         event.stopPropagation();
 
         setDeleteError('');
+
         setRestoranZaBrisanje(
             restoran,
         );
@@ -196,9 +206,13 @@ function RestoraniPage() {
         }
 
         const restoranId =
-            restoranZaBrisanje.restoranId;
+            restoranZaBrisanje
+                .restoranId;
 
-        setDeletingId(restoranId);
+        setDeletingId(
+            restoranId,
+        );
+
         setDeleteError('');
 
         try {
@@ -221,7 +235,9 @@ function RestoraniPage() {
                     ),
             );
 
-            setRestoranZaBrisanje(null);
+            setRestoranZaBrisanje(
+                null,
+            );
         } catch (error) {
             setDeleteError(
                 error.message,
@@ -249,45 +265,63 @@ function RestoraniPage() {
 
     return (
         <div className="restorani-page">
-            <div className="restorani-container">
 
-                <div className="restorani-header">
-                    <div>
+            <section className="restorani-hero">
+                <div className="restorani-hero-overlay">
+
+                    <div className="restorani-hero-content">
+                        <span className="restorani-kicker">
+                            Organizacija događaja
+                        </span>
+
                         <h1>
-                            Restorani
+                            RESTORANI
                         </h1>
 
                         <p>
-                            Izaberite restoran i
-                            pogledajte njegovu ponudu.
+                            Pronađite idealan prostor za vaš događaj,
+                            izaberite paket i dodatne usluge
+                            i jednostavno kreirajte svoju rezervaciju.
                         </p>
                     </div>
 
-                    {jeAdministrator && (
-                        <button
-                            type="button"
-                            className="dodaj-restoran-button"
-                            onClick={() =>
-                                setPrikaziFormu(
-                                    (prev) => !prev,
-                                )
-                            }
-                        >
-                            + Dodaj restoran
-                        </button>
-                    )}
                 </div>
+            </section>
 
-                {jeAdministrator &&
-                    prikaziFormu && (
-                        <form
-                            className="dodaj-restoran-forma"
-                            onSubmit={
-                                handleSubmit
-                            }
-                        >
-                            <div className="dodaj-restoran-forma-header">
-                                <div>
+            <main className="restorani-container">
+
+                <section className="restorani-izbor">
+
+                    <div className="restorani-izbor-header">
+                        <span>
+                            Ponuda restorana
+                        </span>
+                    </div>
+
+                    {jeAdministrator &&
+                        !prikaziFormu && (
+                            <div className="dodaj-restoran-wrapper">
+                                <button
+                                    type="button"
+                                    className="dodaj-restoran-button"
+                                    onClick={() =>
+                                        setPrikaziFormu(true)
+                                    }
+                                >
+                                    + Dodaj restoran
+                                </button>
+                            </div>
+                        )}
+
+                    {jeAdministrator &&
+                        prikaziFormu && (
+                            <form
+                                className="dodaj-restoran-forma"
+                                onSubmit={
+                                    handleSubmit
+                                }
+                            >
+                                <div className="dodaj-restoran-forma-header">
                                     <span>
                                         Administracija
                                     </span>
@@ -301,212 +335,234 @@ function RestoraniPage() {
                                         podatke restorana.
                                     </p>
                                 </div>
-                            </div>
 
-                            {dodavanjeError && (
-                                <div className="dodaj-restoran-error">
-                                    {
-                                        dodavanjeError
-                                    }
-                                </div>
-                            )}
-
-                            <div className="dodaj-restoran-grid">
-
-                                <div className="restoran-form-field">
-                                    <label htmlFor="naziv">
-                                        Naziv
-                                    </label>
-
-                                    <input
-                                        id="naziv"
-                                        name="naziv"
-                                        value={
-                                            formData.naziv
+                                {dodavanjeError && (
+                                    <div className="dodaj-restoran-error">
+                                        {
+                                            dodavanjeError
                                         }
-                                        onChange={
-                                            handleChange
-                                        }
-                                        required
-                                    />
-                                </div>
+                                    </div>
+                                )}
 
-                                <div className="restoran-form-field">
-                                    <label htmlFor="telefon">
-                                        Telefon
-                                    </label>
+                                <div className="dodaj-restoran-grid">
 
-                                    <input
-                                        id="telefon"
-                                        name="telefon"
-                                        value={
-                                            formData.telefon
-                                        }
-                                        onChange={
-                                            handleChange
-                                        }
-                                        required
-                                    />
-                                </div>
+                                    <div className="restoran-form-field">
+                                        <label htmlFor="naziv">
+                                            Naziv
+                                        </label>
 
-                                <div className="restoran-form-field">
-                                    <label htmlFor="radnoVreme">
-                                        Radno vreme
-                                    </label>
-
-                                    <input
-                                        id="radnoVreme"
-                                        name="radnoVreme"
-                                        value={
-                                            formData.radnoVreme
-                                        }
-                                        onChange={
-                                            handleChange
-                                        }
-                                        placeholder="08:00-23:00"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="restoran-form-field">
-                                    <label htmlFor="grad">
-                                        Grad
-                                    </label>
-
-                                    <input
-                                        id="grad"
-                                        name="grad"
-                                        value={
-                                            formData.grad
-                                        }
-                                        onChange={
-                                            handleChange
-                                        }
-                                        required
-                                    />
-                                </div>
-
-                                <div className="restoran-form-field restoran-adresa-field">
-                                    <label htmlFor="adresa">
-                                        Adresa
-                                    </label>
-
-                                    <input
-                                        id="adresa"
-                                        name="adresa"
-                                        value={
-                                            formData.adresa
-                                        }
-                                        onChange={
-                                            handleChange
-                                        }
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="dodaj-restoran-actions">
-                                <button
-                                    type="button"
-                                    className="odustani-restoran-button"
-                                    onClick={
-                                        handleOdustani
-                                    }
-                                    disabled={
-                                        isSaving
-                                    }
-                                >
-                                    Odustani
-                                </button>
-
-                                <button
-                                    type="submit"
-                                    className="sacuvaj-restoran-button"
-                                    disabled={
-                                        isSaving
-                                    }
-                                >
-                                    {isSaving
-                                        ? 'Čuvanje...'
-                                        : 'Dodaj restoran'}
-                                </button>
-                            </div>
-                        </form>
-                    )}
-
-                {aktivniRestorani.length ===
-                    0 ? (
-                    <p className="restorani-empty">
-                        Trenutno nema aktivnih
-                        restorana u sistemu.
-                    </p>
-                ) : (
-                    <div className="restorani-lista">
-                        {aktivniRestorani.map(
-                            (restoran) => (
-                                <div
-                                    className="restoran-card"
-                                    key={
-                                        restoran.restoranId
-                                    }
-                                    onClick={() =>
-                                        navigate(
-                                            `/restorani/${restoran.restoranId}`,
-                                        )
-                                    }
-                                >
-                                    <div className="restoran-sadrzaj">
-                                        <h2>
-                                            {
-                                                restoran.naziv
+                                        <input
+                                            id="naziv"
+                                            name="naziv"
+                                            value={
+                                                formData.naziv
                                             }
-                                        </h2>
+                                            onChange={
+                                                handleChange
+                                            }
+                                            required
+                                        />
+                                    </div>
 
-                                        <div className="restoran-info">
-                                            <p>
-                                                <strong>
-                                                    Adresa:
-                                                </strong>{' '}
-                                                {
-                                                    restoran.adresa
-                                                }
-                                            </p>
+                                    <div className="restoran-form-field">
+                                        <label htmlFor="telefon">
+                                            Telefon
+                                        </label>
 
-                                            <p>
-                                                <strong>
-                                                    Grad:
-                                                </strong>{' '}
+                                        <input
+                                            id="telefon"
+                                            name="telefon"
+                                            value={
+                                                formData.telefon
+                                            }
+                                            onChange={
+                                                handleChange
+                                            }
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="restoran-form-field">
+                                        <label htmlFor="radnoVreme">
+                                            Radno vreme
+                                        </label>
+
+                                        <input
+                                            id="radnoVreme"
+                                            name="radnoVreme"
+                                            value={
+                                                formData.radnoVreme
+                                            }
+                                            onChange={
+                                                handleChange
+                                            }
+                                            placeholder="08:00-23:00"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="restoran-form-field">
+                                        <label htmlFor="grad">
+                                            Grad
+                                        </label>
+
+                                        <input
+                                            id="grad"
+                                            name="grad"
+                                            value={
+                                                formData.grad
+                                            }
+                                            onChange={
+                                                handleChange
+                                            }
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="restoran-form-field restoran-adresa-field">
+                                        <label htmlFor="adresa">
+                                            Adresa
+                                        </label>
+
+                                        <input
+                                            id="adresa"
+                                            name="adresa"
+                                            value={
+                                                formData.adresa
+                                            }
+                                            onChange={
+                                                handleChange
+                                            }
+                                            required
+                                        />
+                                    </div>
+
+                                </div>
+
+                                <div className="dodaj-restoran-actions">
+                                    <button
+                                        type="button"
+                                        className="odustani-restoran-button"
+                                        onClick={
+                                            handleOdustani
+                                        }
+                                        disabled={
+                                            isSaving
+                                        }
+                                    >
+                                        Odustani
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        className="sacuvaj-restoran-button"
+                                        disabled={
+                                            isSaving
+                                        }
+                                    >
+                                        {isSaving
+                                            ? 'Čuvanje...'
+                                            : 'Dodaj restoran'}
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+
+                    {aktivniRestorani.length ===
+                        0 ? (
+                        <p className="restorani-empty">
+                            Trenutno nema aktivnih
+                            restorana u sistemu.
+                        </p>
+                    ) : (
+                        <div className="restorani-lista">
+
+                            {aktivniRestorani.map(
+                                (restoran) => (
+                                    <article
+                                        className="restoran-card"
+                                        key={
+                                            restoran.restoranId
+                                        }
+                                        onClick={() =>
+                                            navigate(
+                                                `/restorani/${restoran.restoranId}`,
+                                            )
+                                        }
+                                    >
+                                        <div className="restoran-card-top">
+
+                                            <span className="restoran-card-kicker">
+                                                Restoran
+                                            </span>
+
+                                            <span className="restoran-grad">
                                                 {
                                                     restoran.grad
                                                 }
+                                            </span>
+
+                                        </div>
+
+                                        <h3>
+                                            {
+                                                restoran.naziv
+                                            }
+                                        </h3>
+
+                                        <div className="restoran-info">
+
+                                            <p>
+                                                <strong>
+                                                    Adresa
+                                                </strong>
+
+                                                <span>
+                                                    {
+                                                        restoran.adresa
+                                                    }
+                                                </span>
                                             </p>
 
                                             <p>
                                                 <strong>
-                                                    Telefon:
-                                                </strong>{' '}
-                                                {
-                                                    restoran.telefon
-                                                }
+                                                    Telefon
+                                                </strong>
+
+                                                <span>
+                                                    {
+                                                        restoran.telefon
+                                                    }
+                                                </span>
                                             </p>
 
                                             {restoran.radnoVreme && (
                                                 <p>
                                                     <strong>
-                                                        Radno vreme:
-                                                    </strong>{' '}
-                                                    {
-                                                        restoran.radnoVreme
-                                                    }
+                                                        Radno vreme
+                                                    </strong>
+
+                                                    <span>
+                                                        {
+                                                            restoran.radnoVreme
+                                                        }
+                                                    </span>
                                                 </p>
                                             )}
-                                        </div>
-                                    </div>
 
-                                    <div className="restoran-card-akcije">
-                                        <span className="restoran-detalji">
-                                            Pogledaj detalje →
-                                        </span>
+                                        </div>
+
+                                        <div className="restoran-card-footer">
+
+                                            <span>
+                                                Pogledaj ponudu
+                                            </span>
+
+                                            <span>
+                                                →
+                                            </span>
+
+                                        </div>
 
                                         {jeAdministrator && (
                                             <button
@@ -524,94 +580,75 @@ function RestoraniPage() {
                                                 Obriši
                                             </button>
                                         )}
-                                    </div>
-                                </div>
-                            ),
-                        )}
-                    </div>
-                )}
+
+                                    </article>
+                                ),
+                            )}
+
+                        </div>
+                    )}
+
+                </section>
 
                 {jeAdministrator &&
                     neaktivniRestorani.length >
                     0 && (
-                        <div className="neaktivni-restorani-sekcija">
+                        <section className="neaktivni-restorani-sekcija">
 
+                            <div className="restorani-izbor-header">
+                                <span>
+                                    Administracija
+                                </span>
 
-                            <div className="restorani-lista">
+                                <h2>
+                                    Neaktivni restorani
+                                </h2>
+                            </div>
+
+                            <div className="neaktivni-restorani-lista">
+
                                 {neaktivniRestorani.map(
                                     (
                                         restoran,
                                     ) => (
                                         <div
-                                            className="restoran-card restoran-card-neaktivan"
+                                            className="restoran-card-neaktivan"
                                             key={
                                                 restoran.restoranId
                                             }
                                         >
-                                            <div className="restoran-sadrzaj">
+                                            <span className="neaktivan-badge">
+                                                Neaktivan
+                                            </span>
 
-                                                <div className="neaktivan-naslov">
-                                                    <h2>
-                                                        {
-                                                            restoran.naziv
-                                                        }
-                                                    </h2>
+                                            <h3>
+                                                {
+                                                    restoran.naziv
+                                                }
+                                            </h3>
 
-                                                    <span className="neaktivan-badge">
-                                                        Neaktivan
-                                                    </span>
-                                                </div>
-
-                                                <div className="restoran-info">
-                                                    <p>
-                                                        <strong>
-                                                            Adresa:
-                                                        </strong>{' '}
-                                                        {
-                                                            restoran.adresa
-                                                        }
-                                                    </p>
-
-                                                    <p>
-                                                        <strong>
-                                                            Grad:
-                                                        </strong>{' '}
-                                                        {
-                                                            restoran.grad
-                                                        }
-                                                    </p>
-
-                                                    <p>
-                                                        <strong>
-                                                            Telefon:
-                                                        </strong>{' '}
-                                                        {
-                                                            restoran.telefon
-                                                        }
-                                                    </p>
-
-                                                    {restoran.radnoVreme && (
-                                                        <p>
-                                                            <strong>
-                                                                Radno vreme:
-                                                            </strong>{' '}
-                                                            {
-                                                                restoran.radnoVreme
-                                                            }
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
+                                            <p>
+                                                {
+                                                    restoran.adresa
+                                                },{' '}
+                                                {
+                                                    restoran.grad
+                                                }
+                                            </p>
                                         </div>
                                     ),
                                 )}
+
                             </div>
-                        </div>
+
+                        </section>
                     )}
-            </div>
+
+            </main>
 
             {restoranZaBrisanje && (
                 <div className="brisanje-modal-overlay">
+
                     <div className="brisanje-modal">
 
                         <div className="brisanje-modal-icon">
@@ -647,6 +684,7 @@ function RestoraniPage() {
                         )}
 
                         <div className="brisanje-modal-actions">
+
                             <button
                                 type="button"
                                 className="brisanje-modal-odustani"
@@ -674,10 +712,14 @@ function RestoraniPage() {
                                     ? 'Brisanje...'
                                     : 'Obriši restoran'}
                             </button>
+
                         </div>
+
                     </div>
+
                 </div>
             )}
+
         </div>
     );
 }

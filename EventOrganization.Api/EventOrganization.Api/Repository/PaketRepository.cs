@@ -59,4 +59,24 @@ public class PaketRepository
         return _context.SaveChangesAsync(
             cancellationToken);
     }
+    public async Task<bool> AktivanPaketPostoji(
+    decimal restoranId,
+    decimal paketId,
+    CancellationToken cancellationToken = default)
+    {
+        var pronadjenPaketId =
+            await _context.Paketi
+                .AsNoTracking()
+                .Where(paket =>
+                    paket.PaketId == paketId &&
+                    paket.RestoranId == restoranId &&
+                    paket.Status == Status.AKTIVNO &&
+                    paket.Restoran.Status == Status.AKTIVNO)
+                .Select(paket =>
+                    (decimal?)paket.PaketId)
+                .FirstOrDefaultAsync(
+                    cancellationToken);
+
+        return pronadjenPaketId.HasValue;
+    }
 }

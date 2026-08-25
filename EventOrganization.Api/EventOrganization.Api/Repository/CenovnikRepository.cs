@@ -18,39 +18,91 @@ public class CenovnikRepository
         decimal restoranId,
         CancellationToken cancellationToken = default)
     {
-        var salaIds = await _context.Sale
-            .AsNoTracking()
-            .Where(sala =>
-                sala.RestoranId == restoranId &&
-                sala.Status == Status.AKTIVNO)
-            .Select(sala => sala.SalaId)
-            .ToListAsync(cancellationToken);
+        var salaIds =
+            await _context.Sale
+                .AsNoTracking()
+                .Where(sala =>
+                    sala.RestoranId == restoranId &&
+                    sala.Status == Status.AKTIVNO)
+                .Select(sala =>
+                    sala.SalaId)
+                .ToListAsync(
+                    cancellationToken);
 
-        var uslugaIds = await _context.Paketi
-            .AsNoTracking()
-            .Where(paket =>
-                paket.RestoranId == restoranId &&
-                paket.Status == Status.AKTIVNO)
-            .SelectMany(paket => paket.Usluge)
-            .Where(usluga =>
-                usluga.Status == Status.AKTIVNO)
-            .Select(usluga => usluga.UslugaId)
-            .Distinct()
-            .ToListAsync(cancellationToken);
+        var uslugaIds =
+            await _context.Paketi
+                .AsNoTracking()
+                .Where(paket =>
+                    paket.RestoranId == restoranId &&
+                    paket.Status == Status.AKTIVNO)
+                .SelectMany(paket =>
+                    paket.Usluge)
+                .Where(usluga =>
+                    usluga.Status == Status.AKTIVNO)
+                .Select(usluga =>
+                    usluga.UslugaId)
+                .Distinct()
+                .ToListAsync(
+                    cancellationToken);
 
         return await _context.Cenovnici
             .AsNoTracking()
-            .Include(cenovnik => cenovnik.Sala)
-            .Include(cenovnik => cenovnik.Usluga)
+            .Include(cenovnik =>
+                cenovnik.Sala)
+            .Include(cenovnik =>
+                cenovnik.Usluga)
             .Where(cenovnik =>
                 (cenovnik.SalaId.HasValue &&
-                 salaIds.Contains(cenovnik.SalaId.Value))
+                 salaIds.Contains(
+                     cenovnik.SalaId.Value))
                 ||
                 (cenovnik.UslugaId.HasValue &&
-                 uslugaIds.Contains(cenovnik.UslugaId.Value)))
+                 uslugaIds.Contains(
+                     cenovnik.UslugaId.Value)))
             .OrderByDescending(cenovnik =>
                 cenovnik.DatumIzmene)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(
+                cancellationToken);
+    }
+
+    public Task<Cenovnik?> GetVazecaCenaSale(
+        decimal salaId,
+        DateTime trenutnoVreme,
+        CancellationToken cancellationToken = default)
+    {
+        return _context.Cenovnici
+            .AsNoTracking()
+            .Where(cenovnik =>
+                cenovnik.SalaId ==
+                    salaId &&
+                cenovnik.DatumIzmene <=
+                    trenutnoVreme)
+            .OrderByDescending(cenovnik =>
+                cenovnik.DatumIzmene)
+            .ThenByDescending(cenovnik =>
+                cenovnik.CenovnikId)
+            .FirstOrDefaultAsync(
+                cancellationToken);
+    }
+
+    public Task<Cenovnik?> GetVazecaCenaUsluge(
+        decimal uslugaId,
+        DateTime trenutnoVreme,
+        CancellationToken cancellationToken = default)
+    {
+        return _context.Cenovnici
+            .AsNoTracking()
+            .Where(cenovnik =>
+                cenovnik.UslugaId ==
+                    uslugaId &&
+                cenovnik.DatumIzmene <=
+                    trenutnoVreme)
+            .OrderByDescending(cenovnik =>
+                cenovnik.DatumIzmene)
+            .ThenByDescending(cenovnik =>
+                cenovnik.CenovnikId)
+            .FirstOrDefaultAsync(
+                cancellationToken);
     }
 
     public Task<Sala?> GetSalaRestorana(
@@ -73,18 +125,21 @@ public class CenovnikRepository
         decimal uslugaId,
         CancellationToken cancellationToken = default)
     {
-        var pronadjenaUslugaId = await _context.Paketi
-            .AsNoTracking()
-            .Where(paket =>
-                paket.RestoranId == restoranId &&
-                paket.Status == Status.AKTIVNO)
-            .SelectMany(paket => paket.Usluge)
-            .Where(usluga =>
-                usluga.UslugaId == uslugaId &&
-                usluga.Status == Status.AKTIVNO)
-            .Select(usluga =>
-                (decimal?)usluga.UslugaId)
-            .FirstOrDefaultAsync(cancellationToken);
+        var pronadjenaUslugaId =
+            await _context.Paketi
+                .AsNoTracking()
+                .Where(paket =>
+                    paket.RestoranId == restoranId &&
+                    paket.Status == Status.AKTIVNO)
+                .SelectMany(paket =>
+                    paket.Usluge)
+                .Where(usluga =>
+                    usluga.UslugaId == uslugaId &&
+                    usluga.Status == Status.AKTIVNO)
+                .Select(usluga =>
+                    (decimal?)usluga.UslugaId)
+                .FirstOrDefaultAsync(
+                    cancellationToken);
 
         if (!pronadjenaUslugaId.HasValue)
         {
@@ -104,17 +159,24 @@ public class CenovnikRepository
         DateTime datum,
         CancellationToken cancellationToken = default)
     {
-        var pocetakDana = datum.Date;
-        var krajDana = pocetakDana.AddDays(1);
+        var pocetakDana =
+            datum.Date;
 
-        var cenovnikId = await _context.Cenovnici
-            .Where(cenovnik =>
-                cenovnik.SalaId == salaId &&
-                cenovnik.DatumIzmene >= pocetakDana &&
-                cenovnik.DatumIzmene < krajDana)
-            .Select(cenovnik =>
-                (decimal?)cenovnik.CenovnikId)
-            .FirstOrDefaultAsync(cancellationToken);
+        var krajDana =
+            pocetakDana.AddDays(1);
+
+        var cenovnikId =
+            await _context.Cenovnici
+                .Where(cenovnik =>
+                    cenovnik.SalaId == salaId &&
+                    cenovnik.DatumIzmene >=
+                        pocetakDana &&
+                    cenovnik.DatumIzmene <
+                        krajDana)
+                .Select(cenovnik =>
+                    (decimal?)cenovnik.CenovnikId)
+                .FirstOrDefaultAsync(
+                    cancellationToken);
 
         return cenovnikId.HasValue;
     }
@@ -124,17 +186,24 @@ public class CenovnikRepository
         DateTime datum,
         CancellationToken cancellationToken = default)
     {
-        var pocetakDana = datum.Date;
-        var krajDana = pocetakDana.AddDays(1);
+        var pocetakDana =
+            datum.Date;
 
-        var cenovnikId = await _context.Cenovnici
-            .Where(cenovnik =>
-                cenovnik.UslugaId == uslugaId &&
-                cenovnik.DatumIzmene >= pocetakDana &&
-                cenovnik.DatumIzmene < krajDana)
-            .Select(cenovnik =>
-                (decimal?)cenovnik.CenovnikId)
-            .FirstOrDefaultAsync(cancellationToken);
+        var krajDana =
+            pocetakDana.AddDays(1);
+
+        var cenovnikId =
+            await _context.Cenovnici
+                .Where(cenovnik =>
+                    cenovnik.UslugaId == uslugaId &&
+                    cenovnik.DatumIzmene >=
+                        pocetakDana &&
+                    cenovnik.DatumIzmene <
+                        krajDana)
+                .Select(cenovnik =>
+                    (decimal?)cenovnik.CenovnikId)
+                .FirstOrDefaultAsync(
+                    cancellationToken);
 
         return cenovnikId.HasValue;
     }
@@ -142,10 +211,12 @@ public class CenovnikRepository
     public async Task<decimal> GetNextCenovnikId(
         CancellationToken cancellationToken = default)
     {
-        var maxId = await _context.Cenovnici
-            .Select(cenovnik =>
-                (decimal?)cenovnik.CenovnikId)
-            .MaxAsync(cancellationToken);
+        var maxId =
+            await _context.Cenovnici
+                .Select(cenovnik =>
+                    (decimal?)cenovnik.CenovnikId)
+                .MaxAsync(
+                    cancellationToken);
 
         return (maxId ?? 0) + 1;
     }
@@ -154,9 +225,10 @@ public class CenovnikRepository
         Cenovnik cenovnik,
         CancellationToken cancellationToken = default)
     {
-        await _context.Cenovnici.AddAsync(
-            cenovnik,
-            cancellationToken);
+        await _context.Cenovnici
+            .AddAsync(
+                cenovnik,
+                cancellationToken);
 
         await _context.SaveChangesAsync(
             cancellationToken);

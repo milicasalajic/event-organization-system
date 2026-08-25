@@ -1,4 +1,5 @@
 ﻿using EventOrganization.Api.DTOs.Usluge;
+using EventOrganization.Api.Models;
 using EventOrganization.Api.Repositories;
 
 namespace EventOrganization.Api.Services;
@@ -6,11 +7,17 @@ namespace EventOrganization.Api.Services;
 public class UslugaService
 {
     private readonly UslugaRepository _uslugaRepository;
+    private readonly CenovnikRepository _cenovnikRepository;
 
     public UslugaService(
-        UslugaRepository uslugaRepository)
+        UslugaRepository uslugaRepository,
+        CenovnikRepository cenovnikRepository)
     {
-        _uslugaRepository = uslugaRepository;
+        _uslugaRepository =
+            uslugaRepository;
+
+        _cenovnikRepository =
+            cenovnikRepository;
     }
 
     public async Task<List<UslugaDto>> GetByPaketId(
@@ -24,57 +31,71 @@ public class UslugaService
                 paketId,
                 cancellationToken);
 
-        var danas = DateTime.Today;
+        var trenutnoVreme =
+            DateTime.Now;
 
-        return usluge
-            .Select(usluga =>
-            {
-                var vazecaCena =
-                    usluga.Cenovnici
-                        .Where(cena =>
-                            cena.DatumIzmene.Date <= danas)
-                        .OrderByDescending(cena =>
-                            cena.DatumIzmene)
-                        .ThenByDescending(cena =>
-                            cena.CenovnikId)
-                        .FirstOrDefault();
+        var rezultat =
+            new List<UslugaDto>();
 
-                return new UslugaDto
-                {
-                    UslugaId =
-                        usluga.UslugaId,
+        foreach (var usluga in usluge)
+        {
+            var dto =
+                await MapToDto(
+                    usluga,
+                    trenutnoVreme,
+                    cancellationToken);
 
-                    Naziv =
-                        usluga.NazivU,
+            rezultat.Add(dto);
+        }
 
-                    Telefon =
-                        usluga.Telefon,
+        return rezultat;
+    }
 
-                    Portfolio =
-                        usluga.Portfolio,
+    private async Task<UslugaDto> MapToDto(
+        Usluga usluga,
+        DateTime trenutnoVreme,
+        CancellationToken cancellationToken)
+    {
+        var vazecaCena =
+            await _cenovnikRepository.GetVazecaCenaUsluge(
+                usluga.UslugaId,
+                trenutnoVreme,
+                cancellationToken);
 
-                    TipUsluge =
-                        usluga.TipUsluge.ToString(),
+        return new UslugaDto
+        {
+            UslugaId =
+                usluga.UslugaId,
 
-                    Opis =
-                        usluga.KeteringFirma?.Opis ??
-                        usluga.DekoraterskaFirma?.Opis,
+            Naziv =
+                usluga.NazivU,
 
-                    CenaFoto =
-                        usluga.Fotograf?.CenaFoto,
+            Telefon =
+                usluga.Telefon,
 
-                    TipFoto =
-                        usluga.Fotograf?
-                            .TipFoto.ToString(),
+            Portfolio =
+                usluga.Portfolio,
 
-                    TipMuzicara =
-                        usluga.MuzickiIzvodjac?
-                            .TipMuzicara.ToString(),
+            TipUsluge =
+                usluga.TipUsluge.ToString(),
 
-                    Cena =
-                        vazecaCena?.Iznos
-                };
-            })
-            .ToList();
+            Opis =
+                usluga.KeteringFirma?.Opis ??
+                usluga.DekoraterskaFirma?.Opis,
+
+            CenaFoto =
+                usluga.Fotograf?.CenaFoto,
+
+            TipFoto =
+                usluga.Fotograf?
+                    .TipFoto.ToString(),
+
+            TipMuzicara =
+                usluga.MuzickiIzvodjac?
+                    .TipMuzicara.ToString(),
+
+            Cena =
+                vazecaCena?.Iznos
+        };
     }
 }

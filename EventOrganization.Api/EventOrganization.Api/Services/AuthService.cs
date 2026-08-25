@@ -23,7 +23,7 @@ public class AuthService
 	{
 		var korisnik = await _context.Korisnici
 			.Include(k => k.Uloga) // za ucitavanje povezanog entiteta
-            .Include(k => k.Radnik)
+            .Include(k => k.Radnik) //kod radnika trbea ucitati i restoran
             .FirstOrDefaultAsync(
 				k => k.Email == request.Email,
 				cancellationToken);

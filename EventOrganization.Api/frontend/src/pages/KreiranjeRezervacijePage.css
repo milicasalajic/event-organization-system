@@ -1,7 +1,7 @@
-.kreiranje-rezervacije-page {
+﻿.kreiranje-rezervacije-page {
     min-height: 100vh;
     padding: 42px 24px 70px;
-    background: #f8f5f0;
+    background: radial-gradient( circle at 10% 5%, rgba(200, 169, 107, 0.11), transparent 28% ), radial-gradient( circle at 90% 18%, rgba(63, 92, 74, 0.08), transparent 30% ), #f8f5f0;
 }
 
 .kreiranje-rezervacije-container {
@@ -10,6 +10,8 @@
     margin: 0 auto;
 }
 
+/* NAZAD */
+
 .rezervacija-nazad-button {
     margin-bottom: 28px;
     padding: 0;
@@ -17,11 +19,19 @@
     background: transparent;
     color: #3f5c4a;
     font: inherit;
+    font-weight: 600;
     cursor: pointer;
 }
 
+    .rezervacija-nazad-button:hover {
+        color: #31483a;
+    }
+
+/* HEADER */
+
 .kreiranje-rezervacije-header {
-    margin-bottom: 30px;
+    margin: 5px 0 38px;
+    text-align: center;
 }
 
     .kreiranje-rezervacije-header > span,
@@ -35,43 +45,120 @@
         text-transform: uppercase;
     }
 
-    .kreiranje-rezervacije-header h1,
-    .rezervacija-card-heading h2 {
-        color: #3f5c4a;
-    }
-
     .kreiranje-rezervacije-header h1 {
-        margin: 0 0 8px;
-        font-size: 2.2rem;
+        margin: 0 0 11px;
+        color: #31483a;
+        font-size: 2.6rem;
+        line-height: 1.1;
     }
 
-    .kreiranje-rezervacije-header p,
-    .rezervacija-card-heading p {
+    .kreiranje-rezervacije-header p {
+        display: inline-block;
         margin: 0;
+        padding: 7px 15px;
+        border: 1px solid rgba( 228, 222, 213, 0.8 );
+        border-radius: 999px;
+        background: rgba( 255, 255, 255, 0.72 );
         color: #77736d;
+        font-size: 0.9rem;
+        font-weight: 600;
     }
+
+/* GLAVNE KARTICE */
 
 .rezervacija-card {
     margin-bottom: 24px;
-    padding: 28px;
+    padding: 30px;
     border: 1px solid #e4ded5;
     border-radius: 18px;
-    background: #ffffff;
+    background: rgba( 255, 255, 255, 0.97 );
+    box-shadow: 0 10px 30px rgba(63, 92, 74, 0.06);
 }
 
 .rezervacija-card-heading {
-    margin-bottom: 24px;
+    margin-bottom: 26px;
 }
 
     .rezervacija-card-heading h2 {
         margin: 0 0 8px;
+        color: #3f5c4a;
+        font-size: 1.55rem;
     }
+
+    .rezervacija-card-heading p {
+        max-width: 620px;
+        margin: 0;
+        color: #77736d;
+        line-height: 1.5;
+    }
+
+/* OBAVEZNA POLJA */
+
+.obavezno {
+    color: #a94442;
+    font-weight: 700;
+}
+
+/* OPŠTI GRID */
 
 .rezervacija-form-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat( 2, minmax(0, 1fr) );
     gap: 20px;
 }
+
+/* PRVI KORAK - OSNOVNI PODACI */
+
+.rezervacija-osnovni-podaci {
+    display: grid;
+    grid-template-columns: repeat( 2, minmax(0, 1fr) );
+    gap: 20px;
+    margin-bottom: 26px;
+}
+
+/* POČETAK / ZAVRŠETAK */
+
+.rezervacija-termini {
+    display: grid;
+    grid-template-columns: repeat( 2, minmax(0, 1fr) );
+    gap: 18px;
+}
+
+.rezervacija-termin-card {
+    padding: 20px;
+    border: 1px solid #e4ded5;
+    border-radius: 14px;
+    background: #faf9f6;
+}
+
+    .rezervacija-termin-card
+    .rezervacija-field + .rezervacija-field {
+        margin-top: 16px;
+    }
+
+.rezervacija-termin-naslov {
+    margin-bottom: 19px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e8e2d9;
+}
+
+    .rezervacija-termin-naslov > span {
+        display: block;
+        margin-bottom: 4px;
+        color: #c8a96b;
+        font-size: 0.69rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .rezervacija-termin-naslov h3 {
+        margin: 0;
+        color: #3f5c4a;
+        font-size: 1.05rem;
+    }
+
+/* POLJA */
 
 .rezervacija-field {
     display: flex;
@@ -85,12 +172,8 @@
 
 .rezervacija-field label {
     color: #2c2c2c;
+    font-size: 0.9rem;
     font-weight: 600;
-}
-
-.obavezno {
-    color: #a94442;
-    font-weight: 700;
 }
 
 .rezervacija-field input,
@@ -104,27 +187,53 @@
     background: #ffffff;
     color: #2c2c2c;
     font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
+
+    .rezervacija-field input:hover,
+    .rezervacija-field select:hover,
+    .rezervacija-field textarea:hover {
+        border-color: #cec5b9;
+    }
+
+    .rezervacija-field input:focus,
+    .rezervacija-field select:focus,
+    .rezervacija-field textarea:focus {
+        outline: none;
+        border-color: #3f5c4a;
+        box-shadow: 0 0 0 3px rgba(63, 92, 74, 0.08);
+    }
+
+.rezervacija-field textarea {
+    resize: vertical;
+}
+
+/* AKCIJE */
 
 .rezervacija-form-actions {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 24px;
+    justify-content: center;
+    margin-top: 28px;
 }
 
 .rezervacija-primary-button {
-    padding: 12px 20px;
+    min-width: 240px;
+    padding: 13px 24px;
     border: 0;
     border-radius: 10px;
     background: #3f5c4a;
     color: #ffffff;
+    box-shadow: 0 7px 18px rgba(63, 92, 74, 0.17);
     font: inherit;
     font-weight: 600;
     cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
     .rezervacija-primary-button:hover:not(:disabled) {
         background: #31483a;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(63, 92, 74, 0.22);
     }
 
     .rezervacija-primary-button:disabled {
@@ -132,9 +241,11 @@
         cursor: default;
     }
 
+/* SALE */
+
 .rezervacija-sale-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat( 3, minmax(0, 1fr) );
     gap: 16px;
 }
 
@@ -144,6 +255,7 @@
     border-radius: 14px;
     background: #ffffff;
     cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .rezervacija-sala-card {
@@ -154,32 +266,58 @@
     padding: 20px;
 }
 
+    .rezervacija-sala-card:hover {
+        border-color: #c8a96b;
+        transform: translateY(-1px);
+        box-shadow: 0 7px 18px rgba(63, 92, 74, 0.07);
+    }
+
     .rezervacija-sala-card input {
         position: absolute;
         top: 16px;
         right: 16px;
+        accent-color: #3f5c4a;
+    }
+
+    .rezervacija-sala-card > strong {
+        padding-right: 28px;
+        color: #31483a;
+        font-size: 1.08rem;
+    }
+
+    .rezervacija-sala-card > span {
+        color: #77736d;
+        font-size: 0.88rem;
     }
 
     .rezervacija-sala-card.aktivna,
     .rezervacija-usluga-card.aktivna {
         border-color: #3f5c4a;
         background: #f4f7f4;
+        box-shadow: 0 0 0 1px rgba(63, 92, 74, 0.08);
     }
+
+/* USLUGE */
 
 .rezervacija-usluge {
     display: flex;
     flex-direction: column;
-    gap: 26px;
+    gap: 28px;
 }
 
-.rezervacija-usluge-grupa h3 {
-    margin: 0 0 12px;
-    color: #3f5c4a;
+.rezervacija-usluge-grupa {
+    padding-top: 3px;
 }
+
+    .rezervacija-usluge-grupa h3 {
+        margin: 0 0 13px;
+        color: #3f5c4a;
+        font-size: 1.08rem;
+    }
 
 .rezervacija-usluge-lista {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat( 2, minmax(0, 1fr) );
     gap: 12px;
 }
 
@@ -190,20 +328,33 @@
     padding: 16px;
 }
 
+    .rezervacija-usluga-card:hover {
+        border-color: #c8a96b;
+    }
+
+    .rezervacija-usluga-card input {
+        margin-top: 3px;
+        accent-color: #3f5c4a;
+    }
+
     .rezervacija-usluga-card strong {
         display: block;
         margin-bottom: 4px;
+        color: #31483a;
     }
 
     .rezervacija-usluga-card p {
-        margin: 0 0 6px;
+        margin: 0 0 7px;
         color: #77736d;
+        line-height: 1.45;
     }
 
     .rezervacija-usluga-card span {
         color: #3f5c4a;
-        font-weight: 600;
+        font-weight: 700;
     }
+
+/* INFO / ERROR */
 
 .rezervacija-error,
 .rezervacija-info {
@@ -213,14 +364,21 @@
 }
 
 .rezervacija-error {
+    border: 1px solid #f0d8d8;
     background: #fdf2f2;
     color: #a94442;
 }
 
 .rezervacija-info {
     border: 1px solid #e4ded5;
-    background: #ffffff;
+    background: rgba( 255, 255, 255, 0.95 );
     color: #77736d;
+}
+
+/* OBRAČUN */
+
+.rezervacija-obracun {
+    border-color: rgba( 63, 92, 74, 0.28 );
 }
 
 .obracun-red,
@@ -234,26 +392,49 @@
 
 .obracun-ukupno {
     margin-top: 8px;
+    padding: 18px 0;
+    border-top: 1px solid #e4ded5;
     border-bottom: 0;
     color: #3f5c4a;
     font-size: 1.2rem;
     font-weight: 700;
 }
 
+    .obracun-ukupno strong {
+        font-size: 1.4rem;
+    }
+
+/* SUCCESS / LOADING */
+
 .rezervacija-success,
 .rezervacija-page-state {
-    padding: 28px;
+    padding: 30px;
     border: 1px solid #e4ded5;
     border-radius: 18px;
     background: #ffffff;
+    box-shadow: 0 10px 30px rgba(63, 92, 74, 0.06);
 }
 
 .rezervacija-success {
     text-align: center;
 }
 
+    .rezervacija-success h2 {
+        margin: 0 0 10px;
+        color: #3f5c4a;
+    }
+
+    .rezervacija-success p {
+        margin: 0 0 24px;
+        color: #77736d;
+    }
+
+/* RESPONSIVE */
+
 @media (max-width: 800px) {
     .rezervacija-form-grid,
+    .rezervacija-osnovni-podaci,
+    .rezervacija-termini,
     .rezervacija-sale-grid,
     .rezervacija-usluge-lista {
         grid-template-columns: 1fr;
@@ -263,7 +444,45 @@
         padding: 28px 16px 50px;
     }
 
+    .kreiranje-rezervacije-header h1 {
+        font-size: 2.2rem;
+    }
+
     .rezervacija-card {
-        padding: 20px;
+        padding: 22px;
+    }
+}
+
+@media (max-width: 520px) {
+    .kreiranje-rezervacije-page {
+        padding: 22px 14px 45px;
+    }
+
+    .kreiranje-rezervacije-header {
+        margin-bottom: 30px;
+    }
+
+        .kreiranje-rezervacije-header h1 {
+            font-size: 1.95rem;
+        }
+
+    .rezervacija-card {
+        padding: 20px 16px;
+        border-radius: 15px;
+    }
+
+    .rezervacija-termin-card {
+        padding: 17px;
+    }
+
+    .rezervacija-primary-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .obracun-ukupno {
+        align-items: flex-end;
+        flex-direction: column;
+        gap: 5px;
     }
 }

@@ -3,10 +3,12 @@ import {
     useNavigate,
     useParams,
 } from 'react-router-dom';
+
 import { getRestoranById } from '../api/restoranApi';
 import { getPaketiByRestoranId } from '../api/paketApi';
 import { getSaleByPaketId } from '../api/salaApi';
 import { getUslugeByPaketId } from '../api/uslugaApi';
+
 import './RestoranDetaljiPage.css';
 
 const naziviTipovaUsluga = {
@@ -23,6 +25,8 @@ const redosledTipovaUsluga = [
     'MUZICKI_IZVODJAC',
 ];
 
+const linkPreviewCache = new Map();
+
 function grupisiUslugePoTipu(usluge) {
     const grupe = {
         FOTOGRAF: [],
@@ -33,9 +37,8 @@ function grupisiUslugePoTipu(usluge) {
 
     usluge.forEach((usluga) => {
         if (grupe[usluga.tipUsluge]) {
-            grupe[usluga.tipUsluge].push(
-                usluga,
-            );
+            grupe[usluga.tipUsluge]
+                .push(usluga);
         }
     });
 
@@ -62,26 +65,201 @@ function formatCena(value) {
         return 'Nije definisana';
     }
 
-    return `${Number(value).toLocaleString('sr-RS')} RSD`;
+    return `${Number(value).toLocaleString('sr-RS')} €`;
 }
 
-function getLinkTekst(tipUsluge) {
-    switch (tipUsluge) {
-        case 'FOTOGRAF':
-            return 'Pogledaj radove';
+function getLinkTekst() {
+    return 'Pogledaj ponudu';
+}
 
-        case 'DEKORATER':
-            return 'Pogledaj dekoracije';
-
-        case 'KETERING':
-            return 'Pogledaj ponudu';
-
-        case 'MUZICKI_IZVODJAC':
-            return 'Pogledaj nastupe';
-
-        default:
-            return 'Više informacija';
+function getDomen(url) {
+    try {
+        return new URL(url)
+            .hostname
+            .replace('www.', '');
+    } catch {
+        return url;
     }
+}
+
+function getGoogleMapsLink(
+    adresa,
+    grad,
+) {
+    const lokacija =
+        `${adresa}, ${grad}`;
+
+    return (
+        'https://www.google.com/maps/search/' +
+        '?api=1&query=' +
+        encodeURIComponent(lokacija)
+    );
+}
+
+async function getLinkPreview(url) {
+    if (linkPreviewCache.has(url)) {
+        return linkPreviewCache.get(url);
+    }
+
+    const response = await fetch(
+        `https://api.microlink.io/?url=${encodeURIComponent(url)}&meta=true`,
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            'Nije moguće učitati pregled linka.',
+        );
+    }
+
+    const result =
+        await response.json();
+
+    if (
+        result.status !== 'success' ||
+        !result.data
+    ) {
+        return null;
+    }
+
+    const image =
+        typeof result.data.image ===
+            'string'
+            ? result.data.image
+            : result.data.image?.url;
+
+    const logo =
+        typeof result.data.logo ===
+            'string'
+            ? result.data.logo
+            : result.data.logo?.url;
+
+    const preview = {
+        title:
+            result.data.title ||
+            getDomen(url),
+
+        description:
+            result.data.description ||
+            '',
+
+        image:
+            image ||
+            logo ||
+            null,
+
+        url:
+            result.data.url ||
+            url,
+    };
+
+    linkPreviewCache.set(
+        url,
+        preview,
+    );
+
+    return preview;
+}
+
+function PortfolioPreview({
+    usluga,
+}) {
+    const [preview, setPreview] =
+        useState(undefined);
+
+    const [
+        imageError,
+        setImageError,
+    ] = useState(false);
+
+    useEffect(() => {
+        let aktivno = true;
+
+        async function loadPreview() {
+            try {
+                const result =
+                    await getLinkPreview(
+                        usluga.portfolio,
+                    );
+
+                if (aktivno) {
+                    setPreview(result);
+                }
+            } catch {
+                if (aktivno) {
+                    setPreview(null);
+                }
+            }
+        }
+
+        loadPreview();
+
+        return () => {
+            aktivno = false;
+        };
+    }, [usluga.portfolio]);
+
+    const imaSliku =
+        preview?.image &&
+        !imageError;
+
+    return (
+        <a
+            href={usluga.portfolio}
+            target="_blank"
+            rel="noreferrer"
+            className={
+                imaSliku
+                    ? 'portfolio-preview'
+                    : 'portfolio-preview bez-slike'
+            }
+        >
+            {imaSliku && (
+                <img
+                    src={preview.image}
+                    alt={
+                        preview.title ||
+                        usluga.naziv
+                    }
+                    onError={() =>
+                        setImageError(true)
+                    }
+                />
+            )}
+
+            <div className="portfolio-preview-tekst">
+
+                <span>
+                    Portfolio
+                </span>
+
+                <strong>
+                    {preview === undefined
+                        ? getLinkTekst()
+                        : preview?.title ||
+                        getLinkTekst()}
+                </strong>
+
+                {preview?.description && (
+                    <p className="portfolio-preview-opis">
+                        {
+                            preview.description
+                        }
+                    </p>
+                )}
+
+                <small>
+                    {getDomen(
+                        usluga.portfolio,
+                    )}
+                </small>
+
+            </div>
+
+            <span className="portfolio-arrow">
+                ↗
+            </span>
+        </a>
+    );
 }
 
 function RestoranDetaljiPage() {
@@ -114,10 +292,6 @@ function RestoranDetaljiPage() {
         korisnik?.uloga ===
         'KLIJENT';
 
-    const imaAkcije =
-        jeKlijent ||
-        jeRadnik;
-
     const [restoran, setRestoran] =
         useState(null);
 
@@ -144,10 +318,8 @@ function RestoranDetaljiPage() {
         setUslugePoPaketu,
     ] = useState({});
 
-    const [
-        isLoading,
-        setIsLoading,
-    ] = useState(true);
+    const [isLoading, setIsLoading] =
+        useState(true);
 
     const [error, setError] =
         useState('');
@@ -210,9 +382,7 @@ function RestoranDetaljiPage() {
                     error.message,
                 );
             } finally {
-                setIsLoading(
-                    false,
-                );
+                setIsLoading(false);
             }
         }
 
@@ -316,7 +486,7 @@ function RestoranDetaljiPage() {
     if (isLoading) {
         return (
             <div className="restoran-detalji-page">
-                <div className="page-state">
+                <div className="restoran-page-state">
                     Učitavanje restorana...
                 </div>
             </div>
@@ -326,7 +496,7 @@ function RestoranDetaljiPage() {
     if (error) {
         return (
             <div className="restoran-detalji-page">
-                <div className="page-state page-state-error">
+                <div className="restoran-page-state restoran-page-error">
                     {error}
                 </div>
             </div>
@@ -382,85 +552,100 @@ function RestoranDetaljiPage() {
         <div className="restoran-detalji-page">
             <main className="restoran-detalji-container">
 
-                <section className="restoran-hero">
-                    <div className="restoran-hero-naslov">
-                        <span className="restoran-kicker">
-                            Restoran
+                {!jeRadnik && (
+                    <button
+                        type="button"
+                        className="restoran-nazad-button"
+                        onClick={() =>
+                            navigate(
+                                '/restorani',
+                            )
+                        }
+                    >
+                        ← Nazad na restorane
+                    </button>
+                )}
+
+                <header className="restoran-zaglavlje">
+
+                    <span className="restoran-kicker">
+                        Restoran
+                    </span>
+
+                    <h1>
+                        {restoran.naziv}
+                    </h1>
+
+                    <div className="restoran-kontakt">
+
+                        <a
+                            href={getGoogleMapsLink(
+                                restoran.adresa,
+                                restoran.grad,
+                            )}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="restoran-adresa-link"
+                        >
+                            {restoran.adresa},{' '}
+                            {restoran.grad}
+                        </a>
+
+                        <span className="restoran-dot">
+                            •
                         </span>
 
-                        <h1>
-                            {restoran.naziv}
-                        </h1>
+                        <a
+                            href={`tel:${restoran.telefon}`}
+                            className="restoran-telefon-link"
+                        >
+                            {restoran.telefon}
+                        </a>
+
                     </div>
 
-                    <div className="restoran-meta">
-                        <div className="restoran-meta-item">
-                            <span>
-                                Adresa
-                            </span>
+                    {restoran.radnoVreme && (
+                        <span className="restoran-radno-vreme">
+                            Radno vreme:{' '}
+                            {restoran.radnoVreme}
+                        </span>
+                    )}
 
-                            <strong>
-                                {restoran.adresa}
-                            </strong>
-                        </div>
+                </header>
 
-                        <div className="restoran-meta-item">
-                            <span>
-                                Grad
-                            </span>
-
-                            <strong>
-                                {restoran.grad}
-                            </strong>
-                        </div>
-
-                        <div className="restoran-meta-item">
-                            <span>
-                                Telefon
-                            </span>
-
-                            <strong>
-                                {restoran.telefon}
-                            </strong>
-                        </div>
+                {jeKlijent && (
+                    <div className="restoran-rezervacija-akcija">
+                        <button
+                            type="button"
+                            className="restoran-rezervisi-button"
+                            onClick={() =>
+                                navigate(
+                                    `/restorani/${restoranId}/nova-rezervacija`,
+                                )
+                            }
+                        >
+                            Rezerviši događaj
+                        </button>
                     </div>
-                </section>
+                )}
 
-                {imaAkcije && (
+                {jeRadnik && (
                     <div className="restoran-radnik-akcije">
 
-                        {jeKlijent && (
-                            <button
-                                type="button"
-                                className="rezervacije-button"
-                                onClick={() =>
-                                    navigate(
-                                        `/restorani/${restoranId}/nova-rezervacija`,
-                                    )
-                                }
-                            >
-                                Nova rezervacija
-                            </button>
-                        )}
-
-                        {jeRadnik && (
-                            <button
-                                type="button"
-                                className="rezervacije-button"
-                                onClick={() =>
-                                    navigate(
-                                        `/restorani/${restoranId}/rezervacije`,
-                                    )
-                                }
-                            >
-                                Pregled rezervacija
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={() =>
+                                navigate(
+                                    `/restorani/${restoranId}/rezervacije`,
+                                )
+                            }
+                        >
+                            Pregled rezervacija
+                        </button>
 
                         {jeMenadzer && (
                             <button
                                 type="button"
-                                className="upravljanje-ponudom-button"
                                 onClick={() =>
                                     navigate(
                                         `/restorani/${restoranId}/upravljanje-ponudom`,
@@ -471,134 +656,103 @@ function RestoranDetaljiPage() {
                             </button>
                         )}
 
-                        {jeRadnik && (
-                            <button
-                                type="button"
-                                className="restoran-cenovnik-button"
-                                onClick={() =>
-                                    navigate(
-                                        `/restorani/${restoranId}/cenovnik`,
-                                    )
-                                }
-                            >
-                                Cenovnik
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={() =>
+                                navigate(
+                                    `/restorani/${restoranId}/cenovnik`,
+                                )
+                            }
+                        >
+                            Cenovnik
+                        </button>
+
                     </div>
                 )}
 
-                <section className="paketi-sekcija">
+                <section className="restoran-ponuda">
 
-                    <div className="section-heading">
+                    <div className="ponuda-card">
 
-                        <div>
-                            <span className="section-kicker">
-                                Ponuda restorana
-                            </span>
-
-                            <h2>
-                                Izaberite paket
+                        <div className="ponuda-naslov">
+                            <h2 className="ponuda-naslov-jedan">
+                                PAKETI U PONUDI RESTORANA
                             </h2>
                         </div>
 
-                        <span className="section-count">
-                            {paketi.length}{' '}
-                            {paketi.length ===
-                                1
-                                ? 'paket'
-                                : 'paketa'}
-                        </span>
-
-                    </div>
-
-                    {paketi.length ===
-                        0 ? (
-                        <div className="empty-state">
-                            Ovaj restoran
-                            trenutno nema
-                            pakete u ponudi.
-                        </div>
-                    ) : (
-                        <div className="paketi-grid">
-
-                            {paketi.map(
-                                (paket) => (
-                                    <button
-                                        key={
-                                            paket.paketId
-                                        }
-                                        type="button"
-                                        className={
-                                            aktivanPaketId ===
-                                                paket.paketId
-                                                ? 'paket-option aktivan'
-                                                : 'paket-option'
-                                        }
-                                        onClick={() =>
-                                            handlePaketClick(
-                                                paket.paketId,
-                                            )
-                                        }
-                                    >
-                                        <div className="paket-option-top">
-                                            <h3>
-                                                {paket.naziv}
-                                            </h3>
-                                        </div>
-
-                                        <p>
-                                            {paket.opis ||
-                                                'Pogledajte sale i dodatne usluge ovog paketa.'}
-                                        </p>
-
-                                        <span className="paket-pregled">
-                                            Pogledaj paket
-                                        </span>
-
-                                    </button>
-                                ),
-                            )}
-
-                        </div>
-                    )}
-
-                </section>
-
-                {aktivanPaket && (
-                    <section className="paket-detalji-panel">
-
-                        <div className="paket-detalji-header">
-
-                            <div>
-                                <span className="section-kicker">
-                                    Izabrani paket
-                                </span>
-
-                                <h2>
-                                    {aktivanPaket.naziv}
-                                </h2>
+                        {paketi.length === 0 ? (
+                            <div className="restoran-empty">
+                                Ovaj restoran trenutno nema
+                                aktivnih paketa.
                             </div>
+                        ) : (
+                            <>
+                                <div className="paketi-izbor">
 
-                            {aktivanPaket.opis && (
-                                <p>
-                                    {aktivanPaket.opis}
-                                </p>
-                            )}
+                                    {paketi.map(
+                                        (paket) => (
+                                            <button
+                                                key={
+                                                    paket.paketId
+                                                }
+                                                type="button"
+                                                className={
+                                                    aktivanPaketId ===
+                                                        paket.paketId
+                                                        ? 'paket-dugme aktivan'
+                                                        : 'paket-dugme'
+                                                }
+                                                onClick={() =>
+                                                    handlePaketClick(
+                                                        paket.paketId,
+                                                    )
+                                                }
+                                            >
+                                                {
+                                                    paket.naziv
+                                                }
+                                            </button>
+                                        ),
+                                    )}
 
-                        </div>
+                                </div>
 
-                        {detaljiLoading[
+                                {aktivanPaket && (
+                                    <div className="izabrani-paket">
+
+                                        <h3>
+                                            {
+                                                aktivanPaket.naziv
+                                            }
+                                        </h3>
+
+                                        {aktivanPaket.opis && (
+                                            <p>
+                                                {
+                                                    aktivanPaket.opis
+                                                }
+                                            </p>
+                                        )}
+
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {aktivanPaket &&
+                            detaljiLoading[
                             aktivanPaketId
-                        ] && (
-                                <div className="detalji-loading">
-                                    Učitavanje detalja paketa...
+                            ] && (
+                                <div className="restoran-info-message">
+                                    Učitavanje ponude...
                                 </div>
                             )}
 
-                        {detaljiError[
+                        {aktivanPaket &&
+                            detaljiError[
                             aktivanPaketId
-                        ] && (
-                                <div className="detalji-error">
+                            ] && (
+                                <div className="restoran-error-message">
                                     {
                                         detaljiError[
                                         aktivanPaketId
@@ -607,61 +761,57 @@ function RestoranDetaljiPage() {
                                 </div>
                             )}
 
-                        {!detaljiLoading[
+                        {aktivanPaket &&
+                            !detaljiLoading[
                             aktivanPaketId
-                        ] &&
+                            ] &&
                             !detaljiError[
                             aktivanPaketId
                             ] && (
                                 <>
-                                    <div className="sale-blok">
+                                    <div className="ponuda-divider" />
 
-                                        <div className="subsection-heading">
+                                    <section className="sale-sekcija">
 
-                                            <div>
-                                                <h3>
-                                                    Dostupne sale
-                                                </h3>
+                                        <div className="ponuda-podnaslov">
 
-                                                <p>
-                                                    Sale koje možete izabrati uz ovaj paket.
-                                                </p>
-                                            </div>
-
-                                            <span className="subsection-count">
-                                                {
-                                                    saleAktivnogPaketa.length
-                                                }
+                                            <span>
+                                                Dostupni prostor
                                             </span>
+
+                                            <h3>
+                                                Sale
+                                            </h3>
 
                                         </div>
 
                                         {saleAktivnogPaketa.length ===
                                             0 ? (
-                                            <div className="empty-inline">
-                                                Paket trenutno nema dostupnih sala.
-                                            </div>
+                                            <p className="restoran-empty-inner">
+                                                Za ovaj paket nisu
+                                                definisane sale.
+                                            </p>
                                         ) : (
-                                            <div className="sale-grid">
+                                            <div className="sale-lista">
 
                                                 {saleAktivnogPaketa.map(
                                                     (
                                                         sala,
                                                     ) => (
                                                         <div
-                                                            className="sala-item"
                                                             key={
                                                                 sala.salaId
                                                             }
+                                                            className="sala-card"
                                                         >
-                                                            <div>
-                                                                <strong>
-                                                                    Sala{' '}
-                                                                    {
-                                                                        sala.rbrS
-                                                                    }
-                                                                </strong>
+                                                            <strong>
+                                                                Sala{' '}
+                                                                {
+                                                                    sala.rbrS
+                                                                }
+                                                            </strong>
 
+                                                            <div>
                                                                 <span>
                                                                     Kapacitet
                                                                 </span>
@@ -669,9 +819,12 @@ function RestoranDetaljiPage() {
                                                                 <b>
                                                                     {
                                                                         sala.kapacitet
-                                                                    }
+                                                                    }{' '}
+                                                                    gostiju
                                                                 </b>
+                                                            </div>
 
+                                                            <div>
                                                                 <span>
                                                                     Cena stolice
                                                                 </span>
@@ -689,35 +842,30 @@ function RestoranDetaljiPage() {
                                             </div>
                                         )}
 
-                                    </div>
+                                    </section>
 
-                                    <div className="usluge-blok">
+                                    <div className="ponuda-divider" />
 
-                                        <div className="subsection-heading">
+                                    <section className="usluge-sekcija">
 
-                                            <div>
-                                                <h3>
-                                                    Dodatne usluge
-                                                </h3>
+                                        <div className="ponuda-podnaslov">
 
-                                                <p>
-                                                    Izaberite kategoriju i pogledajte dostupne pružaoce usluga.
-                                                </p>
-                                            </div>
-
-                                            <span className="subsection-count">
-                                                {
-                                                    uslugeAktivnogPaketa.length
-                                                }
+                                            <span>
+                                                Dodatna ponuda
                                             </span>
+
+                                            <h3>
+                                                Dodatne usluge
+                                            </h3>
 
                                         </div>
 
                                         {uslugeAktivnogPaketa.length ===
                                             0 ? (
-                                            <div className="empty-inline">
-                                                Paket trenutno nema dodatnih usluga.
-                                            </div>
+                                            <p className="restoran-empty-inner">
+                                                Ovaj paket nema
+                                                dodatnih usluga.
+                                            </p>
                                         ) : (
                                             <>
                                                 <div className="usluge-tabs">
@@ -748,38 +896,28 @@ function RestoranDetaljiPage() {
                                                                     tip
                                                                     ]
                                                                 }
-
-                                                                <span>
-                                                                    {
-                                                                        grupisaneUsluge[
-                                                                            tip
-                                                                        ]
-                                                                            .length
-                                                                    }
-                                                                </span>
                                                             </button>
                                                         ),
                                                     )}
 
                                                 </div>
 
-                                                <div className="usluge-lista-nova">
+                                                <div className="usluge-lista">
 
                                                     {uslugeZaPrikaz.map(
                                                         (
                                                             usluga,
                                                         ) => (
                                                             <article
-                                                                className="usluga-red"
                                                                 key={
                                                                     usluga.uslugaId
                                                                 }
+                                                                className="usluga-card"
                                                             >
 
-                                                                <div className="usluga-red-main">
+                                                                <div className="usluga-header">
 
-                                                                    <div className="usluga-tekst">
-
+                                                                    <div>
                                                                         <h4>
                                                                             {
                                                                                 usluga.naziv
@@ -793,104 +931,72 @@ function RestoranDetaljiPage() {
                                                                                 }
                                                                             </p>
                                                                         )}
-
                                                                     </div>
 
-                                                                    {usluga.portfolio && (
-                                                                        <a
-                                                                            href={
-                                                                                usluga.portfolio
-                                                                            }
-                                                                            target="_blank"
-                                                                            rel="noreferrer"
-                                                                            className="portfolio-link"
-                                                                        >
-                                                                            <span>
-                                                                                {getLinkTekst(
-                                                                                    usluga.tipUsluge,
-                                                                                )}
-                                                                            </span>
-
-                                                                            <span className="portfolio-link-icon">
-                                                                                ↗
-                                                                            </span>
-                                                                        </a>
-                                                                    )}
+                                                                    <strong className="usluga-cena">
+                                                                        {formatCena(
+                                                                            usluga.cena,
+                                                                        )}
+                                                                    </strong>
 
                                                                 </div>
 
-                                                                <div className="usluga-meta">
+                                                                <div className="usluga-detalji">
 
                                                                     {usluga.telefon && (
-                                                                        <div>
-                                                                            <span>
-                                                                                Telefon
-                                                                            </span>
-
+                                                                        <span>
+                                                                            Telefon:{' '}
                                                                             <strong>
                                                                                 {
                                                                                     usluga.telefon
                                                                                 }
                                                                             </strong>
-                                                                        </div>
+                                                                        </span>
                                                                     )}
 
-                                                                    <div>
-                                                                        <span>
-                                                                            Cena usluge
-                                                                        </span>
-
-                                                                        <strong>
-                                                                            {formatCena(
-                                                                                usluga.cena,
-                                                                            )}
-                                                                        </strong>
-                                                                    </div>
-
                                                                     {usluga.tipFoto && (
-                                                                        <div>
-                                                                            <span>
-                                                                                Vrsta usluge
-                                                                            </span>
-
+                                                                        <span>
+                                                                            Vrsta fotografije:{' '}
                                                                             <strong>
                                                                                 {formatEnumValue(
                                                                                     usluga.tipFoto,
                                                                                 )}
                                                                             </strong>
-                                                                        </div>
+                                                                        </span>
                                                                     )}
 
                                                                     {usluga.cenaFoto !=
                                                                         null && (
-                                                                            <div>
-                                                                                <span>
-                                                                                    Cena fotografije
-                                                                                </span>
-
+                                                                            <span>
+                                                                                Cena fotografije:{' '}
                                                                                 <strong>
                                                                                     {formatCena(
                                                                                         usluga.cenaFoto,
                                                                                     )}
                                                                                 </strong>
-                                                                            </div>
+                                                                            </span>
                                                                         )}
 
                                                                     {usluga.tipMuzicara && (
-                                                                        <div>
-                                                                            <span>
-                                                                                Vrsta izvođača
-                                                                            </span>
-
+                                                                        <span>
+                                                                            Izvođač:{' '}
                                                                             <strong>
                                                                                 {formatEnumValue(
                                                                                     usluga.tipMuzicara,
                                                                                 )}
                                                                             </strong>
-                                                                        </div>
+                                                                        </span>
                                                                     )}
 
                                                                 </div>
+
+                                                                {usluga.portfolio && (
+                                                                    <PortfolioPreview
+                                                                        usluga={
+                                                                            usluga
+                                                                        }
+                                                                    />
+                                                                )}
 
                                                             </article>
                                                         ),
@@ -900,12 +1006,13 @@ function RestoranDetaljiPage() {
                                             </>
                                         )}
 
-                                    </div>
+                                    </section>
                                 </>
                             )}
 
-                    </section>
-                )}
+                    </div>
+
+                </section>
 
             </main>
         </div>

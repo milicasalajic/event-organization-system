@@ -19,7 +19,7 @@ export async function getDostupneSale(
                         `Bearer ${token}`,
                 },
                 body:
-                    JSON.stringify(data),
+                    JSON.stringify(data), // pretvaras u json string da bi bekend razumeo, ne mozes slati javascript obj
             },
         );
 

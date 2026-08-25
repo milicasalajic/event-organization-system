@@ -11,7 +11,8 @@ public class CenovnikService
     public CenovnikService(
         CenovnikRepository cenovnikRepository)
     {
-        _cenovnikRepository = cenovnikRepository;
+        _cenovnikRepository =
+            cenovnikRepository;
     }
 
     public async Task<List<CenovnikStavkaDto>> GetByRestoranId(
@@ -19,100 +20,27 @@ public class CenovnikService
         DateTime datum,
         CancellationToken cancellationToken = default)
     {
-        var cenovnik = await _cenovnikRepository.GetByRestoranId(
-            restoranId,
-            cancellationToken);
+        var cenovnik =
+            await _cenovnikRepository.GetByRestoranId(
+                restoranId,
+                cancellationToken);
 
-        var rezultat = new List<CenovnikStavkaDto>();
+        var rezultat =
+            new List<CenovnikStavkaDto>();
 
-        var ceneSala = cenovnik
-            .Where(cena => cena.SalaId.HasValue)
-            .GroupBy(cena => cena.SalaId!.Value);
+        DodajCeneSala(
+            cenovnik,
+            datum,
+            rezultat);
 
-        foreach (var grupa in ceneSala)
-        {
-            var vazecaCena = grupa
-                .Where(cena =>
-                    cena.DatumIzmene.Date <= datum.Date)
-                .OrderByDescending(cena =>
-                    cena.DatumIzmene)
-                .ThenByDescending(cena =>
-                    cena.CenovnikId)
-                .FirstOrDefault();
-
-            foreach (var cena in grupa)
-            {
-                rezultat.Add(new CenovnikStavkaDto
-                {
-                    CenovnikId = cena.CenovnikId,
-                    SalaId = cena.SalaId,
-                    UslugaId = null,
-
-                    Naziv =
-                        $"Sala {cena.Sala!.RbrS}",
-
-                    Vrsta =
-                        "Cena stolice",
-
-                    Iznos =
-                        cena.Iznos,
-
-                    DatumIzmene =
-                        cena.DatumIzmene,
-
-                    Vazeca =
-                        vazecaCena is not null &&
-                        vazecaCena.CenovnikId ==
-                        cena.CenovnikId
-                });
-            }
-        }
-
-        var ceneUsluga = cenovnik
-            .Where(cena => cena.UslugaId.HasValue)
-            .GroupBy(cena => cena.UslugaId!.Value);
-
-        foreach (var grupa in ceneUsluga)
-        {
-            var vazecaCena = grupa
-                .Where(cena =>
-                    cena.DatumIzmene.Date <= datum.Date)
-                .OrderByDescending(cena =>
-                    cena.DatumIzmene)
-                .ThenByDescending(cena =>
-                    cena.CenovnikId)
-                .FirstOrDefault();
-
-            foreach (var cena in grupa)
-            {
-                rezultat.Add(new CenovnikStavkaDto
-                {
-                    CenovnikId = cena.CenovnikId,
-                    SalaId = null,
-                    UslugaId = cena.UslugaId,
-
-                    Naziv =
-                        cena.Usluga!.NazivU,
-
-                    Vrsta =
-                        cena.Usluga.TipUsluge.ToString(),
-
-                    Iznos =
-                        cena.Iznos,
-
-                    DatumIzmene =
-                        cena.DatumIzmene,
-
-                    Vazeca =
-                        vazecaCena is not null &&
-                        vazecaCena.CenovnikId ==
-                        cena.CenovnikId
-                });
-            }
-        }
+        DodajCeneUsluga(
+            cenovnik,
+            datum,
+            rezultat);
 
         return rezultat
-            .OrderBy(stavka => stavka.Naziv)
+            .OrderBy(stavka =>
+                stavka.Naziv)
             .ThenByDescending(stavka =>
                 stavka.DatumIzmene)
             .ToList();
@@ -124,12 +52,14 @@ public class CenovnikService
         NovaCenaDto request,
         CancellationToken cancellationToken = default)
     {
-        ValidirajCenu(request);
+        ValidirajCenu(
+            request);
 
-        var sala = await _cenovnikRepository.GetSalaRestorana(
-            restoranId,
-            salaId,
-            cancellationToken);
+        var sala =
+            await _cenovnikRepository.GetSalaRestorana(
+                restoranId,
+                salaId,
+                cancellationToken);
 
         if (sala is null)
         {
@@ -137,7 +67,8 @@ public class CenovnikService
                 "Sala nije pronađena u ovom restoranu.");
         }
 
-        var datum = request.DatumIzmene.Date;
+        var datum =
+            request.DatumIzmene.Date;
 
         var postojiCena =
             await _cenovnikRepository.CenaSaleZaDatumPostoji(
@@ -155,15 +86,24 @@ public class CenovnikService
             await _cenovnikRepository.GetNextCenovnikId(
                 cancellationToken);
 
-        var cenovnik = new Cenovnik
-        {
-            CenovnikId = cenovnikId,
-            Iznos = request.Iznos,
-            DatumIzmene = datum,
+        var cenovnik =
+            new Cenovnik
+            {
+                CenovnikId =
+                    cenovnikId,
 
-            SalaId = salaId,
-            UslugaId = null
-        };
+                Iznos =
+                    request.Iznos,
+
+                DatumIzmene =
+                    datum,
+
+                SalaId =
+                    salaId,
+
+                UslugaId =
+                    null
+            };
 
         await _cenovnikRepository.Add(
             cenovnik,
@@ -171,9 +111,14 @@ public class CenovnikService
 
         return new CenovnikStavkaDto
         {
-            CenovnikId = cenovnik.CenovnikId,
-            SalaId = sala.SalaId,
-            UslugaId = null,
+            CenovnikId =
+                cenovnik.CenovnikId,
+
+            SalaId =
+                sala.SalaId,
+
+            UslugaId =
+                null,
 
             Naziv =
                 $"Sala {sala.RbrS}",
@@ -187,7 +132,8 @@ public class CenovnikService
             DatumIzmene =
                 cenovnik.DatumIzmene,
 
-            Vazeca = false
+            Vazeca =
+                false
         };
     }
 
@@ -197,7 +143,8 @@ public class CenovnikService
         NovaCenaDto request,
         CancellationToken cancellationToken = default)
     {
-        ValidirajCenu(request);
+        ValidirajCenu(
+            request);
 
         var usluga =
             await _cenovnikRepository.GetUslugaRestorana(
@@ -211,7 +158,8 @@ public class CenovnikService
                 "Usluga nije pronađena u ponudi ovog restorana.");
         }
 
-        var datum = request.DatumIzmene.Date;
+        var datum =
+            request.DatumIzmene.Date;
 
         var postojiCena =
             await _cenovnikRepository.CenaUslugeZaDatumPostoji(
@@ -229,15 +177,24 @@ public class CenovnikService
             await _cenovnikRepository.GetNextCenovnikId(
                 cancellationToken);
 
-        var cenovnik = new Cenovnik
-        {
-            CenovnikId = cenovnikId,
-            Iznos = request.Iznos,
-            DatumIzmene = datum,
+        var cenovnik =
+            new Cenovnik
+            {
+                CenovnikId =
+                    cenovnikId,
 
-            SalaId = null,
-            UslugaId = uslugaId
-        };
+                Iznos =
+                    request.Iznos,
+
+                DatumIzmene =
+                    datum,
+
+                SalaId =
+                    null,
+
+                UslugaId =
+                    uslugaId
+            };
 
         await _cenovnikRepository.Add(
             cenovnik,
@@ -245,9 +202,14 @@ public class CenovnikService
 
         return new CenovnikStavkaDto
         {
-            CenovnikId = cenovnik.CenovnikId,
-            SalaId = null,
-            UslugaId = usluga.UslugaId,
+            CenovnikId =
+                cenovnik.CenovnikId,
+
+            SalaId =
+                null,
+
+            UslugaId =
+                usluga.UslugaId,
 
             Naziv =
                 usluga.NazivU,
@@ -261,12 +223,136 @@ public class CenovnikService
             DatumIzmene =
                 cenovnik.DatumIzmene,
 
-            Vazeca = false
+            Vazeca =
+                false
         };
     }
 
+    private static void DodajCeneSala(
+        List<Cenovnik> cenovnik,
+        DateTime datum,
+        List<CenovnikStavkaDto> rezultat)
+    {
+        var ceneSala =
+            cenovnik
+                .Where(cena =>
+                    cena.SalaId.HasValue)
+                .GroupBy(cena =>
+                    cena.SalaId!.Value);
+
+        foreach (var grupa in ceneSala)
+        {
+            var vazecaCena =
+                PronadjiVazecuCenu(
+                    grupa,
+                    datum);
+
+            foreach (var cena in grupa)
+            {
+                rezultat.Add(
+                    new CenovnikStavkaDto
+                    {
+                        CenovnikId =
+                            cena.CenovnikId,
+
+                        SalaId =
+                            cena.SalaId,
+
+                        UslugaId =
+                            null,
+
+                        Naziv =
+                            $"Sala {cena.Sala!.RbrS}",
+
+                        Vrsta =
+                            "Cena stolice",
+
+                        Iznos =
+                            cena.Iznos,
+
+                        DatumIzmene =
+                            cena.DatumIzmene,
+
+                        Vazeca =
+                            vazecaCena is not null &&
+                            vazecaCena.CenovnikId ==
+                                cena.CenovnikId
+                    });
+            }
+        }
+    }
+
+    private static void DodajCeneUsluga(
+        List<Cenovnik> cenovnik,
+        DateTime datum,
+        List<CenovnikStavkaDto> rezultat)
+    {
+        var ceneUsluga =
+            cenovnik
+                .Where(cena =>
+                    cena.UslugaId.HasValue)
+                .GroupBy(cena =>
+                    cena.UslugaId!.Value);
+
+        foreach (var grupa in ceneUsluga)
+        {
+            var vazecaCena =
+                PronadjiVazecuCenu(
+                    grupa,
+                    datum);
+
+            foreach (var cena in grupa)
+            {
+                rezultat.Add(
+                    new CenovnikStavkaDto
+                    {
+                        CenovnikId =
+                            cena.CenovnikId,
+
+                        SalaId =
+                            null,
+
+                        UslugaId =
+                            cena.UslugaId,
+
+                        Naziv =
+                            cena.Usluga!.NazivU,
+
+                        Vrsta =
+                            cena.Usluga.TipUsluge.ToString(),
+
+                        Iznos =
+                            cena.Iznos,
+
+                        DatumIzmene =
+                            cena.DatumIzmene,
+
+                        Vazeca =
+                            vazecaCena is not null &&
+                            vazecaCena.CenovnikId ==
+                                cena.CenovnikId
+                    });
+            }
+        }
+    }
+
+    private static Cenovnik? PronadjiVazecuCenu(
+        IEnumerable<Cenovnik> cene,
+        DateTime datum)
+    {
+        return cene
+            .Where(cena =>
+                cena.DatumIzmene.Date <=
+                    datum.Date)
+            .OrderByDescending(cena =>
+                cena.DatumIzmene)
+            .ThenByDescending(cena =>
+                cena.CenovnikId)
+            .FirstOrDefault();
+    }
+
     private static void ValidirajCenu(
-         NovaCenaDto request)
+        NovaCenaDto request)
     {
         if (request.Iznos <= 0)
         {

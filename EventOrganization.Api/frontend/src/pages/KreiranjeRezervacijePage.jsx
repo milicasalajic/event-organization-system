@@ -63,7 +63,7 @@ function formatCena(value) {
         return '-';
     }
 
-    return `${Number(value).toLocaleString('sr-RS')} RSD`;
+    return `${Number(value).toLocaleString('sr-RS')} €`;
 }
 
 function napraviDatumVreme(
@@ -659,7 +659,7 @@ function KreiranjeRezervacijePage() {
                                 </p>
                             </div>
 
-                            <div className="rezervacija-form-grid">
+                            <div className="rezervacija-osnovni-podaci">
 
                                 <div className="rezervacija-field">
                                     <label htmlFor="tipDogadjaja">
@@ -722,131 +722,160 @@ function KreiranjeRezervacijePage() {
                                         onChange={
                                             handleOsnovniPodatakChange
                                         }
+                                        placeholder="npr. 120"
                                     />
                                 </div>
 
-                                <div className="rezervacija-field">
-                                    <label htmlFor="datumPocetka">
-                                        Datum početka{' '}
-                                        <span className="obavezno">
-                                            *
-                                        </span>
-                                    </label>
+                            </div>
 
-                                    <input
-                                        id="datumPocetka"
-                                        name="datumPocetka"
-                                        type="date"
-                                        value={
-                                            formData.datumPocetka
-                                        }
-                                        onChange={
-                                            handleOsnovniPodatakChange
-                                        }
-                                    />
+                            <div className="rezervacija-termini">
+
+                                <div className="rezervacija-termin-card">
+
+                                    <div className="rezervacija-termin-naslov">
+                                 
+
+                                        <h3>
+                                            Početak događaja
+                                        </h3>
+                                    </div>
+
+                                    <div className="rezervacija-field">
+                                        <label htmlFor="datumPocetka">
+                                            Datum{' '}
+                                            <span className="obavezno">
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <input
+                                            id="datumPocetka"
+                                            name="datumPocetka"
+                                            type="date"
+                                            value={
+                                                formData.datumPocetka
+                                            }
+                                            onChange={
+                                                handleOsnovniPodatakChange
+                                            }
+                                        />
+                                    </div>
+
+                                    <div className="rezervacija-field">
+                                        <label htmlFor="satPocetka">
+                                            Vreme{' '}
+                                            <span className="obavezno">
+                                                *
+                                            </span>
+                                        </label>
+
+                                        <select
+                                            id="satPocetka"
+                                            name="satPocetka"
+                                            value={
+                                                formData.satPocetka
+                                            }
+                                            onChange={
+                                                handleOsnovniPodatakChange
+                                            }
+                                        >
+                                            <option value="">
+                                                Izaberite vreme
+                                            </option>
+
+                                            {sati.map(
+                                                (sat) => (
+                                                    <option
+                                                        key={
+                                                            sat.value
+                                                        }
+                                                        value={
+                                                            sat.value
+                                                        }
+                                                    >
+                                                        {
+                                                            sat.naziv
+                                                        }
+                                                    </option>
+                                                ),
+                                            )}
+                                        </select>
+                                    </div>
+
                                 </div>
 
-                                <div className="rezervacija-field">
-                                    <label htmlFor="satPocetka">
-                                        Vreme početka{' '}
-                                        <span className="obavezno">
-                                            *
-                                        </span>
-                                    </label>
+                                <div className="rezervacija-termin-card">
 
-                                    <select
-                                        id="satPocetka"
-                                        name="satPocetka"
-                                        value={
-                                            formData.satPocetka
-                                        }
-                                        onChange={
-                                            handleOsnovniPodatakChange
-                                        }
-                                    >
-                                        <option value="">
-                                            Izaberite sat
-                                        </option>
+                                    <div className="rezervacija-termin-naslov">
+                                       
 
-                                        {sati.map(
-                                            (sat) => (
-                                                <option
-                                                    key={
-                                                        sat.value
-                                                    }
-                                                    value={
-                                                        sat.value
-                                                    }
-                                                >
-                                                    {
-                                                        sat.naziv
-                                                    }
-                                                </option>
-                                            ),
-                                        )}
-                                    </select>
-                                </div>
+                                        <h3>
+                                            Završetak događaja
+                                        </h3>
+                                    </div>
 
-                                <div className="rezervacija-field">
-                                    <label htmlFor="datumZavrsetka">
-                                        Datum završetka{' '}
-                                        <span className="obavezno">
-                                            *
-                                        </span>
-                                    </label>
+                                    <div className="rezervacija-field">
+                                        <label htmlFor="datumZavrsetka">
+                                            Datum{' '}
+                                            <span className="obavezno">
+                                                *
+                                            </span>
+                                        </label>
 
-                                    <input
-                                        id="datumZavrsetka"
-                                        name="datumZavrsetka"
-                                        type="date"
-                                        value={
-                                            formData.datumZavrsetka
-                                        }
-                                        onChange={
-                                            handleOsnovniPodatakChange
-                                        }
-                                    />
-                                </div>
+                                        <input
+                                            id="datumZavrsetka"
+                                            name="datumZavrsetka"
+                                            type="date"
+                                            value={
+                                                formData.datumZavrsetka
+                                            }
+                                            onChange={
+                                                handleOsnovniPodatakChange
+                                            }
+                                        />
+                                    </div>
 
-                                <div className="rezervacija-field">
-                                    <label htmlFor="satZavrsetka">
-                                        Vreme završetka{' '}
-                                        <span className="obavezno">
-                                            *
-                                        </span>
-                                    </label>
+                                    <div className="rezervacija-field">
+                                        <label htmlFor="satZavrsetka">
+                                            Vreme{' '}
+                                            <span className="obavezno">
+                                                *
+                                            </span>
+                                        </label>
 
-                                    <select
-                                        id="satZavrsetka"
-                                        name="satZavrsetka"
-                                        value={
-                                            formData.satZavrsetka
-                                        }
-                                        onChange={
-                                            handleOsnovniPodatakChange
-                                        }
-                                    >
-                                        <option value="">
-                                            Izaberite sat
-                                        </option>
+                                        <select
+                                            id="satZavrsetka"
+                                            name="satZavrsetka"
+                                            value={
+                                                formData.satZavrsetka
+                                            }
+                                            onChange={
+                                                handleOsnovniPodatakChange
+                                            }
+                                        >
+                                            <option value="">
+                                                Izaberite vreme
+                                            </option>
 
-                                        {sati.map(
-                                            (sat) => (
-                                                <option
-                                                    key={
-                                                        sat.value
-                                                    }
-                                                    value={
-                                                        sat.value
-                                                    }
-                                                >
-                                                    {
-                                                        sat.naziv
-                                                    }
-                                                </option>
-                                            ),
-                                        )}
-                                    </select>
+                                            {sati.map(
+                                                (sat) => (
+                                                    <option
+                                                        key={
+                                                            sat.value
+                                                        }
+                                                        value={
+                                                            sat.value
+                                                        }
+                                                    >
+                                                        {
+                                                            sat.naziv
+                                                        }
+                                                    </option>
+                                                ),
+                                            )}
+                                        </select>
+                                    </div>
+
                                 </div>
 
                             </div>

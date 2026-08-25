@@ -8,11 +8,17 @@ namespace EventOrganization.Api.Services;
 public class KeteringService
 {
     private readonly KeteringRepository _keteringRepository;
+    private readonly CenovnikRepository _cenovnikRepository;
 
     public KeteringService(
-        KeteringRepository keteringRepository)
+        KeteringRepository keteringRepository,
+        CenovnikRepository cenovnikRepository)
     {
-        _keteringRepository = keteringRepository;
+        _keteringRepository =
+            keteringRepository;
+
+        _cenovnikRepository =
+            cenovnikRepository;
     }
 
     public async Task<List<KeteringFirmaDto>> GetByRestoranId(
@@ -24,18 +30,174 @@ public class KeteringService
                 restoranId,
                 cancellationToken);
 
-        return usluge
-            .Select(usluga =>
-                MapToDto(
+        var rezultat =
+            new List<KeteringFirmaDto>();
+
+        foreach (var usluga in usluge)
+        {
+            rezultat.Add(
+                await MapToDto(
                     usluga,
-                    restoranId))
-            .ToList();
+                    restoranId,
+                    cancellationToken));
+        }
+
+        return rezultat;
     }
 
     public async Task<KeteringFirmaDto> Add(
         decimal restoranId,
         DodavanjeKeteringFirmeDto request,
         CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatke(
+            request);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            null,
+            cancellationToken);
+
+        var paketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        var uslugaId =
+            await _keteringRepository.GetNextUslugaId(
+                cancellationToken);
+
+        var cenovnikId =
+            await _cenovnikRepository.GetNextCenovnikId(
+                cancellationToken);
+
+        var usluga =
+            KreirajKeteringFirmu(
+                uslugaId,
+                cenovnikId,
+                naziv,
+                request);
+
+        PoveziPakete(
+            usluga,
+            paketi);
+
+        await _keteringRepository.Add(
+            usluga,
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<KeteringFirmaDto?> Update(
+        decimal restoranId,
+        decimal uslugaId,
+        IzmenaKeteringFirmeDto request,
+        CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatkeIzmene(
+            request);
+
+        var usluga =
+            await _keteringRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return null;
+        }
+
+        ValidirajKeteringFirmuZaIzmenu(
+            usluga);
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            uslugaId,
+            cancellationToken);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var noviPaketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        IzmeniPodatkeKeteringFirme(
+            usluga,
+            request,
+            naziv);
+
+        IzmeniPakete(
+            usluga,
+            noviPaketi,
+            restoranId);
+
+        await _keteringRepository.SaveChanges(
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<bool> Delete(
+        decimal restoranId,
+        decimal uslugaId,
+        CancellationToken cancellationToken = default)
+    {
+        var usluga =
+            await _keteringRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return false;
+        }
+
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
+
+        if (usluga.Paketi.Count == 0)
+        {
+            usluga.Status =
+                Status.NEAKTIVNO;
+        }
+
+        await _keteringRepository.SaveChanges(
+            cancellationToken);
+
+        return true;
+    }
+
+    private static void ValidirajPodatke(
+        DodavanjeKeteringFirmeDto request)
     {
         if (string.IsNullOrWhiteSpace(
                 request.Naziv))
@@ -63,25 +225,48 @@ public class KeteringService
                 "Cena ketering usluge ne može biti veća od 99999.");
         }
 
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
-
-        if (paketIds.Count == 0)
+        if (request.PaketIds.Count == 0)
         {
             throw new ArgumentException(
                 "Ketering firma mora biti povezana sa najmanje jednim paketom.");
         }
+    }
 
-        var naziv =
-            request.Naziv.Trim();
+    private static void ValidirajPodatkeIzmene(
+        IzmenaKeteringFirmeDto request)
+    {
+        if (string.IsNullOrWhiteSpace(
+                request.Naziv))
+        {
+            throw new ArgumentException(
+                "Naziv ketering firme je obavezan.");
+        }
 
+        if (string.IsNullOrWhiteSpace(
+                request.Telefon))
+        {
+            throw new ArgumentException(
+                "Telefon ketering firme je obavezan.");
+        }
+
+        if (request.PaketIds.Count == 0)
+        {
+            throw new ArgumentException(
+                "Ketering firma mora biti povezana sa najmanje jednim paketom.");
+        }
+    }
+
+    private async Task ValidirajNaziv(
+        decimal restoranId,
+        string naziv,
+        decimal? izuzmiUslugaId,
+        CancellationToken cancellationToken)
+    {
         var nazivPostoji =
             await _keteringRepository.NazivPostoji(
                 restoranId,
                 naziv,
-                null,
+                izuzmiUslugaId,
                 cancellationToken);
 
         if (nazivPostoji)
@@ -89,27 +274,52 @@ public class KeteringService
             throw new ArgumentException(
                 "Ketering firma sa ovim nazivom već postoji u ponudi restorana.");
         }
+    }
 
+    private async Task<List<Paket>> UcitajIValidirajPakete(
+        decimal restoranId,
+        List<decimal> paketIds,
+        CancellationToken cancellationToken)
+    {
         var paketi =
             await _keteringRepository.GetPaketiZaRestoran(
                 restoranId,
                 paketIds,
                 cancellationToken);
 
-        if (paketi.Count != paketIds.Count)
+        if (paketi.Count !=
+            paketIds.Count)
         {
             throw new ArgumentException(
                 "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
         }
 
-        var uslugaId =
-            await _keteringRepository.GetNextUslugaId(
-                cancellationToken);
+        return paketi;
+    }
 
-        var cenovnikId =
-            await _keteringRepository.GetNextCenovnikId(
-                cancellationToken);
+    private static void ValidirajKeteringFirmuZaIzmenu(
+        Usluga usluga)
+    {
+        if (usluga.Status ==
+            Status.NEAKTIVNO)
+        {
+            throw new InvalidOperationException(
+                "Neaktivnu ketering firmu nije moguće menjati.");
+        }
 
+        if (usluga.KeteringFirma is null)
+        {
+            throw new InvalidOperationException(
+                "Podaci ketering firme nisu pronađeni.");
+        }
+    }
+
+    private static Usluga KreirajKeteringFirmu(
+        decimal uslugaId,
+        decimal cenovnikId,
+        string naziv,
+        DodavanjeKeteringFirmeDto request)
+    {
         var usluga =
             new Usluga
             {
@@ -148,12 +358,6 @@ public class KeteringService
                     }
             };
 
-        foreach (var paket in paketi)
-        {
-            usluga.Paketi.Add(
-                paket);
-        }
-
         usluga.Cenovnici.Add(
             new Cenovnik
             {
@@ -164,7 +368,7 @@ public class KeteringService
                     request.Cena,
 
                 DatumIzmene =
-                    DateTime.Today,
+                    DateTime.Now,
 
                 UslugaId =
                     uslugaId,
@@ -173,92 +377,14 @@ public class KeteringService
                     null
             });
 
-        await _keteringRepository.Add(
-            usluga,
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
+        return usluga;
     }
 
-    public async Task<KeteringFirmaDto?> Update(
-        decimal restoranId,
-        decimal uslugaId,
+    private static void IzmeniPodatkeKeteringFirme(
+        Usluga usluga,
         IzmenaKeteringFirmeDto request,
-        CancellationToken cancellationToken = default)
+        string naziv)
     {
-        if (string.IsNullOrWhiteSpace(
-                request.Naziv))
-        {
-            throw new ArgumentException(
-                "Naziv ketering firme je obavezan.");
-        }
-
-        if (string.IsNullOrWhiteSpace(
-                request.Telefon))
-        {
-            throw new ArgumentException(
-                "Telefon ketering firme je obavezan.");
-        }
-
-        var usluga =
-            await _keteringRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return null;
-        }
-
-        if (usluga.Status ==
-            Status.NEAKTIVNO)
-        {
-            throw new InvalidOperationException(
-                "Neaktivnu ketering firmu nije moguće menjati.");
-        }
-
-        var naziv =
-            request.Naziv.Trim();
-
-        var nazivPostoji =
-            await _keteringRepository.NazivPostoji(
-                restoranId,
-                naziv,
-                uslugaId,
-                cancellationToken);
-
-        if (nazivPostoji)
-        {
-            throw new ArgumentException(
-                "Ketering firma sa ovim nazivom već postoji u ponudi restorana.");
-        }
-
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
-
-        if (paketIds.Count == 0)
-        {
-            throw new ArgumentException(
-                "Ketering firma mora biti povezana sa najmanje jednim paketom.");
-        }
-
-        var noviPaketi =
-            await _keteringRepository.GetPaketiZaRestoran(
-                restoranId,
-                paketIds,
-                cancellationToken);
-
-        if (noviPaketi.Count != paketIds.Count)
-        {
-            throw new ArgumentException(
-                "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
-        }
-
         usluga.NazivU =
             naziv;
 
@@ -271,30 +397,32 @@ public class KeteringService
                 ? null
                 : request.Portfolio.Trim();
 
-        if (usluga.KeteringFirma is null)
-        {
-            throw new InvalidOperationException(
-                "Podaci ketering firme nisu pronađeni.");
-        }
-
-        usluga.KeteringFirma.Opis =
+        usluga.KeteringFirma!.Opis =
             string.IsNullOrWhiteSpace(
                 request.Opis)
                 ? null
                 : request.Opis.Trim();
+    }
 
-        var stariPaketiRestorana =
-            usluga.Paketi
-                .Where(paket =>
-                    paket.RestoranId ==
-                    restoranId)
-                .ToList();
-
-        foreach (var paket in stariPaketiRestorana)
+    private static void PoveziPakete(
+        Usluga usluga,
+        List<Paket> paketi)
+    {
+        foreach (var paket in paketi)
         {
-            usluga.Paketi.Remove(
+            usluga.Paketi.Add(
                 paket);
         }
+    }
+
+    private static void IzmeniPakete(
+        Usluga usluga,
+        List<Paket> noviPaketi,
+        decimal restoranId)
+    {
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
 
         foreach (var paket in noviPaketi)
         {
@@ -307,31 +435,12 @@ public class KeteringService
                     paket);
             }
         }
-
-        await _keteringRepository.SaveChanges(
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
     }
 
-    public async Task<bool> Delete(
-        decimal restoranId,
-        decimal uslugaId,
-        CancellationToken cancellationToken = default)
+    private static void UkloniPaketeRestorana(
+        Usluga usluga,
+        decimal restoranId)
     {
-        var usluga =
-            await _keteringRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return false;
-        }
-
         var paketiRestorana =
             usluga.Paketi
                 .Where(paket =>
@@ -344,36 +453,18 @@ public class KeteringService
             usluga.Paketi.Remove(
                 paket);
         }
-
-        if (usluga.Paketi.Count == 0)
-        {
-            usluga.Status =
-                Status.NEAKTIVNO;
-        }
-
-        await _keteringRepository.SaveChanges(
-            cancellationToken);
-
-        return true;
     }
 
-    private static KeteringFirmaDto MapToDto(
+    private async Task<KeteringFirmaDto> MapToDto(
         Usluga usluga,
-        decimal restoranId)
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var danas =
-            DateTime.Today;
-
         var vazecaCena =
-            usluga.Cenovnici
-                .Where(cena =>
-                    cena.DatumIzmene.Date <=
-                    danas)
-                .OrderByDescending(cena =>
-                    cena.DatumIzmene)
-                .ThenByDescending(cena =>
-                    cena.CenovnikId)
-                .FirstOrDefault();
+            await _cenovnikRepository.GetVazecaCenaUsluge(
+                usluga.UslugaId,
+                DateTime.Now,
+                cancellationToken);
 
         return new KeteringFirmaDto
         {

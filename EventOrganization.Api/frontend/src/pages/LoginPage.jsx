@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/AuthApi';
 import './LoginPage.css';
@@ -6,10 +6,17 @@ import './LoginPage.css';
 function LoginPage() {
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState('');
-    const [lozinka, setLozinka] = useState('');
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] =
+        useState('');
+
+    const [lozinka, setLozinka] =
+        useState('');
+
+    const [error, setError] =
+        useState('');
+
+    const [isLoading, setIsLoading] =
+        useState(false);
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -18,24 +25,40 @@ function LoginPage() {
         setIsLoading(true);
 
         try {
-            const result = await login(email, lozinka);
+            const result =
+                await login(
+                    email,
+                    lozinka,
+                );
 
-            localStorage.setItem('token', result.token);
+            localStorage.setItem(
+                'token',
+                result.token,
+            );
 
             localStorage.setItem(
                 'korisnik',
                 JSON.stringify({
-                    korisnikId: result.korisnikId,
-                    ime: result.ime,
-                    prezime: result.prezime,
-                    email: result.email,
-                    uloga: result.uloga,
-                    restoranId: result.restoranId,
+                    korisnikId:
+                        result.korisnikId,
+                    ime:
+                        result.ime,
+                    prezime:
+                        result.prezime,
+                    email:
+                        result.email,
+                    uloga:
+                        result.uloga,
+                    restoranId:
+                        result.restoranId,
                 }),
             );
+
             navigate('/');
-        }  catch (error) {
-            setError(error.message);
+        } catch (error) {
+            setError(
+                error.message,
+            );
         } finally {
             setIsLoading(false);
         }
@@ -43,50 +66,138 @@ function LoginPage() {
 
     return (
         <div className="auth-page">
-            <form className="auth-form" onSubmit={handleSubmit}>
-                <h1>Prijava</h1>
 
-                <div className="form-group">
-                    <label htmlFor="email">
-                        Email adresa
-                    </label>
+            <div className="auth-container">
 
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        required
-                    />
-                </div>
+                <section className="auth-visual">
 
-                <div className="form-group">
-                    <label htmlFor="lozinka">
-                        Lozinka
-                    </label>
+                    <div className="auth-image auth-image-drinks">
+                        <img
+                            src="/images/log1.jpg"
+                            alt="Proslava"
+                        />
+                    </div>
 
-                    <input
-                        id="lozinka"
-                        type="password"
-                        value={lozinka}
-                        onChange={(event) => setLozinka(event.target.value)}
-                        required
-                    />
-                </div>
+                    <div className="auth-image auth-image-wedding">
+                        <img
+                            src="/images/log2.jpg"
+                            alt="Venčanje"
+                        />
+                    </div>
 
-                {error && (
-                    <p className="error-message">
-                        {error}
-                    </p>
-                )}
+                    <div className="auth-image auth-image-dessert">
+                        <img
+                            src="/images/log3.jpg"
+                            alt="Poslastice"
+                        />
+                    </div>
 
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Prijavljivanje...' : 'Prijavi se'}
-                </button>
-            </form>
+                </section>
+
+                <section className="auth-login-section">
+
+                    <form
+                        className="auth-form"
+                        onSubmit={
+                            handleSubmit
+                        }
+                    >
+                        <div className="auth-form-header">
+
+                            <span className="auth-kicker">
+                                Organizacija događaja
+                            </span>
+
+                            <h1>
+                                Dobro došli
+                            </h1>
+
+                            <p>
+                                Prijavite se kako biste
+                                nastavili sa korišćenjem
+                                sistema.
+                            </p>
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label htmlFor="email">
+                                Email adresa
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                value={
+                                    email
+                                }
+                                onChange={(
+                                    event,
+                                ) =>
+                                    setEmail(
+                                        event
+                                            .target
+                                            .value,
+                                    )
+                                }
+                                placeholder="Unesite email adresu"
+                                required
+                            />
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label htmlFor="lozinka">
+                                Lozinka
+                            </label>
+
+                            <input
+                                id="lozinka"
+                                type="password"
+                                value={
+                                    lozinka
+                                }
+                                onChange={(
+                                    event,
+                                ) =>
+                                    setLozinka(
+                                        event
+                                            .target
+                                            .value,
+                                    )
+                                }
+                                placeholder="Unesite lozinku"
+                                required
+                            />
+
+                        </div>
+
+                        {error && (
+                            <p className="error-message">
+                                {error}
+                            </p>
+                        )}
+
+                        <button
+                            type="submit"
+                            className="auth-submit-button"
+                            disabled={
+                                isLoading
+                            }
+                        >
+                            {isLoading
+                                ? 'Prijavljivanje...'
+                                : 'Prijavi se'}
+                        </button>
+
+                    </form>
+
+                </section>
+
+            </div>
+
         </div>
     );
 }

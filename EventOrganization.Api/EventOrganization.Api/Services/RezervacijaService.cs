@@ -7,29 +7,34 @@ namespace EventOrganization.Api.Services;
 
 public class RezervacijaService
 {
-    private readonly RezervacijaRepository
-        _rezervacijaRepository;
+    private readonly RezervacijaRepository _rezervacijaRepository;
+    private readonly SalaRepository _salaRepository;
+    private readonly UslugaRepository _uslugaRepository;
+    private readonly CenovnikRepository _cenovnikRepository;
 
     public RezervacijaService(
-        RezervacijaRepository rezervacijaRepository)
+        RezervacijaRepository rezervacijaRepository,
+        SalaRepository salaRepository,
+        UslugaRepository uslugaRepository,
+        CenovnikRepository cenovnikRepository)
     {
-        _rezervacijaRepository =
-            rezervacijaRepository;
+        _rezervacijaRepository = rezervacijaRepository;
+        _salaRepository = salaRepository;
+        _uslugaRepository = uslugaRepository;
+        _cenovnikRepository = cenovnikRepository;
     }
 
-    public async Task<List<RezervacijaPregledDto>>
-        GetByRestoranId(
-            decimal restoranId,
-            CancellationToken cancellationToken = default)
+    public async Task<List<RezervacijaPregledDto>> GetByRestoranId(
+        decimal restoranId,
+        CancellationToken cancellationToken = default)
     {
         await RealizujIstekleRezervacije(
             cancellationToken);
 
         var rezervacije =
-            await _rezervacijaRepository
-                .GetByRestoranId(
-                    restoranId,
-                    cancellationToken);
+            await _rezervacijaRepository.GetByRestoranId(
+                restoranId,
+                cancellationToken);
 
         return rezervacije
             .Select(rezervacija =>
@@ -49,8 +54,7 @@ public class RezervacijaService
                             rezervacija.BrGostiju),
 
                     Status =
-                        rezervacija.StatusRez
-                            .ToString(),
+                        rezervacija.StatusRez.ToString(),
 
                     TipoviDogadjaja =
                         rezervacija.TipoviDogadjaja
@@ -61,18 +65,16 @@ public class RezervacijaService
             .ToList();
     }
 
-    public async Task<RezervacijaDetaljiDto?>
-        GetDetalji(
-            decimal restoranId,
-            decimal rezervacijaId,
-            CancellationToken cancellationToken = default)
+    public async Task<RezervacijaDetaljiDto?> GetDetalji(
+        decimal restoranId,
+        decimal rezervacijaId,
+        CancellationToken cancellationToken = default)
     {
         var rezervacija =
-            await _rezervacijaRepository
-                .GetDetalji(
-                    restoranId,
-                    rezervacijaId,
-                    cancellationToken);
+            await _rezervacijaRepository.GetDetalji(
+                restoranId,
+                rezervacijaId,
+                cancellationToken);
 
         if (rezervacija is null)
         {
@@ -85,20 +87,16 @@ public class RezervacijaService
                 rezervacija.RezervacijaId,
 
             ImeKlijenta =
-                rezervacija.Korisnik
-                    .Korisnik.Ime,
+                rezervacija.Korisnik.Korisnik.Ime,
 
             PrezimeKlijenta =
-                rezervacija.Korisnik
-                    .Korisnik.Prezime,
+                rezervacija.Korisnik.Korisnik.Prezime,
 
             EmailKlijenta =
-                rezervacija.Korisnik
-                    .Korisnik.Email,
+                rezervacija.Korisnik.Korisnik.Email,
 
             TelefonKlijenta =
-                rezervacija.Korisnik
-                    .Korisnik.Telefon,
+                rezervacija.Korisnik.Korisnik.Telefon,
 
             PaketId =
                 rezervacija.PaketId,
@@ -131,8 +129,7 @@ public class RezervacijaService
                 rezervacija.VremeKreiranja,
 
             Status =
-                rezervacija.StatusRez
-                    .ToString(),
+                rezervacija.StatusRez.ToString(),
 
             DodatneUsluge =
                 rezervacija.StavkeRezervacije
@@ -148,49 +145,42 @@ public class RezervacijaService
         };
     }
 
-    public async Task<RezervacijaDetaljiDto?>
-        ObradiRezervaciju(
-            decimal restoranId,
-            decimal rezervacijaId,
-            StatusRez noviStatus,
-            CancellationToken cancellationToken = default)
+    public async Task<RezervacijaDetaljiDto?> ObradiRezervaciju(
+        decimal restoranId,
+        decimal rezervacijaId,
+        StatusRez noviStatus,
+        CancellationToken cancellationToken = default)
     {
         await RealizujIstekleRezervacije(
             cancellationToken);
 
         var rezervacija =
-            await _rezervacijaRepository
-                .GetForUpdate(
-                    restoranId,
-                    rezervacijaId,
-                    cancellationToken);
+            await _rezervacijaRepository.GetForUpdate(
+                restoranId,
+                rezervacijaId,
+                cancellationToken);
 
         if (rezervacija is null)
         {
             return null;
         }
 
-        var dozvoljenaPromena =
-            false;
+        var dozvoljenaPromena = false;
 
         if (rezervacija.StatusRez ==
             StatusRez.POSLATA)
         {
             dozvoljenaPromena =
-                noviStatus ==
-                    StatusRez.POTVRDJENA ||
-                noviStatus ==
-                    StatusRez.ODBIJENA ||
-                noviStatus ==
-                    StatusRez.OTKAZANA;
+                noviStatus == StatusRez.POTVRDJENA ||
+                noviStatus == StatusRez.ODBIJENA ||
+                noviStatus == StatusRez.OTKAZANA;
         }
 
         if (rezervacija.StatusRez ==
             StatusRez.POTVRDJENA)
         {
             dozvoljenaPromena =
-                noviStatus ==
-                    StatusRez.OTKAZANA;
+                noviStatus == StatusRez.OTKAZANA;
         }
 
         if (!dozvoljenaPromena)
@@ -204,13 +194,12 @@ public class RezervacijaService
             rezervacija.SalaId.HasValue)
         {
             var salaJeZauzeta =
-                await _rezervacijaRepository
-                    .SalaJeZauzeta(
-                        rezervacija.SalaId.Value,
-                        rezervacija.VremePocetka,
-                        rezervacija.VremeZavrsetka,
-                        rezervacija.RezervacijaId,
-                        cancellationToken);
+                await _rezervacijaRepository.SalaJeZauzeta(
+                    rezervacija.SalaId.Value,
+                    rezervacija.VremePocetka,
+                    rezervacija.VremeZavrsetka,
+                    rezervacija.RezervacijaId,
+                    cancellationToken);
 
             if (salaJeZauzeta)
             {
@@ -222,9 +211,8 @@ public class RezervacijaService
         rezervacija.StatusRez =
             noviStatus;
 
-        await _rezervacijaRepository
-            .SaveChanges(
-                cancellationToken);
+        await _rezervacijaRepository.SaveChanges(
+            cancellationToken);
 
         return await GetDetalji(
             restoranId,
@@ -239,10 +227,9 @@ public class RezervacijaService
             DateTime.Now;
 
         var rezervacije =
-            await _rezervacijaRepository
-                .GetPotvrdjeneIstekle(
-                    trenutnoVreme,
-                    cancellationToken);
+            await _rezervacijaRepository.GetPotvrdjeneIstekle(
+                trenutnoVreme,
+                cancellationToken);
 
         if (rezervacije.Count == 0)
         {
@@ -255,13 +242,11 @@ public class RezervacijaService
                 StatusRez.REALIZOVANA;
         }
 
-        await _rezervacijaRepository
-            .SaveChanges(
-                cancellationToken);
+        await _rezervacijaRepository.SaveChanges(
+            cancellationToken);
     }
 
-    public async Task<List<DostupnaSalaDto>>
-    GetDostupneSale(
+    public async Task<List<DostupnaSalaDto>> GetDostupneSale(
         decimal restoranId,
         PretragaDostupnihSalaDto request,
         CancellationToken cancellationToken = default)
@@ -287,32 +272,30 @@ public class RezervacijaService
         }
 
         var sale =
-            await _rezervacijaRepository
-                .GetDostupneSale(
-                    restoranId,
-                    request.BrGostiju,
-                    request.VremePocetka,
-                    request.VremeZavrsetka,
-                    cancellationToken);
+            await _rezervacijaRepository.GetDostupneSale(
+                restoranId,
+                request.BrGostiju,
+                request.VremePocetka,
+                request.VremeZavrsetka,
+                cancellationToken);
 
         var trenutnoVreme =
             DateTime.Now;
 
-        return sale
-            .Select(sala =>
-            {
-                var cenaStolice =
-                    sala.Cenovnici
-                        .Where(cena =>
-                            cena.DatumIzmene <=
-                                trenutnoVreme)
-                        .OrderByDescending(cena =>
-                            cena.DatumIzmene)
-                        .ThenByDescending(cena =>
-                            cena.CenovnikId)
-                        .FirstOrDefault();
 
-                return new DostupnaSalaDto
+        var rezultat =
+            new List<DostupnaSalaDto>();
+
+        foreach (var sala in sale)
+        {
+            var cenaStolice =
+                await _cenovnikRepository.GetVazecaCenaSale(
+                    sala.SalaId,
+                    trenutnoVreme,
+                    cancellationToken);
+
+            rezultat.Add(
+                new DostupnaSalaDto
                 {
                     SalaId =
                         sala.SalaId,
@@ -325,12 +308,13 @@ public class RezervacijaService
 
                     CenaStolice =
                         cenaStolice?.Iznos
-                };
-            })
-            .ToList();
+                });
+        }
+
+        return rezultat;
     }
 
-    public async Task<decimal> Obracun(
+    public async Task<decimal> Obracun( //dok jos nije kreirana rezervacija kolika ce cena biti
         KreiranjeRezervacijeDto request,
         CancellationToken cancellationToken = default)
     {
@@ -343,11 +327,12 @@ public class RezervacijaService
                 trenutnoVreme,
                 cancellationToken);
 
-        return IzracunajCenu(
+        return await IzracunajCenu(
             podaci.Sala,
             podaci.Usluge,
             request.BrGostiju,
-            trenutnoVreme);
+            trenutnoVreme,
+            cancellationToken);
     }
 
     public async Task<KreiranjeRezervacijeResponseDto>
@@ -359,115 +344,42 @@ public class RezervacijaService
         var vremeKreiranja =
             DateTime.Now;
 
-        var klijentPostoji =
-            await _rezervacijaRepository
-                .KlijentPostoji(
-                    korisnikId,
-                    cancellationToken);
-
-        if (!klijentPostoji)
-        {
-            throw new InvalidOperationException(
-                "Prijavljeni korisnik nije klijent.");
-        }
-
-        var podaci =
+        var podaci = //za bekend pri proveri u unosu i ucitavanje
             await ValidirajIUcitajPodatke(
                 request,
                 vremeKreiranja,
                 cancellationToken);
 
         var ukupnaCena =
-            IzracunajCenu(
+            await IzracunajCenu(
                 podaci.Sala,
                 podaci.Usluge,
                 request.BrGostiju,
-                vremeKreiranja);
+                vremeKreiranja,
+                cancellationToken);
 
         var rezervacijaId =
-            await _rezervacijaRepository
-                .GetNextRezervacijaId(
-                    cancellationToken);
+            await _rezervacijaRepository.GetNextRezervacijaId( //bolje kreiraj sekvencu za nov id 
+                cancellationToken);
 
         var rezervacija =
-            new Rezervacija
-            {
-                RezervacijaId =
-                    rezervacijaId,
-
-                BrGostiju =
-                    request.BrGostiju,
-
-                Opis =
-                    string.IsNullOrWhiteSpace(
-                        request.Opis)
-                        ? null
-                        : request.Opis.Trim(),
-
-                Napomena =
-                    string.IsNullOrWhiteSpace(
-                        request.Napomena)
-                        ? null
-                        : request.Napomena.Trim(),
-
-                VremePocetka =
-                    request.VremePocetka,
-
-                VremeZavrsetka =
-                    request.VremeZavrsetka,
-
-                VremeKreiranja =
-                    vremeKreiranja,
-
-                StatusRez =
-                    StatusRez.POSLATA,
-
-                KorisnikId =
-                    korisnikId,
-
-                PaketId =
-                    request.PaketId,
-
-                SalaId =
-                    request.SalaId
-            };
+            KreirajRezervacijuEntitet(
+                rezervacijaId,
+                korisnikId,
+                request,
+                vremeKreiranja);
 
         rezervacija.TipoviDogadjaja.Add(
             podaci.TipDogadjaja);
 
-        if (podaci.Usluge.Count > 0)
-        {
-            var sledeciStavkaId =
-                await _rezervacijaRepository
-                    .GetNextStavkaId(
-                        cancellationToken);
+        await DodajStavkeRezervacije(
+            rezervacija,
+            podaci.Usluge,
+            cancellationToken);
 
-            foreach (var usluga in podaci.Usluge)
-            {
-                rezervacija.StavkeRezervacije.Add(
-                    new StavkaRezervacije
-                    {
-                        StavkaId =
-                            sledeciStavkaId,
-
-                        RezervacijaId =
-                            rezervacijaId,
-
-                        UslugaId =
-                            usluga.UslugaId,
-
-                        TipStavke =
-                            usluga.TipUsluge
-                    });
-
-                sledeciStavkaId++;
-            }
-        }
-
-        await _rezervacijaRepository
-            .Add(
-                rezervacija,
-                cancellationToken);
+        await _rezervacijaRepository.Add(
+            rezervacija,
+            cancellationToken);
 
         return new KreiranjeRezervacijeResponseDto
         {
@@ -475,8 +387,7 @@ public class RezervacijaService
                 rezervacija.RezervacijaId,
 
             Status =
-                rezervacija.StatusRez
-                    .ToString(),
+                rezervacija.StatusRez.ToString(),
 
             VremeKreiranja =
                 rezervacija.VremeKreiranja,
@@ -486,30 +397,137 @@ public class RezervacijaService
         };
     }
 
+    private static Rezervacija KreirajRezervacijuEntitet(
+        decimal rezervacijaId,
+        decimal korisnikId,
+        KreiranjeRezervacijeDto request,
+        DateTime vremeKreiranja)
+    {
+        return new Rezervacija
+        {
+            RezervacijaId =
+                rezervacijaId,
+
+            BrGostiju =
+                request.BrGostiju,
+
+            Opis =
+                string.IsNullOrWhiteSpace(
+                    request.Opis)
+                    ? null
+                    : request.Opis.Trim(),
+
+            Napomena =
+                string.IsNullOrWhiteSpace(
+                    request.Napomena)
+                    ? null
+                    : request.Napomena.Trim(),
+
+            VremePocetka =
+                request.VremePocetka,
+
+            VremeZavrsetka =
+                request.VremeZavrsetka,
+
+            VremeKreiranja =
+                vremeKreiranja,
+
+            StatusRez =
+                StatusRez.POSLATA,
+
+            KorisnikId =
+                korisnikId,
+
+            PaketId =
+                request.PaketId,
+
+            SalaId =
+                request.SalaId
+        };
+    }
+
+    private async Task DodajStavkeRezervacije(
+        Rezervacija rezervacija,
+        List<Usluga> usluge,
+        CancellationToken cancellationToken)
+    {
+        if (usluge.Count == 0)
+        {
+            return;
+        }
+
+        var sledeciStavkaId =
+            await _rezervacijaRepository.GetNextStavkaId(
+                cancellationToken);
+
+        foreach (var usluga in usluge)
+        {
+            rezervacija.StavkeRezervacije.Add(
+                new StavkaRezervacije
+                {
+                    StavkaId =
+                        sledeciStavkaId,
+
+                    RezervacijaId =
+                        rezervacija.RezervacijaId,
+
+                    UslugaId =
+                        usluga.UslugaId,
+
+                    TipStavke =
+                        usluga.TipUsluge
+                });
+
+            sledeciStavkaId++;
+        }
+    }
+
     private async Task<PodaciZaRezervaciju>
         ValidirajIUcitajPodatke(
             KreiranjeRezervacijeDto request,
             DateTime trenutnoVreme,
             CancellationToken cancellationToken)
     {
-        if (request.RestoranId <= 0)
-        {
-            throw new ArgumentException(
-                "Restoran nije ispravno izabran.");
-        }
+        ValidirajOsnovnePodatke(
+            request,
+            trenutnoVreme);
 
-        if (request.SalaId <= 0)
-        {
-            throw new ArgumentException(
-                "Sala nije ispravno izabrana.");
-        }
+        var sala =
+            await UcitajIValidirajSalu(
+                request,
+                cancellationToken);
 
-        if (request.PaketId <= 0)
-        {
-            throw new ArgumentException(
-                "Paket nije ispravno izabran.");
-        }
+        await ValidirajDostupnostSale(
+            request,
+            cancellationToken);
 
+        var tipDogadjaja =
+            await UcitajTipDogadjaja(
+                request.TipDogadjaja,
+                cancellationToken);
+
+        var usluge =
+            await UcitajIValidirajUsluge(
+                request,
+                cancellationToken);
+
+        return new PodaciZaRezervaciju
+        {
+            Sala =
+                sala,
+
+            Usluge =
+                usluge,
+
+            TipDogadjaja =
+                tipDogadjaja
+        };
+    }
+
+    private static void ValidirajOsnovnePodatke(
+        KreiranjeRezervacijeDto request,
+        DateTime trenutnoVreme)
+    {
         if (request.BrGostiju <= 0)
         {
             throw new ArgumentException(
@@ -529,34 +547,23 @@ public class RezervacijaService
             throw new ArgumentException(
                 "Termin rezervacije mora biti u budućnosti.");
         }
+    }
 
-        var paket =
-            await _rezervacijaRepository
-                .GetPaketZaRezervaciju(
-                    request.RestoranId,
-                    request.PaketId,
-                    cancellationToken);
-
-        if (paket is null)
-        {
-            throw new ArgumentException(
-                "Izabrani paket ne postoji.");
-        }
-
+    private async Task<Sala> UcitajIValidirajSalu(
+        KreiranjeRezervacijeDto request,
+        CancellationToken cancellationToken)
+    {
         var sala =
-            paket.Sale
-                .FirstOrDefault(sala =>
-                    sala.SalaId ==
-                        request.SalaId &&
-                    sala.RestoranId ==
-                        request.RestoranId &&
-                    sala.Status ==
-                        Status.AKTIVNO);
+            await _salaRepository.GetZaRezervaciju(
+                request.RestoranId,
+                request.SalaId,
+                request.PaketId,
+                cancellationToken);
 
         if (sala is null)
         {
             throw new ArgumentException(
-                "Izabrani paket nije dostupan u izabranoj sali.");
+                "Izabrana sala ili paket nisu dostupni.");
         }
 
         if (request.BrGostiju >
@@ -566,26 +573,36 @@ public class RezervacijaService
                 "Broj gostiju je veći od kapaciteta izabrane sale.");
         }
 
+        return sala;
+    }
+
+    private async Task ValidirajDostupnostSale(
+        KreiranjeRezervacijeDto request,
+        CancellationToken cancellationToken)
+    {
         var salaJeZauzeta =
-            await _rezervacijaRepository
-                .SalaJeZauzeta(
-                    request.SalaId,
-                    request.VremePocetka,
-                    request.VremeZavrsetka,
-                    null,
-                    cancellationToken);
+            await _rezervacijaRepository.SalaJeZauzeta(
+                request.SalaId,
+                request.VremePocetka,
+                request.VremeZavrsetka,
+                null,
+                cancellationToken);
 
         if (salaJeZauzeta)
         {
             throw new InvalidOperationException(
                 "Izabrana sala je zauzeta u izabranom terminu.");
         }
+    }
 
+    private async Task<TipDogadjaja> UcitajTipDogadjaja(
+        Dogadjaj tip,
+        CancellationToken cancellationToken)
+    {
         var tipDogadjaja =
-            await _rezervacijaRepository
-                .GetTipDogadjaja(
-                    request.TipDogadjaja,
-                    cancellationToken);
+            await _rezervacijaRepository.GetTipDogadjaja(
+                tip,
+                cancellationToken);
 
         if (tipDogadjaja is null)
         {
@@ -593,19 +610,24 @@ public class RezervacijaService
                 "Izabrani tip događaja ne postoji.");
         }
 
+        return tipDogadjaja;
+    }
+
+    private async Task<List<Usluga>> UcitajIValidirajUsluge(
+        KreiranjeRezervacijeDto request,
+        CancellationToken cancellationToken)
+    {
         var uslugaIds =
             request.UslugaIds
                 .Distinct()
                 .ToList();
 
         var usluge =
-            paket.Usluge
-                .Where(usluga =>
-                    uslugaIds.Contains(
-                        usluga.UslugaId) &&
-                    usluga.Status ==
-                        Status.AKTIVNO)
-                .ToList();
+            await _uslugaRepository.GetZaRezervaciju(
+                request.RestoranId,
+                request.PaketId,
+                uslugaIds,
+                cancellationToken);
 
         if (usluge.Count !=
             uslugaIds.Count)
@@ -614,35 +636,21 @@ public class RezervacijaService
                 "Jedna ili više izabranih usluga ne pripadaju izabranom paketu.");
         }
 
-        return new PodaciZaRezervaciju
-        {
-            Sala =
-                sala,
-
-            Usluge =
-                usluge,
-
-            TipDogadjaja =
-                tipDogadjaja
-        };
+        return usluge;
     }
 
-    private static decimal IzracunajCenu(
+    private async Task<decimal> IzracunajCenu(
         Sala sala,
         List<Usluga> usluge,
         decimal brGostiju,
-        DateTime trenutnoVreme)
+        DateTime trenutnoVreme,
+        CancellationToken cancellationToken)
     {
         var cenaStolice =
-            sala.Cenovnici
-                .Where(cena =>
-                    cena.DatumIzmene <=
-                        trenutnoVreme)
-                .OrderByDescending(cena =>
-                    cena.DatumIzmene)
-                .ThenByDescending(cena =>
-                    cena.CenovnikId)
-                .FirstOrDefault();
+            await _cenovnikRepository.GetVazecaCenaSale(
+                sala.SalaId,
+                trenutnoVreme,
+                cancellationToken);
 
         if (cenaStolice is null)
         {
@@ -657,15 +665,10 @@ public class RezervacijaService
         foreach (var usluga in usluge)
         {
             var cenaUsluge =
-                usluga.Cenovnici
-                    .Where(cena =>
-                        cena.DatumIzmene <=
-                            trenutnoVreme)
-                    .OrderByDescending(cena =>
-                        cena.DatumIzmene)
-                    .ThenByDescending(cena =>
-                        cena.CenovnikId)
-                    .FirstOrDefault();
+                await _cenovnikRepository.GetVazecaCenaUsluge(
+                    usluga.UslugaId,
+                    trenutnoVreme,
+                    cancellationToken);
 
             if (cenaUsluge is null)
             {

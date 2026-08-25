@@ -180,7 +180,7 @@ public class RezervacijaController : ControllerBase
     [HttpPost(
         "restoran/{restoranId}/dostupne-sale")]
     public async Task<ActionResult<List<DostupnaSalaDto>>>
-        GetDostupneSale(
+        GetDostupneSale( //dobavljanje dostupnih sala pri procesu rezervacije
             decimal restoranId,
             PretragaDostupnihSalaDto request,
             CancellationToken cancellationToken)
@@ -206,8 +206,7 @@ public class RezervacijaController : ControllerBase
 
     [Authorize(Roles = "KLIJENT")]
     [HttpPost("obracun")]
-    public async Task<ActionResult<decimal>>
-        Obracun(
+    public async Task<ActionResult<decimal>> Obracun(//dok jos nije kreirana rezervacija kolika ce cena biti
             KreiranjeRezervacijeDto request,
             CancellationToken cancellationToken)
     {
@@ -245,7 +244,7 @@ public class RezervacijaController : ControllerBase
             User.FindFirst(
                 ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
+        if (!decimal.TryParse( //token vraca kao string, zato se koristi decimal
                 korisnikIdClaim,
                 out var korisnikId))
         {

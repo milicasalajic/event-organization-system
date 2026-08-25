@@ -293,7 +293,7 @@ function UpravljanjePonudomPage() {
             return '-';
         }
 
-        return `${Number(value).toLocaleString('sr-RS')} RSD`;
+        return `${Number(value).toLocaleString('sr-RS')} EUR`;
     }
 
     // =========================

@@ -47,6 +47,28 @@ public class SalaRepository
             .ToListAsync(cancellationToken);
     }
 
+    public Task<Sala?> GetZaRezervaciju(
+        decimal restoranId,
+        decimal salaId,
+        decimal paketId,
+        CancellationToken cancellationToken = default)
+    {
+        return _context.Sale
+            .AsNoTracking()
+            .Include(sala =>
+                sala.Cenovnici)
+            .FirstOrDefaultAsync(
+                sala =>
+                    sala.SalaId == salaId &&
+                    sala.RestoranId == restoranId &&
+                    sala.Status == Status.AKTIVNO &&
+                    sala.Paketi.Any(paket =>
+                        paket.PaketId == paketId &&
+                        paket.RestoranId == restoranId &&
+                        paket.Status == Status.AKTIVNO),
+                cancellationToken);
+    }
+
     public Task<Sala?> GetForUpdate(
         decimal restoranId,
         decimal salaId,

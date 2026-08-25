@@ -1,40 +1,211 @@
 .restorani-page {
     min-height: 100vh;
-    padding: 50px 24px;
-    background-color: #f8f5f0;
+    background: #f8f5f0;
+    color: #2c2c2c;
+}
+
+.restorani-hero {
+    min-height: 560px;
+    background: linear-gradient( 90deg, rgba(248, 245, 240, 0.98) 0%, rgba(248, 245, 240, 0.92) 34%, rgba(248, 245, 240, 0.62) 52%, rgba(248, 245, 240, 0.18) 75%, rgba(248, 245, 240, 0.08) 100% ), url('/images/restoran.png') center / cover no-repeat;
+}
+
+.restorani-hero-overlay {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 560px;
+    margin: 0 auto;
+    padding: 105px 32px 145px;
+    box-sizing: border-box;
+}
+
+.restorani-hero-content {
+    max-width: 600px;
+}
+
+.restorani-kicker {
+    display: block;
+    margin-bottom: 14px;
+    color: #c8a96b;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.restorani-hero-content h1 {
+    margin: 0;
+    color: #31483a;
+    font-size: clamp( 3.7rem, 7vw, 6.3rem );
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+}
+
+.restorani-hero-content p {
+    max-width: 570px;
+    margin: 27px 0 0;
+    color: #5f5c57;
+    font-size: 1.08rem;
+    line-height: 1.7;
 }
 
 .restorani-container {
     width: 100%;
-    max-width: 950px;
+    max-width: 1000px;
     margin: 0 auto;
+    padding: 0 28px 80px;
+    box-sizing: border-box;
 }
 
-.restorani-header {
-    margin-bottom: 35px;
-    text-align: center;
+.restorani-izbor {
+    position: relative;
+    z-index: 2;
+    margin-top: -75px;
 }
 
-    .restorani-header h1 {
+.restorani-izbor-header {
+    margin-bottom: 22px;
+}
+
+    .restorani-izbor-header > span,
+    .dodaj-restoran-forma-header > span {
+        display: block;
+        margin-bottom: 8px;
+        color: #c8a96b;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+    }
+
+    .restorani-izbor-header h2 {
         margin: 0;
-        color: #3f5c4a;
-        font-size: 32px;
+        color: #31483a;
+        font-size: 2rem;
+    }
+
+.dodaj-restoran-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.dodaj-restoran-button {
+    min-width: 190px;
+    padding: 12px 22px;
+    border: 1px solid #3f5c4a;
+    border-radius: 10px;
+    background: #3f5c4a;
+    color: #ffffff;
+    box-shadow: 0 7px 18px rgba(63, 92, 74, 0.18);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .dodaj-restoran-button:hover {
+        border-color: #31483a;
+        background: #31483a;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(63, 92, 74, 0.22);
+    }
+
+.dodaj-restoran-forma {
+    margin: 0 auto 28px;
+    padding: 28px;
+    border: 1px solid #e4ded5;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 14px 35px rgba(63, 92, 74, 0.1);
+}
+
+.dodaj-restoran-forma-header {
+    margin-bottom: 24px;
+}
+
+    .dodaj-restoran-forma-header h2 {
+        margin: 0 0 7px;
+        color: #31483a;
+    }
+
+    .dodaj-restoran-forma-header p {
+        margin: 0;
+        color: #77736d;
+    }
+
+.dodaj-restoran-grid {
+    display: grid;
+    grid-template-columns: repeat( 2, minmax(0, 1fr) );
+    gap: 18px;
+}
+
+.restoran-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+    .restoran-form-field label {
         font-weight: 600;
     }
 
-        .restorani-header h1::after {
-            content: '';
-            display: block;
-            width: 55px;
-            height: 2px;
-            margin: 14px auto 0;
-            background-color: #c8a96b;
+    .restoran-form-field input {
+        padding: 12px 14px;
+        border: 1px solid #e4ded5;
+        border-radius: 10px;
+        font: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .restoran-form-field input:focus {
+            outline: none;
+            border-color: #3f5c4a;
+            box-shadow: 0 0 0 3px rgba(63, 92, 74, 0.08);
         }
 
-    .restorani-header p {
-        margin-top: 14px;
-        color: #77736d;
-        font-size: 15px;
+.restoran-adresa-field {
+    grid-column: 1 / -1;
+}
+
+.dodaj-restoran-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.odustani-restoran-button,
+.sacuvaj-restoran-button {
+    padding: 11px 18px;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.odustani-restoran-button {
+    border: 1px solid #d8d2c9;
+    background: #ffffff;
+    color: #3f5c4a;
+}
+
+    .odustani-restoran-button:hover:not(:disabled) {
+        border-color: #3f5c4a;
+        background: #f7f8f6;
+    }
+
+.sacuvaj-restoran-button {
+    border: 1px solid #3f5c4a;
+    background: #3f5c4a;
+    color: #ffffff;
+}
+
+    .sacuvaj-restoran-button:hover:not(:disabled) {
+        border-color: #31483a;
+        background: #31483a;
     }
 
 .restorani-lista {
@@ -44,284 +215,287 @@
 }
 
 .restoran-card {
-    width: 100%;
-    padding: 26px 30px;
+    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 30px;
-    background-color: #ffffff;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 26px 30px;
+    overflow: hidden;
     border: 1px solid #e4ded5;
-    border-left: 4px solid #c8a96b;
-    border-radius: 10px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 14px 35px rgba(63, 92, 74, 0.1);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
     .restoran-card:hover {
-        transform: translateY(-3px);
-        border-color: #d7c29a;
-        border-left-color: #c8a96b;
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
+        transform: translateY(-4px);
+        border-color: #c8a96b;
+        box-shadow: 0 20px 45px rgba(63, 92, 74, 0.15);
     }
 
-.restoran-sadrzaj {
-    flex: 1;
+.restoran-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-.restoran-card h2 {
-    margin: 0 0 16px;
+.restoran-card-kicker {
+    color: #c8a96b;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.restoran-grad {
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: #f3efe8;
     color: #3f5c4a;
-    font-size: 23px;
+    font-size: 0.78rem;
     font-weight: 600;
+}
+
+.restoran-card h3 {
+    margin: 16px 0 20px;
+    color: #31483a;
+    font-size: 1.65rem;
 }
 
 .restoran-info {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+    display: grid;
+    grid-template-columns: repeat( 3, minmax(0, 1fr) );
+    gap: 30px;
 }
 
     .restoran-info p {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
         margin: 0;
-        color: #55514c;
-        font-size: 14px;
-        line-height: 1.5;
     }
 
     .restoran-info strong {
-        color: #2c2c2c;
+        color: #77736d;
+        font-size: 0.76rem;
         font-weight: 600;
+        text-transform: uppercase;
     }
 
-.restoran-detalji {
-    flex-shrink: 0;
+    .restoran-info span {
+        color: #2c2c2c;
+    }
+
+.restoran-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #eee9e1;
     color: #3f5c4a;
-    font-size: 14px;
-    font-weight: 600;
-    transition: transform 0.2s ease;
+    font-weight: 700;
 }
 
-.restoran-card:hover .restoran-detalji {
-    transform: translateX(4px);
+.obrisi-restoran-button {
+    position: absolute;
+    z-index: 2;
+    right: 80px;
+    bottom: 17px;
+    padding: 7px 12px;
+    border: 1px solid #e8caca;
+    border-radius: 10px;
+    background: #fdf2f2;
+    color: #a94442;
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    cursor: pointer;
 }
 
+    .obrisi-restoran-button:hover {
+        border-color: #a94442;
+        background: #a94442;
+        color: #ffffff;
+    }
+
+.dodaj-restoran-error,
+.brisanje-restorana-error {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    background: #fdf2f2;
+    color: #a94442;
+}
+
+.restorani-empty,
 .restorani-loading,
-.restorani-error,
-.restorani-empty {
-    margin-top: 80px;
+.restorani-error {
+    padding: 28px;
     text-align: center;
-    font-size: 15px;
-}
-
-.restorani-loading,
-.restorani-empty {
-    color: #77736d;
 }
 
 .restorani-error {
     color: #a94442;
 }
 
-@media (max-width: 650px) {
-    .restorani-page {
-        padding: 32px 16px;
-    }
-
-    .restoran-card {
-        padding: 22px 20px;
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 18px;
-    }
-
-        .restoran-card h2 {
-            font-size: 20px;
-        }
-
-    .restorani-header h1 {
-        font-size: 27px;
-    }
-
-    .restoran-detalji {
-        align-self: flex-end;
-    }
+.neaktivni-restorani-sekcija {
+    margin-top: 70px;
+    padding-top: 36px;
+    border-top: 1px solid #e4ded5;
 }
-.restorani-header {
+
+.neaktivni-restorani-lista {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 25px;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.dodaj-restoran-button {
-    flex-shrink: 0;
-    padding: 12px 20px;
-    background: #2f4738;
-    border: 1px solid #2f4738;
-    border-radius: 8px;
-    color: #ffffff;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-    .dodaj-restoran-button:hover {
-        background: #24372c;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(47, 71, 56, 0.18);
-    }
-
-.dodaj-restoran-forma {
-    margin: 25px 0 30px;
-    padding: 26px 28px;
-    background: #ffffff;
+.restoran-card-neaktivan {
+    padding: 20px;
     border: 1px solid #e4ded5;
-    border-top: 4px solid #718979;
-    border-radius: 11px;
-    box-shadow: 0 5px 20px rgba(35, 43, 38, 0.05);
+    border-radius: 16px;
+    background: #efebe5;
+    opacity: 0.75;
 }
 
-.dodaj-restoran-forma-header {
-    margin-bottom: 22px;
-}
-
-    .dodaj-restoran-forma-header span {
-        display: block;
-        margin-bottom: 5px;
-        color: #9b8151;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1.2px;
-        text-transform: uppercase;
+    .restoran-card-neaktivan h3 {
+        margin: 10px 0 6px;
+        color: #5f5c57;
     }
 
-    .dodaj-restoran-forma-header h2 {
+    .restoran-card-neaktivan p {
         margin: 0;
-        color: #344139;
-        font-size: 21px;
+        color: #77736d;
     }
 
-    .dodaj-restoran-forma-header p {
-        margin: 6px 0 0;
-        color: #858078;
-        font-size: 12px;
-    }
-
-.dodaj-restoran-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px 22px;
-}
-
-.restoran-form-field {
-    min-width: 0;
-}
-
-.restoran-adresa-field {
-    grid-column: 1 / -1;
-}
-
-.restoran-form-field label {
-    display: block;
-    margin-bottom: 7px;
-    color: #89847c;
-    font-size: 10px;
+.neaktivan-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #e1d9ce;
+    color: #77736d;
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
 }
 
-.restoran-form-field input {
-    width: 100%;
-    height: 43px;
-    padding: 0 13px;
-    background: #ffffff;
-    border: 1px solid #d8d1c7;
-    border-radius: 7px;
-    outline: none;
-    color: #353a36;
-    font: inherit;
-    font-size: 13px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-    .restoran-form-field input:focus {
-        border-color: #718979;
-        box-shadow: 0 0 0 3px rgba(113, 137, 121, 0.1);
-    }
-
-.dodaj-restoran-actions {
+.brisanje-modal-overlay {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
     display: flex;
-    justify-content: flex-end;
-    gap: 9px;
-    margin-top: 24px;
-    padding-top: 18px;
-    border-top: 1px solid #eee8df;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(30, 35, 31, 0.55);
 }
 
-.odustani-restoran-button,
-.sacuvaj-restoran-button {
-    padding: 10px 17px;
-    border-radius: 7px;
-    font-family: inherit;
-    font-size: 12px;
+.brisanje-modal {
+    width: 100%;
+    max-width: 430px;
+    padding: 30px;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.brisanje-modal-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: #fdf2f2;
+    color: #a94442;
+    font-size: 1.4rem;
     font-weight: 700;
+}
+
+.brisanje-modal h2 {
+    margin: 0 0 14px;
+    color: #31483a;
+}
+
+.brisanje-modal p {
+    color: #5f5c57;
+}
+
+.brisanje-modal-napomena {
+    display: block;
+    color: #77736d;
+    font-size: 0.9rem;
+}
+
+.brisanje-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.brisanje-modal-odustani,
+.brisanje-modal-potvrdi {
+    padding: 11px 18px;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
     cursor: pointer;
 }
 
-.odustani-restoran-button {
+.brisanje-modal-odustani {
+    border: 1px solid #d8d2c9;
     background: #ffffff;
-    border: 1px solid #d9d2c8;
-    color: #65615b;
+    color: #3f5c4a;
 }
 
-    .odustani-restoran-button:hover {
-        background: #f6f3ee;
-    }
-
-.sacuvaj-restoran-button {
-    background: #2f4738;
-    border: 1px solid #2f4738;
+.brisanje-modal-potvrdi {
+    border: 1px solid #a94442;
+    background: #a94442;
     color: #ffffff;
 }
 
-    .sacuvaj-restoran-button:hover {
-        background: #24372c;
+    .brisanje-modal-potvrdi:hover:not(:disabled) {
+        border-color: #8f3937;
+        background: #8f3937;
     }
 
-.dodaj-restoran-actions button:disabled {
-    opacity: 0.6;
-    cursor: default;
-}
-
-.dodaj-restoran-error {
-    margin-bottom: 17px;
-    padding: 10px 13px;
-    background: #fff3f2;
-    border: 1px solid #edccc8;
-    border-radius: 6px;
-    color: #9d3e38;
-    font-size: 12px;
-}
+    .dodaj-restoran-button:disabled,
+    .odustani-restoran-button:disabled,
+    .sacuvaj-restoran-button:disabled,
+    .obrisi-restoran-button:disabled,
+    .brisanje-modal-odustani:disabled,
+    .brisanje-modal-potvrdi:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
 
 @media (max-width: 650px) {
-    .restorani-header {
-        align-items: flex-start;
-        flex-direction: column;
+    .restorani-hero {
+        min-height: 500px;
+        background-position: 60% center;
     }
 
-    .dodaj-restoran-button {
-        width: 100%;
+    .restorani-hero-overlay {
+        min-height: 500px;
+        padding: 80px 20px 110px;
     }
 
-    .dodaj-restoran-forma {
-        padding: 21px 18px;
+    .restorani-hero-content h1 {
+        font-size: 3.3rem;
     }
 
+    .restorani-container {
+        padding: 0 16px 55px;
+    }
+
+    .restoran-info,
     .dodaj-restoran-grid {
         grid-template-columns: 1fr;
     }
@@ -330,143 +504,7 @@
         grid-column: auto;
     }
 
-    .dodaj-restoran-actions {
-        flex-direction: column-reverse;
+    .restorani-izbor {
+        margin-top: -60px;
     }
-
-        .dodaj-restoran-actions button {
-            width: 100%;
-        }
 }
-.restoran-card-akcije {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.obrisi-restoran-button {
-    padding: 8px 13px;
-    background: #ffffff;
-    border: 1px solid #bd7770;
-    border-radius: 7px;
-    color: #944841;
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-    .obrisi-restoran-button:hover {
-        background: #fae9e7;
-    }
-
-    .obrisi-restoran-button:disabled {
-        opacity: 0.55;
-        cursor: default;
-    }
-
-.brisanje-restorana-error {
-    margin-bottom: 18px;
-    padding: 10px 13px;
-    background: #fff3f2;
-    border: 1px solid #edccc8;
-    border-radius: 7px;
-    color: #9d3e38;
-    font-size: 12px;
-}
-.neaktivni-restorani-sekcija {
-    margin-top: 55px;
-    padding-top: 30px;
-    border-top: 1px solid #ddd8d0;
-}
-
-.neaktivni-restorani-header {
-    margin-bottom: 22px;
-}
-
-    .neaktivni-restorani-header h2 {
-        margin: 0;
-        color: #77736d;
-        font-size: 20px;
-        font-weight: 600;
-    }
-
-    .neaktivni-restorani-header p {
-        margin: 6px 0 0;
-        color: #9a958e;
-        font-size: 13px;
-    }
-
-.restoran-card-neaktivan {
-    background-color: #f1f1ef;
-    border-color: #dddcd8;
-    border-left-color: #b8b6b1;
-    box-shadow: none;
-}
-
-    .restoran-card-neaktivan:hover {
-        background-color: #eeeeec;
-        border-color: #d5d4d0;
-        border-left-color: #aaa8a3;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    }
-
-    .restoran-card-neaktivan h2 {
-        color: #777773;
-    }
-
-    .restoran-card-neaktivan .restoran-info p {
-        color: #8a8884;
-    }
-
-    .restoran-card-neaktivan .restoran-info strong {
-        color: #706f6b;
-    }
-
-    .restoran-card-neaktivan .restoran-detalji {
-        color: #85847f;
-    }
-
-.neaktivan-naslov {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-    .neaktivan-naslov h2 {
-        margin: 0;
-    }
-
-.neaktivan-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 9px;
-    background: #e2e2df;
-    border: 1px solid #d1d0cc;
-    border-radius: 5px;
-    color: #777570;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-}
-.upravljanje-ponudom-button {
-    min-width: 230px;
-    padding: 15px 30px;
-    background: #718979;
-    border: 1px solid #718979;
-    border-radius: 8px;
-    color: #ffffff;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-    .upravljanje-ponudom-button:hover {
-        background: #607766;
-        transform: translateY(-1px);
-    }

@@ -10,11 +10,18 @@ public class DekoraterskaFirmaService
     private readonly DekoraterskaFirmaRepository
         _dekoraterskaFirmaRepository;
 
+    private readonly CenovnikRepository
+        _cenovnikRepository;
+
     public DekoraterskaFirmaService(
-        DekoraterskaFirmaRepository dekoraterskaFirmaRepository)
+        DekoraterskaFirmaRepository dekoraterskaFirmaRepository,
+        CenovnikRepository cenovnikRepository)
     {
         _dekoraterskaFirmaRepository =
             dekoraterskaFirmaRepository;
+
+        _cenovnikRepository =
+            cenovnikRepository;
     }
 
     public async Task<List<DekoraterskaFirmaDto>> GetByRestoranId(
@@ -26,18 +33,174 @@ public class DekoraterskaFirmaService
                 restoranId,
                 cancellationToken);
 
-        return usluge
-            .Select(usluga =>
-                MapToDto(
+        var rezultat =
+            new List<DekoraterskaFirmaDto>();
+
+        foreach (var usluga in usluge)
+        {
+            rezultat.Add(
+                await MapToDto(
                     usluga,
-                    restoranId))
-            .ToList();
+                    restoranId,
+                    cancellationToken));
+        }
+
+        return rezultat;
     }
 
     public async Task<DekoraterskaFirmaDto> Add(
         decimal restoranId,
         DodavanjeDekoraterskeFirmeDto request,
         CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatke(
+            request);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            null,
+            cancellationToken);
+
+        var paketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        var uslugaId =
+            await _dekoraterskaFirmaRepository.GetNextUslugaId(
+                cancellationToken);
+
+        var cenovnikId =
+            await _cenovnikRepository.GetNextCenovnikId(
+                cancellationToken);
+
+        var usluga =
+            KreirajDekoraterskuFirmu(
+                uslugaId,
+                cenovnikId,
+                naziv,
+                request);
+
+        PoveziPakete(
+            usluga,
+            paketi);
+
+        await _dekoraterskaFirmaRepository.Add(
+            usluga,
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<DekoraterskaFirmaDto?> Update(
+        decimal restoranId,
+        decimal uslugaId,
+        IzmenaDekoraterskeFirmeDto request,
+        CancellationToken cancellationToken = default)
+    {
+        ValidirajPodatkeIzmene(
+            request);
+
+        var usluga =
+            await _dekoraterskaFirmaRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return null;
+        }
+
+        ValidirajDekoraterskuFirmuZaIzmenu(
+            usluga);
+
+        var naziv =
+            request.Naziv.Trim();
+
+        await ValidirajNaziv(
+            restoranId,
+            naziv,
+            uslugaId,
+            cancellationToken);
+
+        var paketIds =
+            request.PaketIds
+                .Distinct()
+                .ToList();
+
+        var noviPaketi =
+            await UcitajIValidirajPakete(
+                restoranId,
+                paketIds,
+                cancellationToken);
+
+        IzmeniPodatkeDekoraterskeFirme(
+            usluga,
+            request,
+            naziv);
+
+        IzmeniPakete(
+            usluga,
+            noviPaketi,
+            restoranId);
+
+        await _dekoraterskaFirmaRepository.SaveChanges(
+            cancellationToken);
+
+        return await MapToDto(
+            usluga,
+            restoranId,
+            cancellationToken);
+    }
+
+    public async Task<bool> Delete(
+        decimal restoranId,
+        decimal uslugaId,
+        CancellationToken cancellationToken = default)
+    {
+        var usluga =
+            await _dekoraterskaFirmaRepository.GetForUpdate(
+                restoranId,
+                uslugaId,
+                cancellationToken);
+
+        if (usluga is null)
+        {
+            return false;
+        }
+
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
+
+        if (usluga.Paketi.Count == 0)
+        {
+            usluga.Status =
+                Status.NEAKTIVNO;
+        }
+
+        await _dekoraterskaFirmaRepository.SaveChanges(
+            cancellationToken);
+
+        return true;
+    }
+
+    private static void ValidirajPodatke(
+        DodavanjeDekoraterskeFirmeDto request)
     {
         if (string.IsNullOrWhiteSpace(
                 request.Naziv))
@@ -65,25 +228,48 @@ public class DekoraterskaFirmaService
                 "Cena dekoraterske usluge ne može biti veća od 99999.");
         }
 
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
-
-        if (paketIds.Count == 0)
+        if (request.PaketIds.Count == 0)
         {
             throw new ArgumentException(
                 "Dekoraterska firma mora biti povezana sa najmanje jednim paketom.");
         }
+    }
 
-        var naziv =
-            request.Naziv.Trim();
+    private static void ValidirajPodatkeIzmene(
+        IzmenaDekoraterskeFirmeDto request)
+    {
+        if (string.IsNullOrWhiteSpace(
+                request.Naziv))
+        {
+            throw new ArgumentException(
+                "Naziv dekoraterske firme je obavezan.");
+        }
 
+        if (string.IsNullOrWhiteSpace(
+                request.Telefon))
+        {
+            throw new ArgumentException(
+                "Telefon dekoraterske firme je obavezan.");
+        }
+
+        if (request.PaketIds.Count == 0)
+        {
+            throw new ArgumentException(
+                "Dekoraterska firma mora biti povezana sa najmanje jednim paketom.");
+        }
+    }
+
+    private async Task ValidirajNaziv(
+        decimal restoranId,
+        string naziv,
+        decimal? izuzmiUslugaId,
+        CancellationToken cancellationToken)
+    {
         var nazivPostoji =
             await _dekoraterskaFirmaRepository.NazivPostoji(
                 restoranId,
                 naziv,
-                null,
+                izuzmiUslugaId,
                 cancellationToken);
 
         if (nazivPostoji)
@@ -91,27 +277,52 @@ public class DekoraterskaFirmaService
             throw new ArgumentException(
                 "Dekoraterska firma sa ovim nazivom već postoji u ponudi restorana.");
         }
+    }
 
+    private async Task<List<Paket>> UcitajIValidirajPakete(
+        decimal restoranId,
+        List<decimal> paketIds,
+        CancellationToken cancellationToken)
+    {
         var paketi =
             await _dekoraterskaFirmaRepository.GetPaketiZaRestoran(
                 restoranId,
                 paketIds,
                 cancellationToken);
 
-        if (paketi.Count != paketIds.Count)
+        if (paketi.Count !=
+            paketIds.Count)
         {
             throw new ArgumentException(
                 "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
         }
 
-        var uslugaId =
-            await _dekoraterskaFirmaRepository.GetNextUslugaId(
-                cancellationToken);
+        return paketi;
+    }
 
-        var cenovnikId =
-            await _dekoraterskaFirmaRepository.GetNextCenovnikId(
-                cancellationToken);
+    private static void ValidirajDekoraterskuFirmuZaIzmenu(
+        Usluga usluga)
+    {
+        if (usluga.Status ==
+            Status.NEAKTIVNO)
+        {
+            throw new InvalidOperationException(
+                "Neaktivnu dekoratersku firmu nije moguće menjati.");
+        }
 
+        if (usluga.DekoraterskaFirma is null)
+        {
+            throw new InvalidOperationException(
+                "Podaci dekoraterske firme nisu pronađeni.");
+        }
+    }
+
+    private static Usluga KreirajDekoraterskuFirmu(
+        decimal uslugaId,
+        decimal cenovnikId,
+        string naziv,
+        DodavanjeDekoraterskeFirmeDto request)
+    {
         var usluga =
             new Usluga
             {
@@ -150,12 +361,6 @@ public class DekoraterskaFirmaService
                     }
             };
 
-        foreach (var paket in paketi)
-        {
-            usluga.Paketi.Add(
-                paket);
-        }
-
         usluga.Cenovnici.Add(
             new Cenovnik
             {
@@ -166,7 +371,7 @@ public class DekoraterskaFirmaService
                     request.Cena,
 
                 DatumIzmene =
-                    DateTime.Today,
+                    DateTime.Now,
 
                 UslugaId =
                     uslugaId,
@@ -175,92 +380,14 @@ public class DekoraterskaFirmaService
                     null
             });
 
-        await _dekoraterskaFirmaRepository.Add(
-            usluga,
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
+        return usluga;
     }
 
-    public async Task<DekoraterskaFirmaDto?> Update(
-        decimal restoranId,
-        decimal uslugaId,
+    private static void IzmeniPodatkeDekoraterskeFirme(
+        Usluga usluga,
         IzmenaDekoraterskeFirmeDto request,
-        CancellationToken cancellationToken = default)
+        string naziv)
     {
-        if (string.IsNullOrWhiteSpace(
-                request.Naziv))
-        {
-            throw new ArgumentException(
-                "Naziv dekoraterske firme je obavezan.");
-        }
-
-        if (string.IsNullOrWhiteSpace(
-                request.Telefon))
-        {
-            throw new ArgumentException(
-                "Telefon dekoraterske firme je obavezan.");
-        }
-
-        var usluga =
-            await _dekoraterskaFirmaRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return null;
-        }
-
-        if (usluga.Status ==
-            Status.NEAKTIVNO)
-        {
-            throw new InvalidOperationException(
-                "Neaktivnu dekoratersku firmu nije moguće menjati.");
-        }
-
-        var naziv =
-            request.Naziv.Trim();
-
-        var nazivPostoji =
-            await _dekoraterskaFirmaRepository.NazivPostoji(
-                restoranId,
-                naziv,
-                uslugaId,
-                cancellationToken);
-
-        if (nazivPostoji)
-        {
-            throw new ArgumentException(
-                "Dekoraterska firma sa ovim nazivom već postoji u ponudi restorana.");
-        }
-
-        var paketIds =
-            request.PaketIds
-                .Distinct()
-                .ToList();
-
-        if (paketIds.Count == 0)
-        {
-            throw new ArgumentException(
-                "Dekoraterska firma mora biti povezana sa najmanje jednim paketom.");
-        }
-
-        var noviPaketi =
-            await _dekoraterskaFirmaRepository.GetPaketiZaRestoran(
-                restoranId,
-                paketIds,
-                cancellationToken);
-
-        if (noviPaketi.Count != paketIds.Count)
-        {
-            throw new ArgumentException(
-                "Jedan ili više izabranih paketa ne pripada ovom restoranu.");
-        }
-
         usluga.NazivU =
             naziv;
 
@@ -273,30 +400,32 @@ public class DekoraterskaFirmaService
                 ? null
                 : request.Portfolio.Trim();
 
-        if (usluga.DekoraterskaFirma is null)
-        {
-            throw new InvalidOperationException(
-                "Podaci dekoraterske firme nisu pronađeni.");
-        }
-
-        usluga.DekoraterskaFirma.Opis =
+        usluga.DekoraterskaFirma!.Opis =
             string.IsNullOrWhiteSpace(
                 request.Opis)
                 ? null
                 : request.Opis.Trim();
+    }
 
-        var stariPaketiRestorana =
-            usluga.Paketi
-                .Where(paket =>
-                    paket.RestoranId ==
-                    restoranId)
-                .ToList();
-
-        foreach (var paket in stariPaketiRestorana)
+    private static void PoveziPakete(
+        Usluga usluga,
+        List<Paket> paketi)
+    {
+        foreach (var paket in paketi)
         {
-            usluga.Paketi.Remove(
+            usluga.Paketi.Add(
                 paket);
         }
+    }
+
+    private static void IzmeniPakete(
+        Usluga usluga,
+        List<Paket> noviPaketi,
+        decimal restoranId)
+    {
+        UkloniPaketeRestorana(
+            usluga,
+            restoranId);
 
         foreach (var paket in noviPaketi)
         {
@@ -309,31 +438,12 @@ public class DekoraterskaFirmaService
                     paket);
             }
         }
-
-        await _dekoraterskaFirmaRepository.SaveChanges(
-            cancellationToken);
-
-        return MapToDto(
-            usluga,
-            restoranId);
     }
 
-    public async Task<bool> Delete(
-        decimal restoranId,
-        decimal uslugaId,
-        CancellationToken cancellationToken = default)
+    private static void UkloniPaketeRestorana(
+        Usluga usluga,
+        decimal restoranId)
     {
-        var usluga =
-            await _dekoraterskaFirmaRepository.GetForUpdate(
-                restoranId,
-                uslugaId,
-                cancellationToken);
-
-        if (usluga is null)
-        {
-            return false;
-        }
-
         var paketiRestorana =
             usluga.Paketi
                 .Where(paket =>
@@ -346,36 +456,18 @@ public class DekoraterskaFirmaService
             usluga.Paketi.Remove(
                 paket);
         }
-
-        if (usluga.Paketi.Count == 0)
-        {
-            usluga.Status =
-                Status.NEAKTIVNO;
-        }
-
-        await _dekoraterskaFirmaRepository.SaveChanges(
-            cancellationToken);
-
-        return true;
     }
 
-    private static DekoraterskaFirmaDto MapToDto(
+    private async Task<DekoraterskaFirmaDto> MapToDto(
         Usluga usluga,
-        decimal restoranId)
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var danas =
-            DateTime.Today;
-
         var vazecaCena =
-            usluga.Cenovnici
-                .Where(cena =>
-                    cena.DatumIzmene.Date <=
-                    danas)
-                .OrderByDescending(cena =>
-                    cena.DatumIzmene)
-                .ThenByDescending(cena =>
-                    cena.CenovnikId)
-                .FirstOrDefault();
+            await _cenovnikRepository.GetVazecaCenaUsluge(
+                usluga.UslugaId,
+                DateTime.Now,
+                cancellationToken);
 
         return new DekoraterskaFirmaDto
         {
