@@ -12,19 +12,17 @@ public class RestoranController : ControllerBase
 {
     private readonly RestoranService _restoranService;
 
-    public RestoranController(
-        RestoranService restoranService)
+    public RestoranController(RestoranService restoranService)
     {
         _restoranService = restoranService;
     }
 
-    [Authorize(Roles = "ADMINISTRATOR, KLIJENT")]
+    [Authorize(Roles = "ADMINISTRATOR,KLIJENT")]
     [HttpGet]
     public async Task<ActionResult<List<RestoranDto>>> GetAll(
         CancellationToken cancellationToken)
     {
-        var restorani = await _restoranService.GetAll(
-            cancellationToken);
+        var restorani = await _restoranService.GetAll(cancellationToken);
 
         return Ok(restorani);
     }
@@ -32,27 +30,25 @@ public class RestoranController : ControllerBase
     [Authorize]
     [HttpGet("{restoranId}")]
     public async Task<ActionResult<RestoranDto>> GetById(
-     decimal restoranId,
-     CancellationToken cancellationToken)
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var korisnikIdClaim = User.FindFirst(
-            ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var uloga = User.FindFirst(
-            ClaimTypes.Role)?.Value;
+        var uloga = User.FindFirst(ClaimTypes.Role)?.Value;
 
-        if (uloga is "MENADZER" or "OPERATER")//provera da li stvarno korisnik radi u restoranu
+        // Provera da li menadžer ili operater stvarno radi u restoranu
+        if (uloga is "MENADZER" or "OPERATER")
         {
-            var korisnikRadiURestoranu =
-                await _restoranService.KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
+            var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+                korisnikId,
+                restoranId,
+                cancellationToken);
 
             if (!korisnikRadiURestoranu)
             {
@@ -71,34 +67,33 @@ public class RestoranController : ControllerBase
 
         return Ok(restoran);
     }
+
     [Authorize(Roles = "ADMINISTRATOR")]
     [HttpPost]
     public async Task<ActionResult<RestoranDto>> Add(
-    DodavanjeRestoranaDto request,
-    CancellationToken cancellationToken)
+        DodavanjeRestoranaDto request,
+        CancellationToken cancellationToken)
     {
-        var restoran =
-            await _restoranService.Add(
-                request,
-                cancellationToken);
+        var restoran = await _restoranService.Add(
+            request,
+            cancellationToken);
 
         return Ok(restoran);
     }
+
     [Authorize(Roles = "ADMINISTRATOR")]
     [HttpDelete("{restoranId}")]
     public async Task<IActionResult> Delete(
-    decimal restoranId,
-    CancellationToken cancellationToken)
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var obrisan =
-            await _restoranService.Delete(
-                restoranId,
-                cancellationToken);
+        var obrisan = await _restoranService.Delete(
+            restoranId,
+            cancellationToken);
 
         if (!obrisan)
         {
-            return NotFound(
-                "Restoran nije pronađen.");
+            return NotFound("Restoran nije pronađen.");
         }
 
         return NoContent();

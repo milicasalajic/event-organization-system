@@ -11,55 +11,42 @@ namespace EventOrganization.Api.Controllers;
 [Authorize(Roles = "MENADZER")]
 public class MuzickiIzvodjacController : ControllerBase
 {
-    private readonly MuzickiIzvodjacService
-        _muzickiIzvodjacService;
-
-    private readonly RestoranService
-        _restoranService;
+    private readonly MuzickiIzvodjacService _muzickiIzvodjacService;
+    private readonly RestoranService _restoranService;
 
     public MuzickiIzvodjacController(
         MuzickiIzvodjacService muzickiIzvodjacService,
         RestoranService restoranService)
     {
-        _muzickiIzvodjacService =
-            muzickiIzvodjacService;
-
-        _restoranService =
-            restoranService;
+        _muzickiIzvodjacService = muzickiIzvodjacService;
+        _restoranService = restoranService;
     }
 
     [HttpGet("restoran/{restoranId}")]
-    public async Task<ActionResult<List<MuzickiIzvodjacDto>>>
-        GetByRestoranId(
-            decimal restoranId,
-            CancellationToken cancellationToken)
+    public async Task<ActionResult<List<MuzickiIzvodjacDto>>> GetByRestoranId(
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var izvodjaci =
-            await _muzickiIzvodjacService.GetByRestoranId(
-                restoranId,
-                cancellationToken);
+        var izvodjaci = await _muzickiIzvodjacService.GetByRestoranId(
+            restoranId,
+            cancellationToken);
 
         return Ok(izvodjaci);
     }
@@ -70,22 +57,17 @@ public class MuzickiIzvodjacController : ControllerBase
         DodavanjeMuzickogIzvodjacaDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
@@ -94,18 +76,16 @@ public class MuzickiIzvodjacController : ControllerBase
 
         try
         {
-            var izvodjac =
-                await _muzickiIzvodjacService.Add(
-                    restoranId,
-                    request,
-                    cancellationToken);
+            var izvodjac = await _muzickiIzvodjacService.Add(
+                restoranId,
+                request,
+                cancellationToken);
 
             return Ok(izvodjac);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
@@ -116,22 +96,17 @@ public class MuzickiIzvodjacController : ControllerBase
         IzmenaMuzickogIzvodjacaDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
@@ -140,30 +115,26 @@ public class MuzickiIzvodjacController : ControllerBase
 
         try
         {
-            var izvodjac =
-                await _muzickiIzvodjacService.Update(
-                    restoranId,
-                    uslugaId,
-                    request,
-                    cancellationToken);
+            var izvodjac = await _muzickiIzvodjacService.Update(
+                restoranId,
+                uslugaId,
+                request,
+                cancellationToken);
 
             if (izvodjac is null)
             {
-                return NotFound(
-                    "Muzički izvođač nije pronađen.");
+                return NotFound("Muzički izvođač nije pronađen.");
             }
 
             return Ok(izvodjac);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
         catch (InvalidOperationException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
@@ -173,38 +144,31 @@ public class MuzickiIzvodjacController : ControllerBase
         decimal uslugaId,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var obrisan =
-            await _muzickiIzvodjacService.Delete(
-                restoranId,
-                uslugaId,
-                cancellationToken);
+        var obrisan = await _muzickiIzvodjacService.Delete(
+            restoranId,
+            uslugaId,
+            cancellationToken);
 
         if (!obrisan)
         {
-            return NotFound(
-                "Muzički izvođač nije pronađen.");
+            return NotFound("Muzički izvođač nije pronađen.");
         }
 
         return NoContent();

@@ -27,32 +27,26 @@ public class KeteringController : ControllerBase
         decimal restoranId,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var keteringFirme =
-            await _keteringService.GetByRestoranId(
-                restoranId,
-                cancellationToken);
+        var keteringFirme = await _keteringService.GetByRestoranId(
+            restoranId,
+            cancellationToken);
 
         return Ok(keteringFirme);
     }
@@ -63,22 +57,17 @@ public class KeteringController : ControllerBase
         DodavanjeKeteringFirmeDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
@@ -87,18 +76,16 @@ public class KeteringController : ControllerBase
 
         try
         {
-            var keteringFirma =
-                await _keteringService.Add(
-                    restoranId,
-                    request,
-                    cancellationToken);
+            var keteringFirma = await _keteringService.Add(
+                restoranId,
+                request,
+                cancellationToken);
 
             return Ok(keteringFirma);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
@@ -109,22 +96,17 @@ public class KeteringController : ControllerBase
         IzmenaKeteringFirmeDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
@@ -133,30 +115,26 @@ public class KeteringController : ControllerBase
 
         try
         {
-            var keteringFirma =
-                await _keteringService.Update(
-                    restoranId,
-                    uslugaId,
-                    request,
-                    cancellationToken);
+            var keteringFirma = await _keteringService.Update(
+                restoranId,
+                uslugaId,
+                request,
+                cancellationToken);
 
             if (keteringFirma is null)
             {
-                return NotFound(
-                    "Ketering firma nije pronađena.");
+                return NotFound("Ketering firma nije pronađena.");
             }
 
             return Ok(keteringFirma);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
         catch (InvalidOperationException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
@@ -166,38 +144,31 @@ public class KeteringController : ControllerBase
         decimal uslugaId,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var obrisan =
-            await _keteringService.Delete(
-                restoranId,
-                uslugaId,
-                cancellationToken);
+        var obrisan = await _keteringService.Delete(
+            restoranId,
+            uslugaId,
+            cancellationToken);
 
         if (!obrisan)
         {
-            return NotFound(
-                "Ketering firma nije pronađena.");
+            return NotFound("Ketering firma nije pronađena.");
         }
 
         return NoContent();

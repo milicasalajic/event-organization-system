@@ -1,0 +1,225 @@
+.moje-rezervacije-page {
+    min-height: 100vh;
+    padding: 48px 24px 70px;
+    background: #f8f5f0;
+    color: #2c2c2c;
+}
+
+.moje-rezervacije-container {
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.moje-rezervacije-nazad {
+    margin-bottom: 30px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #3f5c4a;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .moje-rezervacije-nazad:hover {
+        text-decoration: underline;
+    }
+
+.moje-rezervacije-heading {
+    margin-bottom: 34px;
+}
+
+    .moje-rezervacije-heading span {
+        display: block;
+        margin-bottom: 8px;
+        color: #c8a96b;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .moje-rezervacije-heading h1 {
+        margin: 0 0 10px;
+        color: #3f5c4a;
+        font-size: 38px;
+    }
+
+    .moje-rezervacije-heading p {
+        margin: 0;
+        color: #77736d;
+        font-size: 16px;
+    }
+
+.moje-rezervacije-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.moja-rezervacija-card {
+    padding: 28px;
+    border: 1px solid #e4ded5;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(44, 44, 44, 0.06);
+}
+
+.moja-rezervacija-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee8df;
+}
+
+.moja-rezervacija-kicker {
+    display: block;
+    margin-bottom: 6px;
+    color: #c8a96b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.moja-rezervacija-header h2 {
+    margin: 0;
+    color: #3f5c4a;
+    font-size: 25px;
+}
+
+.moja-rezervacija-header p {
+    margin: 6px 0 0;
+    color: #77736d;
+}
+
+.moja-rezervacija-status {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-poslata {
+    background: #f4efe5;
+    color: #806d45;
+}
+
+.status-potvrdjena {
+    background: #e9f2ec;
+    color: #3f5c4a;
+}
+
+.status-realizovana {
+    background: #eef0ed;
+    color: #555c57;
+}
+
+.status-otkazana,
+.status-odbijena {
+    background: #fdf2f2;
+    color: #a94442;
+}
+
+.moja-rezervacija-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 28px;
+    padding: 24px 0;
+}
+
+.moja-rezervacija-podatak span,
+.moja-rezervacija-detalji span {
+    display: block;
+    margin-bottom: 5px;
+    color: #77736d;
+    font-size: 13px;
+}
+
+.moja-rezervacija-podatak strong {
+    color: #2c2c2c;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.moja-rezervacija-detalji {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px solid #eee8df;
+}
+
+    .moja-rezervacija-detalji p {
+        margin: 0;
+        line-height: 1.6;
+    }
+
+.moja-rezervacija-footer {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid #eee8df;
+    color: #77736d;
+    font-size: 13px;
+}
+
+.moje-rezervacije-empty,
+.moje-rezervacije-state {
+    padding: 35px;
+    border: 1px solid #e4ded5;
+    border-radius: 16px;
+    background: #ffffff;
+    color: #77736d;
+    text-align: center;
+}
+
+.moje-rezervacije-error {
+    color: #a94442;
+}
+
+@media (max-width: 700px) {
+    .moje-rezervacije-page {
+        padding: 30px 16px 50px;
+    }
+
+    .moje-rezervacije-heading h1 {
+        font-size: 30px;
+    }
+
+    .moja-rezervacija-header {
+        flex-direction: column;
+    }
+
+    .moja-rezervacija-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .moja-rezervacija-card {
+        padding: 22px;
+    }
+}
+.moja-rezervacija-cena {
+    color: #2f6b48 !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+.moja-rezervacija-restoran-link {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #3f5c4a;
+    font-size: 25px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+    .moja-rezervacija-restoran-link:hover {
+        color: #6f8b78;
+    }

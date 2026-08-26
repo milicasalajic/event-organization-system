@@ -263,10 +263,6 @@
     background: #faf9f6;
 }
 
-    .sala-card:hover {
-        border-color: #c8a96b;
-    }
-
     .sala-card > strong {
         display: block;
         margin-bottom: 14px;

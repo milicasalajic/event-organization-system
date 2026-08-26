@@ -15,6 +15,12 @@ function LoginPage() {
     const [error, setError] =
         useState('');
 
+    const [fieldErrors, setFieldErrors] =
+        useState({
+            email: '',
+            lozinka: '',
+        });
+
     const [isLoading, setIsLoading] =
         useState(false);
 
@@ -22,6 +28,31 @@ function LoginPage() {
         event.preventDefault();
 
         setError('');
+
+        const errors = {
+            email: '',
+            lozinka: '',
+        };
+
+        if (!email.trim()) {
+            errors.email =
+                'Email adresa je obavezna.';
+        }
+
+        if (!lozinka.trim()) {
+            errors.lozinka =
+                'Lozinka je obavezna.';
+        }
+
+        setFieldErrors(errors);
+
+        if (
+            errors.email ||
+            errors.lozinka
+        ) {
+            return;
+        }
+
         setIsLoading(true);
 
         try {
@@ -101,6 +132,7 @@ function LoginPage() {
                         onSubmit={
                             handleSubmit
                         }
+                        noValidate
                     >
                         <div className="auth-form-header">
 
@@ -134,16 +166,30 @@ function LoginPage() {
                                 }
                                 onChange={(
                                     event,
-                                ) =>
+                                ) => {
                                     setEmail(
                                         event
                                             .target
                                             .value,
-                                    )
-                                }
+                                    );
+
+                                    setFieldErrors(
+                                        (prev) => ({
+                                            ...prev,
+                                            email: '',
+                                        }),
+                                    );
+                                }}
                                 placeholder="Unesite email adresu"
-                                required
                             />
+
+                            {fieldErrors.email && (
+                                <span className="field-error">
+                                    {
+                                        fieldErrors.email
+                                    }
+                                </span>
+                            )}
 
                         </div>
 
@@ -161,16 +207,30 @@ function LoginPage() {
                                 }
                                 onChange={(
                                     event,
-                                ) =>
+                                ) => {
                                     setLozinka(
                                         event
                                             .target
                                             .value,
-                                    )
-                                }
+                                    );
+
+                                    setFieldErrors(
+                                        (prev) => ({
+                                            ...prev,
+                                            lozinka: '',
+                                        }),
+                                    );
+                                }}
                                 placeholder="Unesite lozinku"
-                                required
                             />
+
+                            {fieldErrors.lozinka && (
+                                <span className="field-error">
+                                    {
+                                        fieldErrors.lozinka
+                                    }
+                                </span>
+                            )}
 
                         </div>
 
@@ -189,7 +249,7 @@ function LoginPage() {
                         >
                             {isLoading
                                 ? 'Prijavljivanje...'
-                                : 'Prijavi se'}
+                                : 'Prijava'}
                         </button>
 
                     </form>

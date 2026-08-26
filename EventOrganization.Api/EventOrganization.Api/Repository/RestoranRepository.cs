@@ -43,10 +43,10 @@ public class RestoranRepository
             .Where(radnik =>
                 radnik.KorisnikId == korisnikId &&
                 radnik.RestoranId == restoranId)
-            .Select(radnik => (decimal?)radnik.KorisnikId)
+            .Select(radnik => (decimal?)radnik.KorisnikId)//klasican select, prikazi id korisnika
             .FirstOrDefaultAsync(cancellationToken);
 
-        return pronadjenKorisnikId.HasValue;
+        return pronadjenKorisnikId.HasValue; //true ili false
     }
     public async Task Add(
     Restoran restoran,

@@ -28,37 +28,29 @@ public class CenovnikController : ControllerBase
         DateTime? datum,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var radi =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var radi = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!radi)
         {
             return Forbid();
         }
 
-        var datumZaCenu =
-            datum?.Date ??
-            DateTime.Today;
+        var datumZaCenu = datum?.Date ?? DateTime.Today;
 
-        var cenovnik =
-            await _cenovnikService.GetByRestoranId(
-                restoranId,
-                datumZaCenu,
-                cancellationToken);
+        var cenovnik = await _cenovnikService.GetByRestoranId(
+            restoranId,
+            datumZaCenu,
+            cancellationToken);
 
         return Ok(cenovnik);
     }
@@ -71,22 +63,17 @@ public class CenovnikController : ControllerBase
         NovaCenaDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var radi =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var radi = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!radi)
         {
@@ -95,19 +82,17 @@ public class CenovnikController : ControllerBase
 
         try
         {
-            var novaCena =
-                await _cenovnikService.AddCenaSale(
-                    restoranId,
-                    salaId,
-                    request,
-                    cancellationToken);
+            var novaCena = await _cenovnikService.AddCenaSale(
+                restoranId,
+                salaId,
+                request,
+                cancellationToken);
 
             return Ok(novaCena);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
@@ -119,22 +104,17 @@ public class CenovnikController : ControllerBase
         NovaCenaDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var radi =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var radi = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!radi)
         {
@@ -143,19 +123,17 @@ public class CenovnikController : ControllerBase
 
         try
         {
-            var novaCena =
-                await _cenovnikService.AddCenaUsluge(
-                    restoranId,
-                    uslugaId,
-                    request,
-                    cancellationToken);
+            var novaCena = await _cenovnikService.AddCenaUsluge(
+                restoranId,
+                uslugaId,
+                request,
+                cancellationToken);
 
             return Ok(novaCena);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 }

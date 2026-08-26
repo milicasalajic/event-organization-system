@@ -273,4 +273,30 @@ public class RezervacijaRepository
         return _context.SaveChangesAsync(
             cancellationToken);
     }
+    public Task<List<Rezervacija>> GetByKorisnikId(
+    decimal korisnikId,
+    CancellationToken cancellationToken = default)
+    {
+        return _context.Rezervacije
+            .AsNoTracking()
+            .Include(rezervacija =>
+                rezervacija.Paket)
+                .ThenInclude(paket =>
+                    paket.Restoran)
+            .Include(rezervacija =>
+                rezervacija.Sala)
+            .Include(rezervacija =>
+                rezervacija.TipoviDogadjaja)
+            .Include(rezervacija =>
+                rezervacija.StavkeRezervacije)
+                .ThenInclude(stavka =>
+                    stavka.Usluga)
+            .Where(rezervacija =>
+                rezervacija.KorisnikId ==
+                    korisnikId)
+            .OrderByDescending(rezervacija =>
+                rezervacija.VremeKreiranja)
+            .ToListAsync(
+                cancellationToken);
+    }
 }

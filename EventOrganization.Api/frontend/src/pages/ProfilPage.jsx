@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     getProfil,
     updateProfil,
@@ -6,6 +7,8 @@ import {
 import './ProfilPage.css';
 
 function ProfilPage() {
+    const navigate = useNavigate();
+
     const [profil, setProfil] = useState(null);
 
     const [formData, setFormData] = useState({
@@ -26,6 +29,18 @@ function ProfilPage() {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    const korisnikJson =
+        localStorage.getItem('korisnik');
+
+    const korisnik =
+        korisnikJson
+            ? JSON.parse(korisnikJson)
+            : null;
+
+    const jeRadnik =
+        korisnik?.uloga === 'MENADZER' ||
+        korisnik?.uloga === 'OPERATER';
 
     useEffect(() => {
         async function loadProfil() {
@@ -51,6 +66,29 @@ function ProfilPage() {
 
         loadProfil();
     }, []);
+
+    function handleNazad() {
+        const postojiPrethodnaStranica =
+            window.history.state?.idx > 0;
+
+        if (postojiPrethodnaStranica) {
+            navigate(-1);
+            return;
+        }
+
+        if (
+            jeRadnik &&
+            korisnik?.restoranId
+        ) {
+            navigate(
+                `/restorani/${korisnik.restoranId}`,
+            );
+
+            return;
+        }
+
+        navigate('/restorani');
+    }
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -148,6 +186,15 @@ function ProfilPage() {
     return (
         <div className="profil-page">
             <main className="profil-container">
+
+                <button
+                    type="button"
+                    className="profil-nazad-button"
+                    onClick={handleNazad}
+                >
+                    ← Nazad
+                </button>
+
                 <div className="profil-heading">
                     <div>
                         <span>

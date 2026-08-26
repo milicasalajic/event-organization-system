@@ -9,8 +9,7 @@ public class RestoranService
 {
     private readonly RestoranRepository _restoranRepository;
 
-    public RestoranService(
-        RestoranRepository restoranRepository)
+    public RestoranService(RestoranRepository restoranRepository)
     {
         _restoranRepository = restoranRepository;
     }
@@ -18,8 +17,7 @@ public class RestoranService
     public async Task<List<RestoranDto>> GetAll(
         CancellationToken cancellationToken = default)
     {
-        var restorani = await _restoranRepository.GetAll(
-            cancellationToken);
+        var restorani = await _restoranRepository.GetAll(cancellationToken);
 
         return restorani
             .Select(MapToDto)
@@ -53,21 +51,9 @@ public class RestoranService
             cancellationToken);
     }
 
-    private static RestoranDto MapToDto(Restoran restoran)
-    {
-        return new RestoranDto
-        {
-            RestoranId = restoran.RestoranId,
-            Naziv = restoran.Naziv,
-            Adresa = restoran.Adresa,
-            Grad = restoran.Grad,
-            Telefon = restoran.Telefon,
-            Status = restoran.Status.ToString()
-        };
-    }
     public async Task<RestoranDto> Add(
-    DodavanjeRestoranaDto request,
-    CancellationToken cancellationToken = default)
+        DodavanjeRestoranaDto request,
+        CancellationToken cancellationToken = default)
     {
         var restoran = new Restoran
         {
@@ -76,7 +62,6 @@ public class RestoranService
             RadnoVreme = request.RadnoVreme,
             Adresa = request.Adresa,
             Grad = request.Grad,
-
             Status = Status.AKTIVNO
         };
 
@@ -94,26 +79,37 @@ public class RestoranService
             Grad = restoran.Grad
         };
     }
+
     public async Task<bool> Delete(
-    decimal restoranId,
-    CancellationToken cancellationToken = default)
+        decimal restoranId,
+        CancellationToken cancellationToken = default)
     {
-        var restoran =
-            await _restoranRepository.GetForUpdate(
-                restoranId,
-                cancellationToken);
+        var restoran = await _restoranRepository.GetForUpdate(
+            restoranId,
+            cancellationToken);
 
         if (restoran is null)
         {
             return false;
         }
 
-        restoran.Status =
-            Status.NEAKTIVNO;
+        restoran.Status = Status.NEAKTIVNO;
 
-        await _restoranRepository.SaveChanges(
-            cancellationToken);
+        await _restoranRepository.SaveChanges(cancellationToken);
 
         return true;
+    }
+
+    private static RestoranDto MapToDto(Restoran restoran)
+    {
+        return new RestoranDto
+        {
+            RestoranId = restoran.RestoranId,
+            Naziv = restoran.Naziv,
+            Adresa = restoran.Adresa,
+            Grad = restoran.Grad,
+            Telefon = restoran.Telefon,
+            Status = restoran.Status.ToString()
+        };
     }
 }

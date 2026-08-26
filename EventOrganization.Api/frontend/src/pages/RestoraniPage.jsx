@@ -76,6 +76,10 @@ function RestoraniPage() {
         korisnik?.uloga ===
         'ADMINISTRATOR';
 
+    const jeKlijent =
+        korisnik?.uloga ===
+        'KLIJENT';
+
     const aktivniRestorani =
         restorani.filter(
             (restoran) =>
@@ -283,6 +287,20 @@ function RestoraniPage() {
                             izaberite paket i dodatne usluge
                             i jednostavno kreirajte svoju rezervaciju.
                         </p>
+
+                        {jeKlijent && (
+                            <button
+                                type="button"
+                                className="moje-rezervacije-button"
+                                onClick={() =>
+                                    navigate(
+                                        '/moje-rezervacije',
+                                    )
+                                }
+                            >
+                                Moje rezervacije
+                            </button>
+                        )}
                     </div>
 
                 </div>

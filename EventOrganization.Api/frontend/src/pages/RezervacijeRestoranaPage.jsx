@@ -71,6 +71,19 @@ function formatEnumValue(value) {
         );
 }
 
+function formatTipDogadjaja(value) {
+    const nazivi = {
+        VENCANJE: 'Venčanje',
+        KRSTENJE: 'Krštenje',
+        RODJENDAN: 'Rođendan',
+        POSLOVNI_DOGADJAJ:
+            'Poslovni događaj',
+    };
+
+    return nazivi[value] ??
+        formatEnumValue(value);
+}
+
 function getStatusClass(status) {
     if (!status) {
         return '';
@@ -454,7 +467,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                             }
                                                                             className="tip-dogadjaja"
                                                                         >
-                                                                            {formatEnumValue(
+                                                                            {formatTipDogadjaja(
                                                                                 tip,
                                                                             )}
                                                                         </span>
@@ -761,7 +774,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                                                     (
                                                                                                         tip,
                                                                                                     ) =>
-                                                                                                        formatEnumValue(
+                                                                                                        formatTipDogadjaja(
                                                                                                             tip,
                                                                                                         ),
                                                                                                 )

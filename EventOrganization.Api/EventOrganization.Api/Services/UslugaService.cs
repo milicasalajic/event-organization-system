@@ -13,11 +13,8 @@ public class UslugaService
         UslugaRepository uslugaRepository,
         CenovnikRepository cenovnikRepository)
     {
-        _uslugaRepository =
-            uslugaRepository;
-
-        _cenovnikRepository =
-            cenovnikRepository;
+        _uslugaRepository = uslugaRepository;
+        _cenovnikRepository = cenovnikRepository;
     }
 
     public async Task<List<UslugaDto>> GetByPaketId(
@@ -25,25 +22,20 @@ public class UslugaService
         decimal paketId,
         CancellationToken cancellationToken = default)
     {
-        var usluge =
-            await _uslugaRepository.GetByPaketId(
-                restoranId,
-                paketId,
-                cancellationToken);
+        var usluge = await _uslugaRepository.GetByPaketId(
+            restoranId,
+            paketId,
+            cancellationToken);
 
-        var trenutnoVreme =
-            DateTime.Now;
-
-        var rezultat =
-            new List<UslugaDto>();
+        var trenutnoVreme = DateTime.Now;
+        var rezultat = new List<UslugaDto>();
 
         foreach (var usluga in usluge)
         {
-            var dto =
-                await MapToDto(
-                    usluga,
-                    trenutnoVreme,
-                    cancellationToken);
+            var dto = await MapToDto(
+                usluga,
+                trenutnoVreme,
+                cancellationToken);
 
             rezultat.Add(dto);
         }
@@ -56,46 +48,23 @@ public class UslugaService
         DateTime trenutnoVreme,
         CancellationToken cancellationToken)
     {
-        var vazecaCena =
-            await _cenovnikRepository.GetVazecaCenaUsluge(
-                usluga.UslugaId,
-                trenutnoVreme,
-                cancellationToken);
+        var vazecaCena = await _cenovnikRepository.GetVazecaCenaUsluge(
+            usluga.UslugaId,
+            trenutnoVreme,
+            cancellationToken);
 
         return new UslugaDto
         {
-            UslugaId =
-                usluga.UslugaId,
-
-            Naziv =
-                usluga.NazivU,
-
-            Telefon =
-                usluga.Telefon,
-
-            Portfolio =
-                usluga.Portfolio,
-
-            TipUsluge =
-                usluga.TipUsluge.ToString(),
-
-            Opis =
-                usluga.KeteringFirma?.Opis ??
-                usluga.DekoraterskaFirma?.Opis,
-
-            CenaFoto =
-                usluga.Fotograf?.CenaFoto,
-
-            TipFoto =
-                usluga.Fotograf?
-                    .TipFoto.ToString(),
-
-            TipMuzicara =
-                usluga.MuzickiIzvodjac?
-                    .TipMuzicara.ToString(),
-
-            Cena =
-                vazecaCena?.Iznos
+            UslugaId = usluga.UslugaId,
+            Naziv = usluga.NazivU,
+            Telefon = usluga.Telefon,
+            Portfolio = usluga.Portfolio,
+            TipUsluge = usluga.TipUsluge.ToString(),
+            Opis = usluga.KeteringFirma?.Opis ?? usluga.DekoraterskaFirma?.Opis,
+            CenaFoto = usluga.Fotograf?.CenaFoto,
+            TipFoto = usluga.Fotograf?.TipFoto.ToString(),
+            TipMuzicara = usluga.MuzickiIzvodjac?.TipMuzicara.ToString(),
+            Cena = vazecaCena?.Iznos
         };
     }
 }

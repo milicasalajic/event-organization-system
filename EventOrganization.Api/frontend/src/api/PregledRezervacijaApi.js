@@ -80,7 +80,6 @@ export async function getRezervacijaDetalji(
 
     return response.json();
 }
-
 export async function obradiRezervaciju(
     restoranId,
     rezervacijaId,
@@ -90,16 +89,13 @@ export async function obradiRezervaciju(
         localStorage.getItem('token');
 
     const response = await fetch(
-        `${API_URL}/api/Rezervacija/restoran/${restoranId}/${rezervacijaId}/obrada`,
+        `${API_URL}/api/Rezervacija/restoran/${restoranId}/${rezervacijaId}/obrada?noviStatus=${status}`,
         {
             method: 'PATCH',
             headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
+                Authorization:
+                    `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                status,
-            }),
         },
     );
 

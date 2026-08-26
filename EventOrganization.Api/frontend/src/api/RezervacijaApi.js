@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export async function getDostupneSale(
+export async function getDostupneSale( 
     restoranId,
     data,
 ) {
@@ -33,7 +33,7 @@ export async function getDostupneSale(
         );
     }
 
-    return response.json();
+    return response.json(); //pretvara json odgovor nazad u javas objekat
 }
 
 export async function obracunajRezervaciju(
@@ -101,6 +101,32 @@ export async function kreirajRezervaciju(
             message ||
             `Greška. Status: ${response.status}`,
         );
+    }
+
+    return response.json();
+}
+export async function getMojeRezervacije() {
+    const token =
+        localStorage.getItem("token");
+
+    const response =
+        await fetch(
+            `${API_URL}/api/Rezervacija/moje`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            });
+
+    if (!response.ok) {
+        const message =
+            await response.text();
+
+        throw new Error(
+            message ||
+            `Greška. Status: ${response.status}`);
     }
 
     return response.json();

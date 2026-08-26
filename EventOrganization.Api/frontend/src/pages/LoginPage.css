@@ -269,3 +269,9 @@
         font-size: 2rem;
     }
 }
+.field-error {
+    display: block;
+    margin-top: 6px;
+    color: #a94442;
+    font-size: 13px;
+}

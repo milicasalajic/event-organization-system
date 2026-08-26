@@ -17,6 +17,7 @@ public class JwtService
 
     public string GenerateToken(Korisnik korisnik)
     {
+        //uzmi jwt podesavanja iz konfiguracije aplikacije
         var key = _configuration["Jwt:Key"]
             ?? throw new InvalidOperationException(
                 "JWT ključ nije konfigurisan.");
@@ -56,8 +57,8 @@ public class JwtService
             SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: issuer, //ko izdaje token
+            audience: audience,//kome je namenjen
             claims: claims,
             notBefore: DateTime.UtcNow,
             expires: DateTime.UtcNow.AddHours(2),

@@ -11,139 +11,103 @@ namespace EventOrganization.Api.Controllers;
 [Route("api/[controller]")]
 public class RezervacijaController : ControllerBase
 {
-    private readonly RezervacijaService
-        _rezervacijaService;
-
-    private readonly RestoranService
-        _restoranService;
+    private readonly RezervacijaService _rezervacijaService;
+    private readonly RestoranService _restoranService;
 
     public RezervacijaController(
         RezervacijaService rezervacijaService,
         RestoranService restoranService)
     {
-        _rezervacijaService =
-            rezervacijaService;
-
-        _restoranService =
-            restoranService;
+        _rezervacijaService = rezervacijaService;
+        _restoranService = restoranService;
     }
 
     [Authorize(Roles = "MENADZER,OPERATER")]
     [HttpGet("restoran/{restoranId}")]
-    public async Task<ActionResult<List<RezervacijaPregledDto>>>
-        GetByRestoranId(
-            decimal restoranId,
-            CancellationToken cancellationToken)
+    public async Task<ActionResult<List<RezervacijaPregledDto>>> GetByRestoranId(
+        decimal restoranId,
+        CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService
-                .KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var rezervacije =
-            await _rezervacijaService
-                .GetByRestoranId(
-                    restoranId,
-                    cancellationToken);
+        var rezervacije = await _rezervacijaService.GetByRestoranId(
+            restoranId,
+            cancellationToken);
 
-        return Ok(
-            rezervacije);
+        return Ok(rezervacije);
     }
 
     [Authorize(Roles = "MENADZER,OPERATER")]
-    [HttpGet(
-        "restoran/{restoranId}/{rezervacijaId}")]
-    public async Task<ActionResult<RezervacijaDetaljiDto>>
-        GetDetalji(
-            decimal restoranId,
-            decimal rezervacijaId,
-            CancellationToken cancellationToken)
+    [HttpGet("restoran/{restoranId}/{rezervacijaId}")]
+    public async Task<ActionResult<RezervacijaDetaljiDto>> GetDetalji(
+        decimal restoranId,
+        decimal rezervacijaId,
+        CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService
-                .KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var rezervacija =
-            await _rezervacijaService
-                .GetDetalji(
-                    restoranId,
-                    rezervacijaId,
-                    cancellationToken);
+        var rezervacija = await _rezervacijaService.GetDetalji(
+            restoranId,
+            rezervacijaId,
+            cancellationToken);
 
         if (rezervacija is null)
         {
-            return NotFound(
-                "Rezervacija nije pronađena.");
+            return NotFound("Rezervacija nije pronađena.");
         }
 
-        return Ok(
-            rezervacija);
+        return Ok(rezervacija);
     }
 
     [Authorize(Roles = "MENADZER,OPERATER")]
-    [HttpPatch(
-        "restoran/{restoranId}/{rezervacijaId}/obrada")]
-    public async Task<ActionResult<RezervacijaDetaljiDto>>
-        ObradiRezervaciju(
-            decimal restoranId,
-            decimal rezervacijaId,
-            StatusRez noviStatus,
-            CancellationToken cancellationToken)
+    [HttpPatch("restoran/{restoranId}/{rezervacijaId}/obrada")]
+    public async Task<ActionResult<RezervacijaDetaljiDto>> ObradiRezervaciju(
+        decimal restoranId,
+        decimal rezervacijaId,
+        StatusRez noviStatus,
+        CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService
-                .KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
@@ -152,126 +116,121 @@ public class RezervacijaController : ControllerBase
 
         try
         {
-            var rezervacija =
-                await _rezervacijaService
-                    .ObradiRezervaciju(
-                        restoranId,
-                        rezervacijaId,
-                        noviStatus,
-                        cancellationToken);
+            var rezervacija = await _rezervacijaService.ObradiRezervaciju(
+                restoranId,
+                rezervacijaId,
+                noviStatus,
+                cancellationToken);
 
             if (rezervacija is null)
             {
-                return NotFound(
-                    "Rezervacija nije pronađena.");
+                return NotFound("Rezervacija nije pronađena.");
             }
 
-            return Ok(
-                rezervacija);
+            return Ok(rezervacija);
         }
         catch (InvalidOperationException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
     [Authorize(Roles = "KLIJENT")]
-    [HttpPost(
-        "restoran/{restoranId}/dostupne-sale")]
-    public async Task<ActionResult<List<DostupnaSalaDto>>>
-        GetDostupneSale( //dobavljanje dostupnih sala pri procesu rezervacije
-            decimal restoranId,
-            PretragaDostupnihSalaDto request,
-            CancellationToken cancellationToken)
+    [HttpPost("restoran/{restoranId}/dostupne-sale")]
+    public async Task<ActionResult<List<DostupnaSalaDto>>> GetDostupneSale(
+        decimal restoranId,
+        PretragaDostupnihSalaDto request,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var sale =
-                await _rezervacijaService
-                    .GetDostupneSale(
-                        restoranId,
-                        request,
-                        cancellationToken);
+            var sale = await _rezervacijaService.GetDostupneSale(
+                restoranId,
+                request,
+                cancellationToken);
 
-            return Ok(
-                sale);
+            return Ok(sale);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
     [Authorize(Roles = "KLIJENT")]
     [HttpPost("obracun")]
-    public async Task<ActionResult<decimal>> Obracun(//dok jos nije kreirana rezervacija kolika ce cena biti
-            KreiranjeRezervacijeDto request,
-            CancellationToken cancellationToken)
+    public async Task<ActionResult<decimal>> Obracun(
+        KreiranjeRezervacijeDto request,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var ukupnaCena =
-                await _rezervacijaService
-                    .Obracun(
-                        request,
-                        cancellationToken);
+            var ukupnaCena = await _rezervacijaService.Obracun(
+                request,
+                cancellationToken);
 
-            return Ok(
-                ukupnaCena);
+            return Ok(ukupnaCena);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
         catch (InvalidOperationException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
     [Authorize(Roles = "KLIJENT")]
     [HttpPost]
-    public async Task<ActionResult<KreiranjeRezervacijeResponseDto>>
-        KreirajRezervaciju(
-            KreiranjeRezervacijeDto request,
-            CancellationToken cancellationToken)
+    public async Task<ActionResult<KreiranjeRezervacijeResponseDto>> KreirajRezervaciju(
+        KreiranjeRezervacijeDto request,
+        CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        // Bitno je ko kreira rezervaciju
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse( //token vraca kao string, zato se koristi decimal
-                korisnikIdClaim,
-                out var korisnikId))
+        // Claim iz tokena je string, pa ga pretvaramo u decimal
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
         try
         {
-            var rezervacija =
-                await _rezervacijaService
-                    .KreirajRezervaciju(
-                        korisnikId,
-                        request,
-                        cancellationToken);
+            var rezervacija = await _rezervacijaService.KreirajRezervaciju(
+                korisnikId,
+                request,
+                cancellationToken);
 
-            return Ok(
-                rezervacija);
+            return Ok(rezervacija);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
         catch (InvalidOperationException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
+    }
+
+    [Authorize(Roles = "KLIJENT")]
+    [HttpGet("moje")]
+    public async Task<ActionResult<List<MojaRezervacijaDto>>> GetMojeRezervacije(
+        CancellationToken cancellationToken)
+    {
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
+        {
+            return Unauthorized();
+        }
+
+        var rezervacije = await _rezervacijaService.GetMojeRezervacije(
+            korisnikId,
+            cancellationToken);
+
+        return Ok(rezervacije);
     }
 }

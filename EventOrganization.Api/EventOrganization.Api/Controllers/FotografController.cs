@@ -1,8 +1,8 @@
-﻿using EventOrganization.Api.DTOs.Fotografi;
+﻿using System.Security.Claims;
+using EventOrganization.Api.DTOs.Fotografi;
 using EventOrganization.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace EventOrganization.Api.Controllers;
 
@@ -18,11 +18,8 @@ public class FotografController : ControllerBase
         FotografService fotografService,
         RestoranService restoranService)
     {
-        _fotografService =
-            fotografService;
-
-        _restoranService =
-            restoranService;
+        _fotografService = fotografService;
+        _restoranService = restoranService;
     }
 
     [HttpGet("restoran/{restoranId}")]
@@ -30,32 +27,26 @@ public class FotografController : ControllerBase
         decimal restoranId,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var fotografi =
-            await _fotografService.GetByRestoranId(
-                restoranId,
-                cancellationToken);
+        var fotografi = await _fotografService.GetByRestoranId(
+            restoranId,
+            cancellationToken);
 
         return Ok(fotografi);
     }
@@ -66,22 +57,17 @@ public class FotografController : ControllerBase
         DodavanjeFotografaDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
@@ -90,18 +76,16 @@ public class FotografController : ControllerBase
 
         try
         {
-            var fotograf =
-                await _fotografService.Add(
-                    restoranId,
-                    request,
-                    cancellationToken);
+            var fotograf = await _fotografService.Add(
+                restoranId,
+                request,
+                cancellationToken);
 
             return Ok(fotograf);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
@@ -112,22 +96,17 @@ public class FotografController : ControllerBase
         IzmenaFotografaDto request,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
@@ -136,30 +115,26 @@ public class FotografController : ControllerBase
 
         try
         {
-            var fotograf =
-                await _fotografService.Update(
-                    restoranId,
-                    uslugaId,
-                    request,
-                    cancellationToken);
+            var fotograf = await _fotografService.Update(
+                restoranId,
+                uslugaId,
+                request,
+                cancellationToken);
 
             if (fotograf is null)
             {
-                return NotFound(
-                    "Fotograf nije pronađen.");
+                return NotFound("Fotograf nije pronađen.");
             }
 
             return Ok(fotograf);
         }
         catch (ArgumentException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
         catch (InvalidOperationException exception)
         {
-            return BadRequest(
-                exception.Message);
+            return BadRequest(exception.Message);
         }
     }
 
@@ -169,38 +144,31 @@ public class FotografController : ControllerBase
         decimal uslugaId,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var korisnikRadiURestoranu =
-            await _restoranService.KorisnikRadiURestoranu(
-                korisnikId,
-                restoranId,
-                cancellationToken);
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
 
         if (!korisnikRadiURestoranu)
         {
             return Forbid();
         }
 
-        var obrisan =
-            await _fotografService.Delete(
-                restoranId,
-                uslugaId,
-                cancellationToken);
+        var obrisan = await _fotografService.Delete(
+            restoranId,
+            uslugaId,
+            cancellationToken);
 
         if (!obrisan)
         {
-            return NotFound(
-                "Fotograf nije pronađen.");
+            return NotFound("Fotograf nije pronađen.");
         }
 
         return NoContent();

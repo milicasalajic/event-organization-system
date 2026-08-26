@@ -12,6 +12,7 @@ public class UslugaController : ControllerBase
 {
     private readonly UslugaService _uslugaService;
     private readonly RestoranService _restoranService;
+
     public UslugaController(
         UslugaService uslugaService,
         RestoranService restoranService)
@@ -27,28 +28,21 @@ public class UslugaController : ControllerBase
         decimal paketId,
         CancellationToken cancellationToken)
     {
-        var korisnikIdClaim =
-            User.FindFirst(
-                ClaimTypes.NameIdentifier)?.Value;
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (!decimal.TryParse(
-                korisnikIdClaim,
-                out var korisnikId))
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
         {
             return Unauthorized();
         }
 
-        var uloga =
-            User.FindFirst(
-                ClaimTypes.Role)?.Value;
+        var uloga = User.FindFirst(ClaimTypes.Role)?.Value;
 
         if (uloga is "MENADZER" or "OPERATER")
         {
-            var korisnikRadiURestoranu =
-                await _restoranService.KorisnikRadiURestoranu(
-                    korisnikId,
-                    restoranId,
-                    cancellationToken);
+            var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+                korisnikId,
+                restoranId,
+                cancellationToken);
 
             if (!korisnikRadiURestoranu)
             {
@@ -56,11 +50,10 @@ public class UslugaController : ControllerBase
             }
         }
 
-        var usluge =
-            await _uslugaService.GetByPaketId(
-                restoranId,
-                paketId,
-                cancellationToken);
+        var usluge = await _uslugaService.GetByPaketId(
+            restoranId,
+            paketId,
+            cancellationToken);
 
         return Ok(usluge);
     }

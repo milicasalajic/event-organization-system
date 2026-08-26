@@ -22,7 +22,7 @@
     border: none;
     color: #747069;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
 }
@@ -39,7 +39,7 @@
         display: block;
         margin-bottom: 6px;
         color: #9b8151;
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 700;
         letter-spacing: 1.3px;
         text-transform: uppercase;
@@ -54,7 +54,7 @@
     .upravljanje-page-header p {
         margin: 8px 0 0;
         color: #817c75;
-        font-size: 13px;
+        font-size: 14px;
     }
 
 .upravljanje-layout {
@@ -84,6 +84,7 @@
     border: 1px solid transparent;
     border-radius: 8px;
     color: #696761;
+    cursor: pointer;
 }
 
     .upravljanje-nav-item.aktivan {
@@ -98,25 +99,24 @@
         cursor: default;
     }
 
+    .upravljanje-nav-item > div {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
 
-.upravljanje-nav-item > div {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
+    .upravljanje-nav-item strong {
+        font-size: 13px;
+    }
 
-.upravljanje-nav-item strong {
-    font-size: 12px;
-}
+    .upravljanje-nav-item small {
+        color: #9a958e;
+        font-size: 10px;
+    }
 
-.upravljanje-nav-item small {
-    color: #9a958e;
-    font-size: 9px;
-}
-
-.upravljanje-nav-item.disabled small {
-    color: #b8b4ae;
-}
+    .upravljanje-nav-item.disabled small {
+        color: #b8b4ae;
+    }
 
 .upravljanje-content {
     min-width: 0;
@@ -139,7 +139,7 @@
         display: block;
         margin-bottom: 5px;
         color: #9b8151;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 700;
         letter-spacing: 1.1px;
         text-transform: uppercase;
@@ -154,7 +154,7 @@
     .management-section-header p {
         margin: 6px 0 0;
         color: #89847c;
-        font-size: 11px;
+        font-size: 12px;
     }
 
 .management-primary-button {
@@ -165,7 +165,7 @@
     border-radius: 7px;
     color: #ffffff;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
@@ -189,7 +189,7 @@
     border-radius: 7px;
     color: #65615b;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
 }
@@ -221,7 +221,7 @@
     .management-table th {
         padding: 12px 15px;
         color: #8a857e;
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 700;
         letter-spacing: 0.5px;
         text-align: left;
@@ -232,7 +232,7 @@
     .management-table td {
         padding: 15px;
         color: #5d615d;
-        font-size: 12px;
+        font-size: 13px;
         line-height: 1.45;
         border-bottom: 1px solid #eee9e2;
         vertical-align: middle;
@@ -262,7 +262,7 @@
     border: 1px solid #e3dbcf;
     border-radius: 5px;
     color: #6d6254;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
 }
 
@@ -278,7 +278,7 @@
     background: #ffffff;
     border-radius: 6px;
     font-family: inherit;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     cursor: pointer;
 }
@@ -308,13 +308,13 @@
     border-radius: 8px;
     color: #858078;
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
 }
 
     .management-empty h3 {
         margin: 0;
         color: #59615c;
-        font-size: 15px;
+        font-size: 16px;
     }
 
     .management-empty p {
@@ -328,7 +328,7 @@
     border: 1px solid #edccc8;
     border-radius: 6px;
     color: #9d3e38;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .management-modal-overlay {
@@ -354,17 +354,21 @@
 
 .management-form-modal {
     max-width: 600px;
-    padding: 27px 29px 25px;
+    max-height: calc(100vh - 40px);
+    padding: 24px 27px 22px;
+    overflow-y: auto;
 }
 
 .management-confirm-modal {
     max-width: 420px;
+    max-height: calc(100vh - 40px);
     padding: 29px 28px 25px;
+    overflow-y: auto;
     text-align: center;
 }
 
 .management-form-header {
-    margin-bottom: 22px;
+    margin-bottom: 18px;
 }
 
     .management-form-header > span {
@@ -384,7 +388,7 @@
     }
 
     .management-form-header p {
-        margin: 6px 0 0;
+        margin: 5px 0 0;
         color: #8a857e;
         font-size: 11px;
     }
@@ -392,7 +396,7 @@
 .management-form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 17px;
+    gap: 14px;
 }
 
 .management-full-field {
@@ -401,9 +405,9 @@
 
 .management-field label {
     display: block;
-    margin-bottom: 7px;
+    margin-bottom: 6px;
     color: #868078;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.4px;
     text-transform: uppercase;
@@ -413,24 +417,24 @@
 .management-field select,
 .management-field textarea {
     width: 100%;
-    padding: 10px 12px;
+    padding: 9px 11px;
     background: #ffffff;
     border: 1px solid #d8d1c7;
     border-radius: 7px;
     outline: none;
     color: #353a36;
     font-family: inherit;
-    font-size: 12px;
+    font-size: 13px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .management-field input,
 .management-field select {
-    height: 42px;
+    height: 40px;
 }
 
 .management-field textarea {
-    min-height: 105px;
+    min-height: 85px;
     resize: vertical;
 }
 
@@ -441,12 +445,20 @@
         box-shadow: 0 0 0 3px rgba(113, 137, 121, 0.1);
     }
 
+.management-checkbox-list {
+    font-size: 12px;
+}
+
+.management-checkbox-item {
+    font-size: 12px;
+}
+
 .management-form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 9px;
-    margin-top: 23px;
-    padding-top: 18px;
+    margin-top: 18px;
+    padding-top: 15px;
     border-top: 1px solid #eee9e2;
 }
 
@@ -474,7 +486,7 @@
 .management-confirm-modal p {
     margin: 12px 0 0;
     color: #66645f;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.6;
 }
 
@@ -486,7 +498,7 @@
     display: block;
     margin-top: 7px;
     color: #99938b;
-    font-size: 10px;
+    font-size: 11px;
 }
 
 .management-confirm-modal .management-error {
@@ -510,7 +522,7 @@
     border-radius: 7px;
     color: #ffffff;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
 }
@@ -533,13 +545,37 @@
     border: 1px solid #e3ddd4;
     border-radius: 9px;
     color: #77736d;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .upravljanje-state-error {
     background: #fff3f2;
     border-color: #edccc8;
     color: #9d3e38;
+}
+
+.cenovnik-vazeca-row {
+    background: #eef4ef;
+}
+
+    .cenovnik-vazeca-row:hover {
+        background: #e5eee7;
+    }
+
+.cenovnik-vazeca-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #dce9df;
+    color: #3f5c4a;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cenovnik-istorijska-label {
+    color: #8a8a8a;
+    font-size: 13px;
 }
 
 @media (max-width: 850px) {
@@ -583,6 +619,11 @@
         min-width: 650px;
     }
 
+    .management-modal-overlay {
+        align-items: flex-start;
+        padding: 12px;
+    }
+
     .management-form-grid {
         grid-template-columns: 1fr;
     }
@@ -592,7 +633,8 @@
     }
 
     .management-form-modal {
-        padding: 23px 19px;
+        max-height: calc(100vh - 24px);
+        padding: 20px 17px;
     }
 
     .management-form-actions,
@@ -605,29 +647,42 @@
             width: 100%;
         }
 }
-.cenovnik-vazeca-row {
-    background: #eef4ef;
+.management-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.management-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-    .cenovnik-vazeca-row:hover {
-        background: #e5eee7;
-    }
-
-.cenovnik-vazeca-badge {
-    display: inline-flex;
+.management-field .management-checkbox-item {
+    display: flex;
     align-items: center;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: #dce9df;
-    color: #3f5c4a;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    color: #5d615d;
     font-size: 12px;
-    font-weight: 700;
-}
-
-.cenovnik-istorijska-label {
-    color: #8a8a8a;
-    font-size: 13px;
-}
-.upravljanje-nav-item {
+    font-weight: 500;
+    letter-spacing: normal;
+    text-transform: none;
     cursor: pointer;
 }
+
+    .management-field .management-checkbox-item input[type='checkbox'] {
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+        margin: 0;
+        padding: 0;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .management-field .management-checkbox-item span {
+        display: block;
+        line-height: 16px;
+    }

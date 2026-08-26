@@ -9,8 +9,7 @@ public class PaketService
 {
     private readonly PaketRepository _paketRepository;
 
-    public PaketService(
-        PaketRepository paketRepository)
+    public PaketService(PaketRepository paketRepository)
     {
         _paketRepository = paketRepository;
     }
@@ -33,30 +32,12 @@ public class PaketService
             })
             .ToList();
     }
-    private static PaketDto MapToDto(
-        Paket paket)
-    {
-        return new PaketDto
-        {
-            PaketId =
-                paket.PaketId,
 
-            Naziv =
-                paket.Naziv,
-
-            Opis =
-                paket.Opis,
-
-            Status =
-                paket.Status.ToString()
-        };
-    }
     public async Task<PaketDto> Add(
-    decimal restoranId,
-    DodavanjePaketaDto request,
-    CancellationToken cancellationToken = default)
+        decimal restoranId,
+        DodavanjePaketaDto request,
+        CancellationToken cancellationToken = default)
     {
-
         var paket = new Paket
         {
             Naziv = request.Naziv.Trim(),
@@ -71,16 +52,16 @@ public class PaketService
 
         return MapToDto(paket);
     }
+
     public async Task<bool> Delete(
-       decimal restoranId,
-       decimal paketId,
-       CancellationToken cancellationToken = default)
+        decimal restoranId,
+        decimal paketId,
+        CancellationToken cancellationToken = default)
     {
-        var paket =
-            await _paketRepository.GetForUpdate(
-                restoranId,
-                paketId,
-                cancellationToken);
+        var paket = await _paketRepository.GetForUpdate(
+            restoranId,
+            paketId,
+            cancellationToken);
 
         if (paket is null)
         {
@@ -92,25 +73,23 @@ public class PaketService
             return true;
         }
 
-        paket.Status =
-            Status.NEAKTIVNO;
+        paket.Status = Status.NEAKTIVNO;
 
-        await _paketRepository.SaveChanges(
-            cancellationToken);
+        await _paketRepository.SaveChanges(cancellationToken);
 
         return true;
     }
+
     public async Task<PaketDto?> Update(
-      decimal restoranId,
-      decimal paketId,
-      IzmenaPaketaDto request,
-      CancellationToken cancellationToken = default)
+        decimal restoranId,
+        decimal paketId,
+        IzmenaPaketaDto request,
+        CancellationToken cancellationToken = default)
     {
-        var paket =
-            await _paketRepository.GetForUpdate(
-                restoranId,
-                paketId,
-                cancellationToken);
+        var paket = await _paketRepository.GetForUpdate(
+            restoranId,
+            paketId,
+            cancellationToken);
 
         if (paket is null)
         {
@@ -123,16 +102,22 @@ public class PaketService
                 "Neaktivan paket nije moguće menjati.");
         }
 
+        paket.Naziv = request.Naziv.Trim();
+        paket.Opis = request.Opis?.Trim();
 
-        paket.Naziv =
-            request.Naziv.Trim();
-
-        paket.Opis =
-            request.Opis?.Trim();
-
-        await _paketRepository.SaveChanges(
-            cancellationToken);
+        await _paketRepository.SaveChanges(cancellationToken);
 
         return MapToDto(paket);
+    }
+
+    private static PaketDto MapToDto(Paket paket)
+    {
+        return new PaketDto
+        {
+            PaketId = paket.PaketId,
+            Naziv = paket.Naziv,
+            Opis = paket.Opis,
+            Status = paket.Status.ToString()
+        };
     }
 }

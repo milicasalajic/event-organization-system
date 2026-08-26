@@ -508,3 +508,24 @@
         margin-top: -60px;
     }
 }
+.moje-rezervacije-button {
+    margin-top: 24px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #3f5c4a;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .moje-rezervacije-button:hover {
+        background: #31483a;
+        transform: translateY(-1px);
+    }
+
+    .moje-rezervacije-button:active {
+        transform: translateY(0);
+    }

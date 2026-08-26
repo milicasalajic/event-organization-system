@@ -208,3 +208,18 @@
             width: 100%;
         }
 }
+.profil-nazad-button {
+    margin-bottom: 28px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #3f5c4a;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+    .profil-nazad-button:hover {
+        color: #6f8b78;
+    }

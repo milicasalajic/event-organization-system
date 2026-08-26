@@ -28,8 +28,7 @@ public class AuthController : ControllerBase
 
         if (result is null)
         {
-            return Unauthorized(
-                "Email adresa ili lozinka nisu ispravni.");
+            return Unauthorized("Email adresa ili lozinka nisu ispravni.");
         }
 
         return Ok(result);
