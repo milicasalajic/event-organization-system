@@ -1,4 +1,4 @@
--- seed_data.sql
+te -- seed_data.sql
 -- Testni podaci za informacioni sistem za organizaciju dogadjaja u restoranima.
 -- Svi korisnicki podaci su izmisljeni.
 -- Portfolio linkovi vode ka javno dostupnim sajtovima stvarnih pruzalaca usluga.

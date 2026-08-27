@@ -11,7 +11,7 @@ const naziviStatusa = {
     ODBIJENA: 'Odbijena',
 };
 
-function formatDatumVreme(value) {
+function formatDatumVreme(value) {//27. avg 2026. 18:30
     if (!value) {
         return '-';
     }
@@ -27,7 +27,7 @@ function formatTermin(vremePocetka, vremeZavrsetka) {
         return '-';
     }
 
-    const pocetak = new Date(vremePocetka);
+    const pocetak = new Date(vremePocetka); //js date objekat
     const zavrsetak = new Date(vremeZavrsetka);
 
     const istiDan =
@@ -39,7 +39,7 @@ function formatTermin(vremePocetka, vremeZavrsetka) {
         });
 
         const od = pocetak.toLocaleTimeString('sr-RS', {
-            hour: '2-digit',
+            hour: '2-digit', //format ovakav 08:00 npr
             minute: '2-digit',
         });
 
@@ -134,7 +134,9 @@ function MojeRezervacijePage() {
 
                     <h1>Kreirane rezervacije</h1>
 
-                    <p>Pregled rezervacija koje ste kreirali.</p>
+                    <p>
+                        Pregled rezervacija koje ste kreirali.
+                    </p>
                 </div>
 
                 {rezervacije.length === 0 ? (
@@ -241,8 +243,7 @@ function MojeRezervacijePage() {
                                         <span>Dodatne usluge</span>
 
                                         <p>
-                                            {rezervacija.dodatneUsluge?.length >
-                                                0
+                                            {rezervacija.dodatneUsluge?.length > 0
                                                 ? rezervacija.dodatneUsluge.join(
                                                     ', ',
                                                 )

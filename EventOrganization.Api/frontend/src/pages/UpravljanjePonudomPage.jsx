@@ -2,42 +2,36 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getRestoranById } from '../api/restoranApi';
-
 import {
     addSala,
     deleteSala,
     getSaleByRestoranId,
     updateSala,
 } from '../api/salaApi';
-
 import {
     addPaket,
     deletePaket,
     getPaketiByRestoranId,
     updatePaket,
 } from '../api/paketApi';
-
 import {
     addKetering,
     deleteKetering,
     getKeteringByRestoranId,
     updateKetering,
 } from '../api/keteringApi';
-
 import {
     addDekoraterskaFirma,
     deleteDekoraterskaFirma,
     getDekoraterskeFirmeByRestoranId,
     updateDekoraterskaFirma,
 } from '../api/dekoraterskaFirmaApi';
-
 import {
     addFotograf,
     deleteFotograf,
     getFotografiByRestoranId,
     updateFotograf,
 } from '../api/fotografApi';
-
 import {
     addMuzickiIzvodjac,
     deleteMuzickiIzvodjac,
@@ -69,18 +63,9 @@ function UpravljanjePonudomPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-    // =========================
-    // SALA
-    // =========================
-
-    const [prikaziSalaFormu, setPrikaziSalaFormu] =
-        useState(false);
-
-    const [salaZaIzmenu, setSalaZaIzmenu] =
-        useState(null);
-
-    const [salaZaBrisanje, setSalaZaBrisanje] =
-        useState(null);
+    const [prikaziSalaFormu, setPrikaziSalaFormu] = useState(false);
+    const [salaZaIzmenu, setSalaZaIzmenu] = useState(null);
+    const [salaZaBrisanje, setSalaZaBrisanje] = useState(null);
 
     const [salaFormData, setSalaFormData] = useState({
         rbrS: '',
@@ -88,36 +73,18 @@ function UpravljanjePonudomPage() {
         cenaStolice: '',
     });
 
-    // =========================
-    // PAKET
-    // =========================
-
-    const [prikaziPaketFormu, setPrikaziPaketFormu] =
-        useState(false);
-
-    const [paketZaIzmenu, setPaketZaIzmenu] =
-        useState(null);
-
-    const [paketZaBrisanje, setPaketZaBrisanje] =
-        useState(null);
+    const [prikaziPaketFormu, setPrikaziPaketFormu] = useState(false);
+    const [paketZaIzmenu, setPaketZaIzmenu] = useState(null);
+    const [paketZaBrisanje, setPaketZaBrisanje] = useState(null);
 
     const [paketFormData, setPaketFormData] = useState({
         naziv: '',
         opis: '',
     });
 
-    // =========================
-    // KETERING
-    // =========================
-
-    const [prikaziKeteringFormu, setPrikaziKeteringFormu] =
-        useState(false);
-
-    const [keteringZaIzmenu, setKeteringZaIzmenu] =
-        useState(null);
-
-    const [keteringZaBrisanje, setKeteringZaBrisanje] =
-        useState(null);
+    const [prikaziKeteringFormu, setPrikaziKeteringFormu] = useState(false);
+    const [keteringZaIzmenu, setKeteringZaIzmenu] = useState(null);
+    const [keteringZaBrisanje, setKeteringZaBrisanje] = useState(null);
 
     const [keteringFormData, setKeteringFormData] = useState({
         naziv: '',
@@ -127,10 +94,6 @@ function UpravljanjePonudomPage() {
         cena: '',
         paketIds: [],
     });
-
-    // =========================
-    // DEKORATERSKA FIRMA
-    // =========================
 
     const [
         prikaziDekoraterskaFirmaFormu,
@@ -159,18 +122,9 @@ function UpravljanjePonudomPage() {
         paketIds: [],
     });
 
-    // =========================
-    // FOTOGRAF
-    // =========================
-
-    const [prikaziFotografFormu, setPrikaziFotografFormu] =
-        useState(false);
-
-    const [fotografZaIzmenu, setFotografZaIzmenu] =
-        useState(null);
-
-    const [fotografZaBrisanje, setFotografZaBrisanje] =
-        useState(null);
+    const [prikaziFotografFormu, setPrikaziFotografFormu] = useState(false);
+    const [fotografZaIzmenu, setFotografZaIzmenu] = useState(null);
+    const [fotografZaBrisanje, setFotografZaBrisanje] = useState(null);
 
     const [fotografFormData, setFotografFormData] = useState({
         naziv: '',
@@ -181,10 +135,6 @@ function UpravljanjePonudomPage() {
         cena: '',
         paketIds: [],
     });
-
-    // =========================
-    // MUZIČKI IZVOĐAČ
-    // =========================
 
     const [
         prikaziMuzickiIzvodjacFormu,
@@ -212,10 +162,6 @@ function UpravljanjePonudomPage() {
         cena: '',
         paketIds: [],
     });
-
-    // =========================
-    // UČITAVANJE
-    // =========================
 
     useEffect(() => {
         async function loadPage() {
@@ -267,10 +213,7 @@ function UpravljanjePonudomPage() {
         return paketIds
             .map(
                 (paketId) =>
-                    paketi.find(
-                        (paket) =>
-                            paket.paketId === paketId,
-                    )?.naziv,
+                    paketi.find((paket) => paket.paketId === paketId)?.naziv,
             )
             .filter(Boolean)
             .join(', ');
@@ -295,10 +238,6 @@ function UpravljanjePonudomPage() {
 
         return `${Number(value).toLocaleString('sr-RS')} EUR`;
     }
-
-    // =========================
-    // SALE
-    // =========================
 
     function handleSalaChange(event) {
         const { name, value } = event.target;
@@ -358,12 +297,11 @@ function UpravljanjePonudomPage() {
                     kapacitet: Number(salaFormData.kapacitet),
                 };
 
-                const izmenjenaSala =
-                    await updateSala(
-                        restoranId,
-                        salaZaIzmenu.salaId,
-                        data,
-                    );
+                const izmenjenaSala = await updateSala(
+                    restoranId,
+                    salaZaIzmenu.salaId,
+                    data,
+                );
 
                 setSale((prev) =>
                     prev.map((sala) =>
@@ -376,21 +314,12 @@ function UpravljanjePonudomPage() {
                 const data = {
                     rbrS: Number(salaFormData.rbrS),
                     kapacitet: Number(salaFormData.kapacitet),
-                    cenaStolice: Number(
-                        salaFormData.cenaStolice,
-                    ),
+                    cenaStolice: Number(salaFormData.cenaStolice),
                 };
 
-                const novaSala =
-                    await addSala(
-                        restoranId,
-                        data,
-                    );
+                const novaSala = await addSala(restoranId, data);
 
-                setSale((prev) => [
-                    ...prev,
-                    novaSala,
-                ]);
+                setSale((prev) => [...prev, novaSala]);
             }
 
             setPrikaziSalaFormu(false);
@@ -411,17 +340,10 @@ function UpravljanjePonudomPage() {
         setActionError('');
 
         try {
-            await deleteSala(
-                restoranId,
-                salaZaBrisanje.salaId,
-            );
+            await deleteSala(restoranId, salaZaBrisanje.salaId);
 
             setSale((prev) =>
-                prev.filter(
-                    (sala) =>
-                        sala.salaId !==
-                        salaZaBrisanje.salaId,
-                ),
+                prev.filter((sala) => sala.salaId !== salaZaBrisanje.salaId),
             );
 
             setSalaZaBrisanje(null);
@@ -431,10 +353,6 @@ function UpravljanjePonudomPage() {
             setDeleteLoading(false);
         }
     }
-
-    // =========================
-    // PAKETI
-    // =========================
 
     function handlePaketChange(event) {
         const { name, value } = event.target;
@@ -487,32 +405,23 @@ function UpravljanjePonudomPage() {
 
         try {
             if (paketZaIzmenu) {
-                const izmenjenPaket =
-                    await updatePaket(
-                        restoranId,
-                        paketZaIzmenu.paketId,
-                        paketFormData,
-                    );
+                const izmenjenPaket = await updatePaket(
+                    restoranId,
+                    paketZaIzmenu.paketId,
+                    paketFormData,
+                );
 
                 setPaketi((prev) =>
                     prev.map((paket) =>
-                        paket.paketId ===
-                            izmenjenPaket.paketId
+                        paket.paketId === izmenjenPaket.paketId
                             ? izmenjenPaket
                             : paket,
                     ),
                 );
             } else {
-                const noviPaket =
-                    await addPaket(
-                        restoranId,
-                        paketFormData,
-                    );
+                const noviPaket = await addPaket(restoranId, paketFormData);
 
-                setPaketi((prev) => [
-                    ...prev,
-                    noviPaket,
-                ]);
+                setPaketi((prev) => [...prev, noviPaket]);
             }
 
             setPrikaziPaketFormu(false);
@@ -533,20 +442,12 @@ function UpravljanjePonudomPage() {
         setActionError('');
 
         try {
-            await deletePaket(
-                restoranId,
-                paketZaBrisanje.paketId,
-            );
+            await deletePaket(restoranId, paketZaBrisanje.paketId);
 
-            const obrisaniPaketId =
-                paketZaBrisanje.paketId;
+            const obrisaniPaketId = paketZaBrisanje.paketId;
 
             setPaketi((prev) =>
-                prev.filter(
-                    (paket) =>
-                        paket.paketId !==
-                        obrisaniPaketId,
-                ),
+                prev.filter((paket) => paket.paketId !== obrisaniPaketId),
             );
 
             setKeteringFirme((prev) =>
@@ -554,8 +455,7 @@ function UpravljanjePonudomPage() {
                     ...ketering,
                     paketIds:
                         ketering.paketIds?.filter(
-                            (id) =>
-                                id !== obrisaniPaketId,
+                            (id) => id !== obrisaniPaketId,
                         ) ?? [],
                 })),
             );
@@ -565,8 +465,7 @@ function UpravljanjePonudomPage() {
                     ...firma,
                     paketIds:
                         firma.paketIds?.filter(
-                            (id) =>
-                                id !== obrisaniPaketId,
+                            (id) => id !== obrisaniPaketId,
                         ) ?? [],
                 })),
             );
@@ -576,8 +475,7 @@ function UpravljanjePonudomPage() {
                     ...fotograf,
                     paketIds:
                         fotograf.paketIds?.filter(
-                            (id) =>
-                                id !== obrisaniPaketId,
+                            (id) => id !== obrisaniPaketId,
                         ) ?? [],
                 })),
             );
@@ -587,8 +485,7 @@ function UpravljanjePonudomPage() {
                     ...izvodjac,
                     paketIds:
                         izvodjac.paketIds?.filter(
-                            (id) =>
-                                id !== obrisaniPaketId,
+                            (id) => id !== obrisaniPaketId,
                         ) ?? [],
                 })),
             );
@@ -601,10 +498,6 @@ function UpravljanjePonudomPage() {
         }
     }
 
-    // =========================
-    // KETERING
-    // =========================
-
     function handleKeteringChange(event) {
         const { name, value } = event.target;
 
@@ -616,19 +509,13 @@ function UpravljanjePonudomPage() {
 
     function handleKeteringPaketCheckbox(paketId) {
         setKeteringFormData((prev) => {
-            const izabran =
-                prev.paketIds.includes(paketId);
+            const izabran = prev.paketIds.includes(paketId);
 
             return {
                 ...prev,
                 paketIds: izabran
-                    ? prev.paketIds.filter(
-                        (id) => id !== paketId,
-                    )
-                    : [
-                        ...prev.paketIds,
-                        paketId,
-                    ],
+                    ? prev.paketIds.filter((id) => id !== paketId)
+                    : [...prev.paketIds, paketId],
             };
         });
     }
@@ -679,9 +566,7 @@ function UpravljanjePonudomPage() {
         event.preventDefault();
 
         if (keteringFormData.paketIds.length === 0) {
-            setActionError(
-                'Izaberite najmanje jedan paket.',
-            );
+            setActionError('Izaberite najmanje jedan paket.');
             return;
         }
 
@@ -698,17 +583,15 @@ function UpravljanjePonudomPage() {
                     paketIds: keteringFormData.paketIds,
                 };
 
-                const izmenjenKetering =
-                    await updateKetering(
-                        restoranId,
-                        keteringZaIzmenu.uslugaId,
-                        data,
-                    );
+                const izmenjenKetering = await updateKetering(
+                    restoranId,
+                    keteringZaIzmenu.uslugaId,
+                    data,
+                );
 
                 setKeteringFirme((prev) =>
                     prev.map((ketering) =>
-                        ketering.uslugaId ===
-                            izmenjenKetering.uslugaId
+                        ketering.uslugaId === izmenjenKetering.uslugaId
                             ? izmenjenKetering
                             : ketering,
                     ),
@@ -716,21 +599,12 @@ function UpravljanjePonudomPage() {
             } else {
                 const data = {
                     ...keteringFormData,
-                    cena: Number(
-                        keteringFormData.cena,
-                    ),
+                    cena: Number(keteringFormData.cena),
                 };
 
-                const noviKetering =
-                    await addKetering(
-                        restoranId,
-                        data,
-                    );
+                const noviKetering = await addKetering(restoranId, data);
 
-                setKeteringFirme((prev) => [
-                    ...prev,
-                    noviKetering,
-                ]);
+                setKeteringFirme((prev) => [...prev, noviKetering]);
             }
 
             setPrikaziKeteringFormu(false);
@@ -751,16 +625,12 @@ function UpravljanjePonudomPage() {
         setActionError('');
 
         try {
-            await deleteKetering(
-                restoranId,
-                keteringZaBrisanje.uslugaId,
-            );
+            await deleteKetering(restoranId, keteringZaBrisanje.uslugaId);
 
             setKeteringFirme((prev) =>
                 prev.filter(
                     (ketering) =>
-                        ketering.uslugaId !==
-                        keteringZaBrisanje.uslugaId,
+                        ketering.uslugaId !== keteringZaBrisanje.uslugaId,
                 ),
             );
 
@@ -771,10 +641,6 @@ function UpravljanjePonudomPage() {
             setDeleteLoading(false);
         }
     }
-
-    // =========================
-    // DEKORATERSKE FIRME
-    // =========================
 
     function handleDekoraterskaFirmaChange(event) {
         const { name, value } = event.target;
@@ -787,19 +653,13 @@ function UpravljanjePonudomPage() {
 
     function handleDekoraterskaFirmaPaketCheckbox(paketId) {
         setDekoraterskaFirmaFormData((prev) => {
-            const izabran =
-                prev.paketIds.includes(paketId);
+            const izabran = prev.paketIds.includes(paketId);
 
             return {
                 ...prev,
                 paketIds: izabran
-                    ? prev.paketIds.filter(
-                        (id) => id !== paketId,
-                    )
-                    : [
-                        ...prev.paketIds,
-                        paketId,
-                    ],
+                    ? prev.paketIds.filter((id) => id !== paketId)
+                    : [...prev.paketIds, paketId],
             };
         });
     }
@@ -849,12 +709,8 @@ function UpravljanjePonudomPage() {
     async function handleDekoraterskaFirmaSubmit(event) {
         event.preventDefault();
 
-        if (
-            dekoraterskaFirmaFormData.paketIds.length === 0
-        ) {
-            setActionError(
-                'Izaberite najmanje jedan paket.',
-            );
+        if (dekoraterskaFirmaFormData.paketIds.length === 0) {
+            setActionError('Izaberite najmanje jedan paket.');
             return;
         }
 
@@ -871,17 +727,15 @@ function UpravljanjePonudomPage() {
                     paketIds: dekoraterskaFirmaFormData.paketIds,
                 };
 
-                const izmenjenaFirma =
-                    await updateDekoraterskaFirma(
-                        restoranId,
-                        dekoraterskaFirmaZaIzmenu.uslugaId,
-                        data,
-                    );
+                const izmenjenaFirma = await updateDekoraterskaFirma(
+                    restoranId,
+                    dekoraterskaFirmaZaIzmenu.uslugaId,
+                    data,
+                );
 
                 setDekoraterskeFirme((prev) =>
                     prev.map((firma) =>
-                        firma.uslugaId ===
-                            izmenjenaFirma.uslugaId
+                        firma.uslugaId === izmenjenaFirma.uslugaId
                             ? izmenjenaFirma
                             : firma,
                     ),
@@ -889,21 +743,15 @@ function UpravljanjePonudomPage() {
             } else {
                 const data = {
                     ...dekoraterskaFirmaFormData,
-                    cena: Number(
-                        dekoraterskaFirmaFormData.cena,
-                    ),
+                    cena: Number(dekoraterskaFirmaFormData.cena),
                 };
 
-                const novaFirma =
-                    await addDekoraterskaFirma(
-                        restoranId,
-                        data,
-                    );
+                const novaFirma = await addDekoraterskaFirma(
+                    restoranId,
+                    data,
+                );
 
-                setDekoraterskeFirme((prev) => [
-                    ...prev,
-                    novaFirma,
-                ]);
+                setDekoraterskeFirme((prev) => [...prev, novaFirma]);
             }
 
             setPrikaziDekoraterskaFirmaFormu(false);
@@ -932,8 +780,7 @@ function UpravljanjePonudomPage() {
             setDekoraterskeFirme((prev) =>
                 prev.filter(
                     (firma) =>
-                        firma.uslugaId !==
-                        dekoraterskaFirmaZaBrisanje.uslugaId,
+                        firma.uslugaId !== dekoraterskaFirmaZaBrisanje.uslugaId,
                 ),
             );
 
@@ -944,10 +791,6 @@ function UpravljanjePonudomPage() {
             setDeleteLoading(false);
         }
     }
-
-    // =========================
-    // FOTOGRAFI
-    // =========================
 
     function handleFotografChange(event) {
         const { name, value } = event.target;
@@ -960,19 +803,13 @@ function UpravljanjePonudomPage() {
 
     function handleFotografPaketCheckbox(paketId) {
         setFotografFormData((prev) => {
-            const izabran =
-                prev.paketIds.includes(paketId);
+            const izabran = prev.paketIds.includes(paketId);
 
             return {
                 ...prev,
                 paketIds: izabran
-                    ? prev.paketIds.filter(
-                        (id) => id !== paketId,
-                    )
-                    : [
-                        ...prev.paketIds,
-                        paketId,
-                    ],
+                    ? prev.paketIds.filter((id) => id !== paketId)
+                    : [...prev.paketIds, paketId],
             };
         });
     }
@@ -1003,9 +840,7 @@ function UpravljanjePonudomPage() {
             telefon: fotograf.telefon ?? '',
             portfolio: fotograf.portfolio ?? '',
             cenaFoto: fotograf.cenaFoto ?? '',
-            tipFoto:
-                fotograf.tipFoto ??
-                'FOTOGRAFIJA',
+            tipFoto: fotograf.tipFoto ?? 'FOTOGRAFIJA',
             cena: '',
             paketIds: fotograf.paketIds ?? [],
         });
@@ -1027,9 +862,7 @@ function UpravljanjePonudomPage() {
         event.preventDefault();
 
         if (fotografFormData.paketIds.length === 0) {
-            setActionError(
-                'Izaberite najmanje jedan paket.',
-            );
+            setActionError('Izaberite najmanje jedan paket.');
             return;
         }
 
@@ -1042,24 +875,20 @@ function UpravljanjePonudomPage() {
                     naziv: fotografFormData.naziv,
                     telefon: fotografFormData.telefon,
                     portfolio: fotografFormData.portfolio,
-                    cenaFoto: Number(
-                        fotografFormData.cenaFoto,
-                    ),
+                    cenaFoto: Number(fotografFormData.cenaFoto),
                     tipFoto: fotografFormData.tipFoto,
                     paketIds: fotografFormData.paketIds,
                 };
 
-                const izmenjenFotograf =
-                    await updateFotograf(
-                        restoranId,
-                        fotografZaIzmenu.uslugaId,
-                        data,
-                    );
+                const izmenjenFotograf = await updateFotograf(
+                    restoranId,
+                    fotografZaIzmenu.uslugaId,
+                    data,
+                );
 
                 setFotografi((prev) =>
                     prev.map((fotograf) =>
-                        fotograf.uslugaId ===
-                            izmenjenFotograf.uslugaId
+                        fotograf.uslugaId === izmenjenFotograf.uslugaId
                             ? izmenjenFotograf
                             : fotograf,
                     ),
@@ -1067,24 +896,13 @@ function UpravljanjePonudomPage() {
             } else {
                 const data = {
                     ...fotografFormData,
-                    cenaFoto: Number(
-                        fotografFormData.cenaFoto,
-                    ),
-                    cena: Number(
-                        fotografFormData.cena,
-                    ),
+                    cenaFoto: Number(fotografFormData.cenaFoto),
+                    cena: Number(fotografFormData.cena),
                 };
 
-                const noviFotograf =
-                    await addFotograf(
-                        restoranId,
-                        data,
-                    );
+                const noviFotograf = await addFotograf(restoranId, data);
 
-                setFotografi((prev) => [
-                    ...prev,
-                    noviFotograf,
-                ]);
+                setFotografi((prev) => [...prev, noviFotograf]);
             }
 
             setPrikaziFotografFormu(false);
@@ -1105,16 +923,12 @@ function UpravljanjePonudomPage() {
         setActionError('');
 
         try {
-            await deleteFotograf(
-                restoranId,
-                fotografZaBrisanje.uslugaId,
-            );
+            await deleteFotograf(restoranId, fotografZaBrisanje.uslugaId);
 
             setFotografi((prev) =>
                 prev.filter(
                     (fotograf) =>
-                        fotograf.uslugaId !==
-                        fotografZaBrisanje.uslugaId,
+                        fotograf.uslugaId !== fotografZaBrisanje.uslugaId,
                 ),
             );
 
@@ -1125,10 +939,6 @@ function UpravljanjePonudomPage() {
             setDeleteLoading(false);
         }
     }
-
-    // =========================
-    // MUZIČKI IZVOĐAČI
-    // =========================
 
     function handleMuzickiIzvodjacChange(event) {
         const { name, value } = event.target;
@@ -1141,19 +951,13 @@ function UpravljanjePonudomPage() {
 
     function handleMuzickiIzvodjacPaketCheckbox(paketId) {
         setMuzickiIzvodjacFormData((prev) => {
-            const izabran =
-                prev.paketIds.includes(paketId);
+            const izabran = prev.paketIds.includes(paketId);
 
             return {
                 ...prev,
                 paketIds: izabran
-                    ? prev.paketIds.filter(
-                        (id) => id !== paketId,
-                    )
-                    : [
-                        ...prev.paketIds,
-                        paketId,
-                    ],
+                    ? prev.paketIds.filter((id) => id !== paketId)
+                    : [...prev.paketIds, paketId],
             };
         });
     }
@@ -1203,12 +1007,8 @@ function UpravljanjePonudomPage() {
     async function handleMuzickiIzvodjacSubmit(event) {
         event.preventDefault();
 
-        if (
-            muzickiIzvodjacFormData.paketIds.length === 0
-        ) {
-            setActionError(
-                'Izaberite najmanje jedan paket.',
-            );
+        if (muzickiIzvodjacFormData.paketIds.length === 0) {
+            setActionError('Izaberite najmanje jedan paket.');
             return;
         }
 
@@ -1221,23 +1021,19 @@ function UpravljanjePonudomPage() {
                     naziv: muzickiIzvodjacFormData.naziv,
                     telefon: muzickiIzvodjacFormData.telefon,
                     portfolio: muzickiIzvodjacFormData.portfolio,
-                    tipMuzicara:
-                        muzickiIzvodjacFormData.tipMuzicara,
-                    paketIds:
-                        muzickiIzvodjacFormData.paketIds,
+                    tipMuzicara: muzickiIzvodjacFormData.tipMuzicara,
+                    paketIds: muzickiIzvodjacFormData.paketIds,
                 };
 
-                const izmenjenIzvodjac =
-                    await updateMuzickiIzvodjac(
-                        restoranId,
-                        muzickiIzvodjacZaIzmenu.uslugaId,
-                        data,
-                    );
+                const izmenjenIzvodjac = await updateMuzickiIzvodjac(
+                    restoranId,
+                    muzickiIzvodjacZaIzmenu.uslugaId,
+                    data,
+                );
 
                 setMuzickiIzvodjaci((prev) =>
                     prev.map((izvodjac) =>
-                        izvodjac.uslugaId ===
-                            izmenjenIzvodjac.uslugaId
+                        izvodjac.uslugaId === izmenjenIzvodjac.uslugaId
                             ? izmenjenIzvodjac
                             : izvodjac,
                     ),
@@ -1245,21 +1041,15 @@ function UpravljanjePonudomPage() {
             } else {
                 const data = {
                     ...muzickiIzvodjacFormData,
-                    cena: Number(
-                        muzickiIzvodjacFormData.cena,
-                    ),
+                    cena: Number(muzickiIzvodjacFormData.cena),
                 };
 
-                const noviIzvodjac =
-                    await addMuzickiIzvodjac(
-                        restoranId,
-                        data,
-                    );
+                const noviIzvodjac = await addMuzickiIzvodjac(
+                    restoranId,
+                    data,
+                );
 
-                setMuzickiIzvodjaci((prev) => [
-                    ...prev,
-                    noviIzvodjac,
-                ]);
+                setMuzickiIzvodjaci((prev) => [...prev, noviIzvodjac]);
             }
 
             setPrikaziMuzickiIzvodjacFormu(false);
@@ -1288,8 +1078,7 @@ function UpravljanjePonudomPage() {
             setMuzickiIzvodjaci((prev) =>
                 prev.filter(
                     (izvodjac) =>
-                        izvodjac.uslugaId !==
-                        muzickiIzvodjacZaBrisanje.uslugaId,
+                        izvodjac.uslugaId !== muzickiIzvodjacZaBrisanje.uslugaId,
                 ),
             );
 
@@ -1300,10 +1089,6 @@ function UpravljanjePonudomPage() {
             setDeleteLoading(false);
         }
     }
-
-    // =========================
-    // LOADING / ERROR
-    // =========================
 
     if (isLoading) {
         return (
@@ -1341,17 +1126,11 @@ function UpravljanjePonudomPage() {
                 </button>
 
                 <div className="upravljanje-page-header">
-                    <span>
-                        Upravljanje ponudom
-                    </span>
+                    <span>Upravljanje ponudom</span>
 
-                    <h1>
-                        {restoran?.naziv}
-                    </h1>
+                    <h1>{restoran?.naziv}</h1>
 
-                    <p>
-                        Upravljanje ponudom restorana.
-                    </p>
+                    <p>Upravljanje ponudom restorana.</p>
                 </div>
 
                 <div className="upravljanje-layout">
@@ -1363,9 +1142,7 @@ function UpravljanjePonudomPage() {
                                     ? 'upravljanje-nav-item aktivan'
                                     : 'upravljanje-nav-item'
                             }
-                            onClick={() =>
-                                promeniSekciju('SALE')
-                            }
+                            onClick={() => promeniSekciju('SALE')}
                         >
                             <div>
                                 <strong>Sale</strong>
@@ -1380,9 +1157,7 @@ function UpravljanjePonudomPage() {
                                     ? 'upravljanje-nav-item aktivan'
                                     : 'upravljanje-nav-item'
                             }
-                            onClick={() =>
-                                promeniSekciju('PAKETI')
-                            }
+                            onClick={() => promeniSekciju('PAKETI')}
                         >
                             <div>
                                 <strong>Paketi</strong>
@@ -1397,9 +1172,7 @@ function UpravljanjePonudomPage() {
                                     ? 'upravljanje-nav-item aktivan'
                                     : 'upravljanje-nav-item'
                             }
-                            onClick={() =>
-                                promeniSekciju('KETERING')
-                            }
+                            onClick={() => promeniSekciju('KETERING')}
                         >
                             <div>
                                 <strong>Ketering firme</strong>
@@ -1414,9 +1187,7 @@ function UpravljanjePonudomPage() {
                                     ? 'upravljanje-nav-item aktivan'
                                     : 'upravljanje-nav-item'
                             }
-                            onClick={() =>
-                                promeniSekciju('DEKORATERI')
-                            }
+                            onClick={() => promeniSekciju('DEKORATERI')}
                         >
                             <div>
                                 <strong>Dekoraterske firme</strong>
@@ -1431,9 +1202,7 @@ function UpravljanjePonudomPage() {
                                     ? 'upravljanje-nav-item aktivan'
                                     : 'upravljanje-nav-item'
                             }
-                            onClick={() =>
-                                promeniSekciju('FOTOGRAFI')
-                            }
+                            onClick={() => promeniSekciju('FOTOGRAFI')}
                         >
                             <div>
                                 <strong>Fotografi</strong>
@@ -1448,11 +1217,7 @@ function UpravljanjePonudomPage() {
                                     ? 'upravljanje-nav-item aktivan'
                                     : 'upravljanje-nav-item'
                             }
-                            onClick={() =>
-                                promeniSekciju(
-                                    'MUZICKI_IZVODJACI',
-                                )
-                            }
+                            onClick={() => promeniSekciju('MUZICKI_IZVODJACI')}
                         >
                             <div>
                                 <strong>Muzički izvođači</strong>
@@ -1469,8 +1234,8 @@ function UpravljanjePonudomPage() {
                                         <span>Ponuda restorana</span>
                                         <h2>Sale</h2>
                                         <p>
-                                            Dodavanje, izmena i brisanje
-                                            sala koje pripadaju restoranu.
+                                            Dodavanje, izmena i brisanje sala
+                                            koje pripadaju restoranu.
                                         </p>
                                     </div>
 
@@ -1541,8 +1306,12 @@ function UpravljanjePonudomPage() {
                                                                     type="button"
                                                                     className="management-delete-button"
                                                                     onClick={() => {
-                                                                        setActionError('');
-                                                                        setSalaZaBrisanje(sala);
+                                                                        setActionError(
+                                                                            '',
+                                                                        );
+                                                                        setSalaZaBrisanje(
+                                                                            sala,
+                                                                        );
                                                                     }}
                                                                 >
                                                                     Obriši
@@ -1565,8 +1334,8 @@ function UpravljanjePonudomPage() {
                                         <span>Ponuda restorana</span>
                                         <h2>Paketi</h2>
                                         <p>
-                                            Dodavanje, izmena i brisanje
-                                            paketa koji pripadaju restoranu.
+                                            Dodavanje, izmena i brisanje paketa
+                                            koji pripadaju restoranu.
                                         </p>
                                     </div>
 
@@ -1629,8 +1398,12 @@ function UpravljanjePonudomPage() {
                                                                     type="button"
                                                                     className="management-delete-button"
                                                                     onClick={() => {
-                                                                        setActionError('');
-                                                                        setPaketZaBrisanje(paket);
+                                                                        setActionError(
+                                                                            '',
+                                                                        );
+                                                                        setPaketZaBrisanje(
+                                                                            paket,
+                                                                        );
                                                                     }}
                                                                 >
                                                                     Obriši
@@ -1654,8 +1427,8 @@ function UpravljanjePonudomPage() {
                                         <h2>Ketering firme</h2>
                                         <p>
                                             Dodavanje, izmena i brisanje
-                                            ketering firmi koje mogu biti
-                                            deo ponude restorana.
+                                            ketering firmi koje mogu biti deo
+                                            ponude restorana.
                                         </p>
                                     </div>
 
@@ -1700,7 +1473,9 @@ function UpravljanjePonudomPage() {
                                                         >
                                                             <td>
                                                                 <strong>
-                                                                    {ketering.naziv}
+                                                                    {
+                                                                        ketering.naziv
+                                                                    }
                                                                 </strong>
 
                                                                 {ketering.portfolio && (
@@ -1719,11 +1494,14 @@ function UpravljanjePonudomPage() {
                                                             </td>
 
                                                             <td>
-                                                                {ketering.telefon}
+                                                                {
+                                                                    ketering.telefon
+                                                                }
                                                             </td>
 
                                                             <td className="management-description-cell">
-                                                                {ketering.opis || '-'}
+                                                                {ketering.opis ||
+                                                                    '-'}
                                                             </td>
 
                                                             <td>
@@ -1757,7 +1535,9 @@ function UpravljanjePonudomPage() {
                                                                         type="button"
                                                                         className="management-delete-button"
                                                                         onClick={() => {
-                                                                            setActionError('');
+                                                                            setActionError(
+                                                                                '',
+                                                                            );
                                                                             setKeteringZaBrisanje(
                                                                                 ketering,
                                                                             );
@@ -1785,17 +1565,15 @@ function UpravljanjePonudomPage() {
                                         <h2>Dekoraterske firme</h2>
                                         <p>
                                             Dodavanje, izmena i brisanje
-                                            dekoraterskih firmi koje mogu
-                                            biti deo ponude restorana.
+                                            dekoraterskih firmi koje mogu biti
+                                            deo ponude restorana.
                                         </p>
                                     </div>
 
                                     <button
                                         type="button"
                                         className="management-primary-button"
-                                        onClick={
-                                            handleDodajDekoraterskuFirmu
-                                        }
+                                        onClick={handleDodajDekoraterskuFirmu}
                                     >
                                         + Dodaj dekoratersku firmu
                                     </button>
@@ -1803,9 +1581,7 @@ function UpravljanjePonudomPage() {
 
                                 {dekoraterskeFirme.length === 0 ? (
                                     <div className="management-empty">
-                                        <h3>
-                                            Nema dekoraterskih firmi
-                                        </h3>
+                                        <h3>Nema dekoraterskih firmi</h3>
                                         <p>
                                             Ovaj restoran trenutno nema
                                             dekoraterske firme u ponudi.
@@ -1858,7 +1634,8 @@ function UpravljanjePonudomPage() {
                                                             </td>
 
                                                             <td className="management-description-cell">
-                                                                {firma.opis || '-'}
+                                                                {firma.opis ||
+                                                                    '-'}
                                                             </td>
 
                                                             <td>
@@ -1892,7 +1669,9 @@ function UpravljanjePonudomPage() {
                                                                         type="button"
                                                                         className="management-delete-button"
                                                                         onClick={() => {
-                                                                            setActionError('');
+                                                                            setActionError(
+                                                                                '',
+                                                                            );
                                                                             setDekoraterskaFirmaZaBrisanje(
                                                                                 firma,
                                                                             );
@@ -1920,9 +1699,8 @@ function UpravljanjePonudomPage() {
                                         <h2>Fotografi</h2>
                                         <p>
                                             Dodavanje, izmena i brisanje
-                                            fotografa ili fotografskih
-                                            firmi koje mogu biti deo ponude
-                                            restorana.
+                                            fotografa ili fotografskih firmi
+                                            koje mogu biti deo ponude restorana.
                                         </p>
                                     </div>
 
@@ -1959,23 +1737,165 @@ function UpravljanjePonudomPage() {
                                             </thead>
 
                                             <tbody>
-                                                {fotografi.map(
-                                                    (fotograf) => (
+                                                {fotografi.map((fotograf) => (
+                                                    <tr
+                                                        key={
+                                                            fotograf.uslugaId
+                                                        }
+                                                    >
+                                                        <td>
+                                                            <strong>
+                                                                {fotograf.naziv}
+                                                            </strong>
+
+                                                            {fotograf.portfolio && (
+                                                                <div>
+                                                                    <a
+                                                                        href={
+                                                                            fotograf.portfolio
+                                                                        }
+                                                                        target="_blank"
+                                                                        rel="noreferrer"
+                                                                    >
+                                                                        Portfolio
+                                                                    </a>
+                                                                </div>
+                                                            )}
+                                                        </td>
+
+                                                        <td>
+                                                            {fotograf.telefon}
+                                                        </td>
+
+                                                        <td>
+                                                            {formatTipFoto(
+                                                                fotograf.tipFoto,
+                                                            )}
+                                                        </td>
+
+                                                        <td>
+                                                            {formatCena(
+                                                                fotograf.cena,
+                                                            )}
+                                                        </td>
+
+                                                        <td>
+                                                            {formatCena(
+                                                                fotograf.cenaFoto,
+                                                            )}
+                                                        </td>
+
+                                                        <td>
+                                                            {getNaziviPaketa(
+                                                                fotograf.paketIds ??
+                                                                [],
+                                                            ) || '-'}
+                                                        </td>
+
+                                                        <td>
+                                                            <div className="management-row-actions">
+                                                                <button
+                                                                    type="button"
+                                                                    className="management-edit-button"
+                                                                    onClick={() =>
+                                                                        handleIzmeniFotograf(
+                                                                            fotograf,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Izmeni
+                                                                </button>
+
+                                                                <button
+                                                                    type="button"
+                                                                    className="management-delete-button"
+                                                                    onClick={() => {
+                                                                        setActionError(
+                                                                            '',
+                                                                        );
+                                                                        setFotografZaBrisanje(
+                                                                            fotograf,
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    Obriši
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {aktivnaSekcija === 'MUZICKI_IZVODJACI' && (
+                            <>
+                                <div className="management-section-header">
+                                    <div>
+                                        <span>Ponuda restorana</span>
+                                        <h2>Muzički izvođači</h2>
+                                        <p>
+                                            Dodavanje, izmena i brisanje
+                                            muzičkih izvođača koji se mogu
+                                            angažovati prilikom organizacije
+                                            događaja.
+                                        </p>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        className="management-primary-button"
+                                        onClick={handleDodajMuzickogIzvodjaca}
+                                    >
+                                        + Dodaj izvođača
+                                    </button>
+                                </div>
+
+                                {muzickiIzvodjaci.length === 0 ? (
+                                    <div className="management-empty">
+                                        <h3>Nema muzičkih izvođača</h3>
+                                        <p>
+                                            Ovaj restoran trenutno nema
+                                            muzičke izvođače u ponudi.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="management-table-wrapper">
+                                        <table className="management-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Naziv</th>
+                                                    <th>Telefon</th>
+                                                    <th>Tip</th>
+                                                    <th>Cena</th>
+                                                    <th>Paketi</th>
+                                                    <th>Akcije</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                {muzickiIzvodjaci.map(
+                                                    (izvodjac) => (
                                                         <tr
                                                             key={
-                                                                fotograf.uslugaId
+                                                                izvodjac.uslugaId
                                                             }
                                                         >
                                                             <td>
                                                                 <strong>
-                                                                    {fotograf.naziv}
+                                                                    {
+                                                                        izvodjac.naziv
+                                                                    }
                                                                 </strong>
 
-                                                                {fotograf.portfolio && (
+                                                                {izvodjac.portfolio && (
                                                                     <div>
                                                                         <a
                                                                             href={
-                                                                                fotograf.portfolio
+                                                                                izvodjac.portfolio
                                                                             }
                                                                             target="_blank"
                                                                             rel="noreferrer"
@@ -1987,30 +1907,26 @@ function UpravljanjePonudomPage() {
                                                             </td>
 
                                                             <td>
-                                                                {fotograf.telefon}
+                                                                {
+                                                                    izvodjac.telefon
+                                                                }
                                                             </td>
 
                                                             <td>
-                                                                {formatTipFoto(
-                                                                    fotograf.tipFoto,
-                                                                )}
-                                                            </td>
-
-                                                            <td>
-                                                                {formatCena(
-                                                                    fotograf.cena,
-                                                                )}
+                                                                {
+                                                                    izvodjac.tipMuzicara
+                                                                }
                                                             </td>
 
                                                             <td>
                                                                 {formatCena(
-                                                                    fotograf.cenaFoto,
+                                                                    izvodjac.cena,
                                                                 )}
                                                             </td>
 
                                                             <td>
                                                                 {getNaziviPaketa(
-                                                                    fotograf.paketIds ??
+                                                                    izvodjac.paketIds ??
                                                                     [],
                                                                 ) || '-'}
                                                             </td>
@@ -2021,8 +1937,8 @@ function UpravljanjePonudomPage() {
                                                                         type="button"
                                                                         className="management-edit-button"
                                                                         onClick={() =>
-                                                                            handleIzmeniFotograf(
-                                                                                fotograf,
+                                                                            handleIzmeniMuzickogIzvodjaca(
+                                                                                izvodjac,
                                                                             )
                                                                         }
                                                                     >
@@ -2033,9 +1949,11 @@ function UpravljanjePonudomPage() {
                                                                         type="button"
                                                                         className="management-delete-button"
                                                                         onClick={() => {
-                                                                            setActionError('');
-                                                                            setFotografZaBrisanje(
-                                                                                fotograf,
+                                                                            setActionError(
+                                                                                '',
+                                                                            );
+                                                                            setMuzickiIzvodjacZaBrisanje(
+                                                                                izvodjac,
                                                                             );
                                                                         }}
                                                                     >
@@ -2052,143 +1970,6 @@ function UpravljanjePonudomPage() {
                                 )}
                             </>
                         )}
-
-                        {aktivnaSekcija ===
-                            'MUZICKI_IZVODJACI' && (
-                                <>
-                                    <div className="management-section-header">
-                                        <div>
-                                            <span>Ponuda restorana</span>
-                                            <h2>Muzički izvođači</h2>
-                                            <p>
-                                                Dodavanje, izmena i brisanje
-                                                muzičkih izvođača koji se mogu
-                                                angažovati prilikom organizacije
-                                                događaja.
-                                            </p>
-                                        </div>
-
-                                        <button
-                                            type="button"
-                                            className="management-primary-button"
-                                            onClick={
-                                                handleDodajMuzickogIzvodjaca
-                                            }
-                                        >
-                                            + Dodaj izvođača
-                                        </button>
-                                    </div>
-
-                                    {muzickiIzvodjaci.length === 0 ? (
-                                        <div className="management-empty">
-                                            <h3>
-                                                Nema muzičkih izvođača
-                                            </h3>
-                                            <p>
-                                                Ovaj restoran trenutno nema
-                                                muzičke izvođače u ponudi.
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <div className="management-table-wrapper">
-                                            <table className="management-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Naziv</th>
-                                                        <th>Telefon</th>
-                                                        <th>Tip</th>
-                                                        <th>Cena</th>
-                                                        <th>Paketi</th>
-                                                        <th>Akcije</th>
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                    {muzickiIzvodjaci.map(
-                                                        (izvodjac) => (
-                                                            <tr
-                                                                key={
-                                                                    izvodjac.uslugaId
-                                                                }
-                                                            >
-                                                                <td>
-                                                                    <strong>
-                                                                        {izvodjac.naziv}
-                                                                    </strong>
-
-                                                                    {izvodjac.portfolio && (
-                                                                        <div>
-                                                                            <a
-                                                                                href={
-                                                                                    izvodjac.portfolio
-                                                                                }
-                                                                                target="_blank"
-                                                                                rel="noreferrer"
-                                                                            >
-                                                                                Portfolio
-                                                                            </a>
-                                                                        </div>
-                                                                    )}
-                                                                </td>
-
-                                                                <td>
-                                                                    {izvodjac.telefon}
-                                                                </td>
-
-                                                                <td>
-                                                                    {izvodjac.tipMuzicara}
-                                                                </td>
-
-                                                                <td>
-                                                                    {formatCena(
-                                                                        izvodjac.cena,
-                                                                    )}
-                                                                </td>
-
-                                                                <td>
-                                                                    {getNaziviPaketa(
-                                                                        izvodjac.paketIds ??
-                                                                        [],
-                                                                    ) || '-'}
-                                                                </td>
-
-                                                                <td>
-                                                                    <div className="management-row-actions">
-                                                                        <button
-                                                                            type="button"
-                                                                            className="management-edit-button"
-                                                                            onClick={() =>
-                                                                                handleIzmeniMuzickogIzvodjaca(
-                                                                                    izvodjac,
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            Izmeni
-                                                                        </button>
-
-                                                                        <button
-                                                                            type="button"
-                                                                            className="management-delete-button"
-                                                                            onClick={() => {
-                                                                                setActionError('');
-                                                                                setMuzickiIzvodjacZaBrisanje(
-                                                                                    izvodjac,
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            Obriši
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        ),
-                                                    )}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
-                                </>
-                            )}
 
                         {actionError &&
                             !prikaziSalaFormu &&
@@ -2219,20 +2000,14 @@ function UpravljanjePonudomPage() {
                     >
                         <div className="management-form-header">
                             <span>
-                                {salaZaIzmenu
-                                    ? 'Izmena'
-                                    : 'Dodavanje'}
+                                {salaZaIzmenu ? 'Izmena' : 'Dodavanje'}
                             </span>
 
                             <h2>
-                                {salaZaIzmenu
-                                    ? 'Izmena sale'
-                                    : 'Nova sala'}
+                                {salaZaIzmenu ? 'Izmena sale' : 'Nova sala'}
                             </h2>
 
-                            <p>
-                                Unesite redni broj i kapacitet sale.
-                            </p>
+                            <p>Unesite redni broj i kapacitet sale.</p>
                         </div>
 
                         {actionError && (
@@ -2289,9 +2064,7 @@ function UpravljanjePonudomPage() {
                                         min="1"
                                         max="99999"
                                         step="1"
-                                        value={
-                                            salaFormData.cenaStolice
-                                        }
+                                        value={salaFormData.cenaStolice}
                                         onChange={handleSalaChange}
                                         required
                                     />
@@ -2333,9 +2106,7 @@ function UpravljanjePonudomPage() {
                     >
                         <div className="management-form-header">
                             <span>
-                                {paketZaIzmenu
-                                    ? 'Izmena'
-                                    : 'Dodavanje'}
+                                {paketZaIzmenu ? 'Izmena' : 'Dodavanje'}
                             </span>
 
                             <h2>
@@ -2344,9 +2115,7 @@ function UpravljanjePonudomPage() {
                                     : 'Novi paket'}
                             </h2>
 
-                            <p>
-                                Unesite osnovne podatke o paketu.
-                            </p>
+                            <p>Unesite osnovne podatke o paketu.</p>
                         </div>
 
                         {actionError && (
@@ -2419,9 +2188,7 @@ function UpravljanjePonudomPage() {
                     >
                         <div className="management-form-header">
                             <span>
-                                {keteringZaIzmenu
-                                    ? 'Izmena'
-                                    : 'Dodavanje'}
+                                {keteringZaIzmenu ? 'Izmena' : 'Dodavanje'}
                             </span>
 
                             <h2>
@@ -2431,9 +2198,8 @@ function UpravljanjePonudomPage() {
                             </h2>
 
                             <p>
-                                Unesite podatke o ketering firmi i
-                                izaberite pakete u kojima će biti
-                                dostupna.
+                                Unesite podatke o ketering firmi i izaberite
+                                pakete u kojima će biti dostupna.
                             </p>
                         </div>
 
@@ -2448,6 +2214,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="keteringNaziv">
                                     Naziv
                                 </label>
+
                                 <input
                                     id="keteringNaziv"
                                     name="naziv"
@@ -2461,6 +2228,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="keteringTelefon">
                                     Telefon
                                 </label>
+
                                 <input
                                     id="keteringTelefon"
                                     name="telefon"
@@ -2474,6 +2242,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="keteringPortfolio">
                                     Portfolio
                                 </label>
+
                                 <input
                                     id="keteringPortfolio"
                                     name="portfolio"
@@ -2487,6 +2256,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="keteringOpis">
                                     Opis
                                 </label>
+
                                 <textarea
                                     id="keteringOpis"
                                     name="opis"
@@ -2501,6 +2271,7 @@ function UpravljanjePonudomPage() {
                                     <label htmlFor="keteringCena">
                                         Cena usluge
                                     </label>
+
                                     <input
                                         id="keteringCena"
                                         name="cena"
@@ -2531,20 +2302,17 @@ function UpravljanjePonudomPage() {
                                             >
                                                 <input
                                                     type="checkbox"
-                                                    checked={
-                                                        keteringFormData.paketIds.includes(
-                                                            paket.paketId,
-                                                        )
-                                                    }
+                                                    checked={keteringFormData.paketIds.includes(
+                                                        paket.paketId,
+                                                    )}
                                                     onChange={() =>
                                                         handleKeteringPaketCheckbox(
                                                             paket.paketId,
                                                         )
                                                     }
                                                 />
-                                                <span>
-                                                    {paket.naziv}
-                                                </span>
+
+                                                <span>{paket.naziv}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -2582,9 +2350,7 @@ function UpravljanjePonudomPage() {
                 <div className="management-modal-overlay">
                     <form
                         className="management-form-modal"
-                        onSubmit={
-                            handleDekoraterskaFirmaSubmit
-                        }
+                        onSubmit={handleDekoraterskaFirmaSubmit}
                     >
                         <div className="management-form-header">
                             <span>
@@ -2600,9 +2366,8 @@ function UpravljanjePonudomPage() {
                             </h2>
 
                             <p>
-                                Unesite podatke o dekoraterskoj
-                                firmi i izaberite pakete u kojima
-                                će biti dostupna.
+                                Unesite podatke o dekoraterskoj firmi i
+                                izaberite pakete u kojima će biti dostupna.
                             </p>
                         </div>
 
@@ -2617,15 +2382,12 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="dekoraterNaziv">
                                     Naziv
                                 </label>
+
                                 <input
                                     id="dekoraterNaziv"
                                     name="naziv"
-                                    value={
-                                        dekoraterskaFirmaFormData.naziv
-                                    }
-                                    onChange={
-                                        handleDekoraterskaFirmaChange
-                                    }
+                                    value={dekoraterskaFirmaFormData.naziv}
+                                    onChange={handleDekoraterskaFirmaChange}
                                     required
                                 />
                             </div>
@@ -2634,15 +2396,12 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="dekoraterTelefon">
                                     Telefon
                                 </label>
+
                                 <input
                                     id="dekoraterTelefon"
                                     name="telefon"
-                                    value={
-                                        dekoraterskaFirmaFormData.telefon
-                                    }
-                                    onChange={
-                                        handleDekoraterskaFirmaChange
-                                    }
+                                    value={dekoraterskaFirmaFormData.telefon}
+                                    onChange={handleDekoraterskaFirmaChange}
                                     required
                                 />
                             </div>
@@ -2651,15 +2410,12 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="dekoraterPortfolio">
                                     Portfolio
                                 </label>
+
                                 <input
                                     id="dekoraterPortfolio"
                                     name="portfolio"
-                                    value={
-                                        dekoraterskaFirmaFormData.portfolio
-                                    }
-                                    onChange={
-                                        handleDekoraterskaFirmaChange
-                                    }
+                                    value={dekoraterskaFirmaFormData.portfolio}
+                                    onChange={handleDekoraterskaFirmaChange}
                                     placeholder="https://..."
                                 />
                             </div>
@@ -2668,16 +2424,13 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="dekoraterOpis">
                                     Opis
                                 </label>
+
                                 <textarea
                                     id="dekoraterOpis"
                                     name="opis"
                                     rows="4"
-                                    value={
-                                        dekoraterskaFirmaFormData.opis
-                                    }
-                                    onChange={
-                                        handleDekoraterskaFirmaChange
-                                    }
+                                    value={dekoraterskaFirmaFormData.opis}
+                                    onChange={handleDekoraterskaFirmaChange}
                                 />
                             </div>
 
@@ -2686,6 +2439,7 @@ function UpravljanjePonudomPage() {
                                     <label htmlFor="dekoraterCena">
                                         Cena usluge
                                     </label>
+
                                     <input
                                         id="dekoraterCena"
                                         name="cena"
@@ -2693,12 +2447,8 @@ function UpravljanjePonudomPage() {
                                         min="1"
                                         max="99999"
                                         step="1"
-                                        value={
-                                            dekoraterskaFirmaFormData.cena
-                                        }
-                                        onChange={
-                                            handleDekoraterskaFirmaChange
-                                        }
+                                        value={dekoraterskaFirmaFormData.cena}
+                                        onChange={handleDekoraterskaFirmaChange}
                                         required
                                     />
                                 </div>
@@ -2715,20 +2465,17 @@ function UpravljanjePonudomPage() {
                                         >
                                             <input
                                                 type="checkbox"
-                                                checked={
-                                                    dekoraterskaFirmaFormData.paketIds.includes(
-                                                        paket.paketId,
-                                                    )
-                                                }
+                                                checked={dekoraterskaFirmaFormData.paketIds.includes(
+                                                    paket.paketId,
+                                                )}
                                                 onChange={() =>
                                                     handleDekoraterskaFirmaPaketCheckbox(
                                                         paket.paketId,
                                                     )
                                                 }
                                             />
-                                            <span>
-                                                {paket.naziv}
-                                            </span>
+
+                                            <span>{paket.naziv}</span>
                                         </label>
                                     ))}
                                 </div>
@@ -2740,9 +2487,7 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-secondary-button"
                                 disabled={isSaving}
-                                onClick={
-                                    handleOdustaniDekoraterskaFirma
-                                }
+                                onClick={handleOdustaniDekoraterskaFirma}
                             >
                                 Odustani
                             </button>
@@ -2771,9 +2516,7 @@ function UpravljanjePonudomPage() {
                     >
                         <div className="management-form-header">
                             <span>
-                                {fotografZaIzmenu
-                                    ? 'Izmena'
-                                    : 'Dodavanje'}
+                                {fotografZaIzmenu ? 'Izmena' : 'Dodavanje'}
                             </span>
 
                             <h2>
@@ -2783,9 +2526,8 @@ function UpravljanjePonudomPage() {
                             </h2>
 
                             <p>
-                                Unesite podatke o fotografu i
-                                izaberite pakete u kojima će biti
-                                dostupan.
+                                Unesite podatke o fotografu i izaberite pakete
+                                u kojima će biti dostupan.
                             </p>
                         </div>
 
@@ -2800,6 +2542,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="fotografNaziv">
                                     Naziv
                                 </label>
+
                                 <input
                                     id="fotografNaziv"
                                     name="naziv"
@@ -2813,6 +2556,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="fotografTelefon">
                                     Telefon
                                 </label>
+
                                 <input
                                     id="fotografTelefon"
                                     name="telefon"
@@ -2826,6 +2570,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="fotografPortfolio">
                                     Portfolio
                                 </label>
+
                                 <input
                                     id="fotografPortfolio"
                                     name="portfolio"
@@ -2839,6 +2584,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="cenaFoto">
                                     Cena jedne fotografije
                                 </label>
+
                                 <input
                                     id="cenaFoto"
                                     name="cenaFoto"
@@ -2856,6 +2602,7 @@ function UpravljanjePonudomPage() {
                                     <label htmlFor="fotografCena">
                                         Cena usluge
                                     </label>
+
                                     <input
                                         id="fotografCena"
                                         name="cena"
@@ -2874,6 +2621,7 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="tipFoto">
                                     Tip usluge
                                 </label>
+
                                 <select
                                     id="tipFoto"
                                     name="tipFoto"
@@ -2884,6 +2632,7 @@ function UpravljanjePonudomPage() {
                                     <option value="FOTOGRAFIJA">
                                         Fotografija
                                     </option>
+
                                     <option value="FOTOGRAFIJA_SNIMANJE">
                                         Fotografija i snimanje
                                     </option>
@@ -2901,20 +2650,17 @@ function UpravljanjePonudomPage() {
                                         >
                                             <input
                                                 type="checkbox"
-                                                checked={
-                                                    fotografFormData.paketIds.includes(
-                                                        paket.paketId,
-                                                    )
-                                                }
+                                                checked={fotografFormData.paketIds.includes(
+                                                    paket.paketId,
+                                                )}
                                                 onChange={() =>
                                                     handleFotografPaketCheckbox(
                                                         paket.paketId,
                                                     )
                                                 }
                                             />
-                                            <span>
-                                                {paket.naziv}
-                                            </span>
+
+                                            <span>{paket.naziv}</span>
                                         </label>
                                     ))}
                                 </div>
@@ -2951,9 +2697,7 @@ function UpravljanjePonudomPage() {
                 <div className="management-modal-overlay">
                     <form
                         className="management-form-modal"
-                        onSubmit={
-                            handleMuzickiIzvodjacSubmit
-                        }
+                        onSubmit={handleMuzickiIzvodjacSubmit}
                     >
                         <div className="management-form-header">
                             <span>
@@ -2969,9 +2713,8 @@ function UpravljanjePonudomPage() {
                             </h2>
 
                             <p>
-                                Unesite podatke o muzičkom izvođaču
-                                i izaberite pakete u kojima će biti
-                                dostupan.
+                                Unesite podatke o muzičkom izvođaču i izaberite
+                                pakete u kojima će biti dostupan.
                             </p>
                         </div>
 
@@ -2986,15 +2729,12 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="muzicarNaziv">
                                     Naziv
                                 </label>
+
                                 <input
                                     id="muzicarNaziv"
                                     name="naziv"
-                                    value={
-                                        muzickiIzvodjacFormData.naziv
-                                    }
-                                    onChange={
-                                        handleMuzickiIzvodjacChange
-                                    }
+                                    value={muzickiIzvodjacFormData.naziv}
+                                    onChange={handleMuzickiIzvodjacChange}
                                     required
                                 />
                             </div>
@@ -3003,15 +2743,12 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="muzicarTelefon">
                                     Telefon
                                 </label>
+
                                 <input
                                     id="muzicarTelefon"
                                     name="telefon"
-                                    value={
-                                        muzickiIzvodjacFormData.telefon
-                                    }
-                                    onChange={
-                                        handleMuzickiIzvodjacChange
-                                    }
+                                    value={muzickiIzvodjacFormData.telefon}
+                                    onChange={handleMuzickiIzvodjacChange}
                                     required
                                 />
                             </div>
@@ -3020,15 +2757,12 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="muzicarPortfolio">
                                     Portfolio
                                 </label>
+
                                 <input
                                     id="muzicarPortfolio"
                                     name="portfolio"
-                                    value={
-                                        muzickiIzvodjacFormData.portfolio
-                                    }
-                                    onChange={
-                                        handleMuzickiIzvodjacChange
-                                    }
+                                    value={muzickiIzvodjacFormData.portfolio}
+                                    onChange={handleMuzickiIzvodjacChange}
                                     placeholder="https://..."
                                 />
                             </div>
@@ -3037,15 +2771,12 @@ function UpravljanjePonudomPage() {
                                 <label htmlFor="tipMuzicara">
                                     Tip izvođača
                                 </label>
+
                                 <input
                                     id="tipMuzicara"
                                     name="tipMuzicara"
-                                    value={
-                                        muzickiIzvodjacFormData.tipMuzicara
-                                    }
-                                    onChange={
-                                        handleMuzickiIzvodjacChange
-                                    }
+                                    value={muzickiIzvodjacFormData.tipMuzicara}
+                                    onChange={handleMuzickiIzvodjacChange}
                                     required
                                 />
                             </div>
@@ -3055,6 +2786,7 @@ function UpravljanjePonudomPage() {
                                     <label htmlFor="muzicarCena">
                                         Cena usluge
                                     </label>
+
                                     <input
                                         id="muzicarCena"
                                         name="cena"
@@ -3062,12 +2794,8 @@ function UpravljanjePonudomPage() {
                                         min="1"
                                         max="99999"
                                         step="1"
-                                        value={
-                                            muzickiIzvodjacFormData.cena
-                                        }
-                                        onChange={
-                                            handleMuzickiIzvodjacChange
-                                        }
+                                        value={muzickiIzvodjacFormData.cena}
+                                        onChange={handleMuzickiIzvodjacChange}
                                         required
                                     />
                                 </div>
@@ -3084,20 +2812,17 @@ function UpravljanjePonudomPage() {
                                         >
                                             <input
                                                 type="checkbox"
-                                                checked={
-                                                    muzickiIzvodjacFormData.paketIds.includes(
-                                                        paket.paketId,
-                                                    )
-                                                }
+                                                checked={muzickiIzvodjacFormData.paketIds.includes(
+                                                    paket.paketId,
+                                                )}
                                                 onChange={() =>
                                                     handleMuzickiIzvodjacPaketCheckbox(
                                                         paket.paketId,
                                                     )
                                                 }
                                             />
-                                            <span>
-                                                {paket.naziv}
-                                            </span>
+
+                                            <span>{paket.naziv}</span>
                                         </label>
                                     ))}
                                 </div>
@@ -3109,9 +2834,7 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-secondary-button"
                                 disabled={isSaving}
-                                onClick={
-                                    handleOdustaniMuzickiIzvodjac
-                                }
+                                onClick={handleOdustaniMuzickiIzvodjac}
                             >
                                 Odustani
                             </button>
@@ -3135,18 +2858,13 @@ function UpravljanjePonudomPage() {
             {salaZaBrisanje && (
                 <div className="management-modal-overlay">
                     <div className="management-confirm-modal">
-                        <div className="management-confirm-icon">
-                            !
-                        </div>
+                        <div className="management-confirm-icon">!</div>
 
                         <h2>Brisanje sale</h2>
 
                         <p>
                             Da li ste sigurni da želite da obrišete{' '}
-                            <strong>
-                                Salu {salaZaBrisanje.rbrS}
-                            </strong>
-                            ?
+                            <strong>Salu {salaZaBrisanje.rbrS}</strong>?
                         </p>
 
                         {actionError && (
@@ -3174,9 +2892,7 @@ function UpravljanjePonudomPage() {
                                 disabled={deleteLoading}
                                 onClick={handleObrisiSalu}
                             >
-                                {deleteLoading
-                                    ? 'Brisanje...'
-                                    : 'Obriši'}
+                                {deleteLoading ? 'Brisanje...' : 'Obriši'}
                             </button>
                         </div>
                     </div>
@@ -3186,19 +2902,13 @@ function UpravljanjePonudomPage() {
             {paketZaBrisanje && (
                 <div className="management-modal-overlay">
                     <div className="management-confirm-modal">
-                        <div className="management-confirm-icon">
-                            !
-                        </div>
+                        <div className="management-confirm-icon">!</div>
 
                         <h2>Brisanje paketa</h2>
 
                         <p>
-                            Da li ste sigurni da želite da obrišete
-                            paket{' '}
-                            <strong>
-                                {paketZaBrisanje.naziv}
-                            </strong>
-                            ?
+                            Da li ste sigurni da želite da obrišete paket{' '}
+                            <strong>{paketZaBrisanje.naziv}</strong>?
                         </p>
 
                         {actionError && (
@@ -3238,17 +2948,13 @@ function UpravljanjePonudomPage() {
             {keteringZaBrisanje && (
                 <div className="management-modal-overlay">
                     <div className="management-confirm-modal">
-                        <div className="management-confirm-icon">
-                            !
-                        </div>
+                        <div className="management-confirm-icon">!</div>
 
                         <h2>Brisanje ketering firme</h2>
 
                         <p>
                             Da li ste sigurni da želite da uklonite{' '}
-                            <strong>
-                                {keteringZaBrisanje.naziv}
-                            </strong>{' '}
+                            <strong>{keteringZaBrisanje.naziv}</strong>{' '}
                             iz ponude restorana?
                         </p>
 
@@ -3277,9 +2983,7 @@ function UpravljanjePonudomPage() {
                                 disabled={deleteLoading}
                                 onClick={handleObrisiKetering}
                             >
-                                {deleteLoading
-                                    ? 'Brisanje...'
-                                    : 'Obriši'}
+                                {deleteLoading ? 'Brisanje...' : 'Obriši'}
                             </button>
                         </div>
                     </div>
@@ -3289,18 +2993,14 @@ function UpravljanjePonudomPage() {
             {dekoraterskaFirmaZaBrisanje && (
                 <div className="management-modal-overlay">
                     <div className="management-confirm-modal">
-                        <div className="management-confirm-icon">
-                            !
-                        </div>
+                        <div className="management-confirm-icon">!</div>
 
                         <h2>Brisanje dekoraterske firme</h2>
 
                         <p>
                             Da li ste sigurni da želite da uklonite{' '}
                             <strong>
-                                {
-                                    dekoraterskaFirmaZaBrisanje.naziv
-                                }
+                                {dekoraterskaFirmaZaBrisanje.naziv}
                             </strong>{' '}
                             iz ponude restorana?
                         </p>
@@ -3317,9 +3017,7 @@ function UpravljanjePonudomPage() {
                                 className="management-secondary-button"
                                 disabled={deleteLoading}
                                 onClick={() => {
-                                    setDekoraterskaFirmaZaBrisanje(
-                                        null,
-                                    );
+                                    setDekoraterskaFirmaZaBrisanje(null);
                                     setActionError('');
                                 }}
                             >
@@ -3330,13 +3028,9 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-danger-button"
                                 disabled={deleteLoading}
-                                onClick={
-                                    handleObrisiDekoraterskuFirmu
-                                }
+                                onClick={handleObrisiDekoraterskuFirmu}
                             >
-                                {deleteLoading
-                                    ? 'Brisanje...'
-                                    : 'Obriši'}
+                                {deleteLoading ? 'Brisanje...' : 'Obriši'}
                             </button>
                         </div>
                     </div>
@@ -3346,17 +3040,13 @@ function UpravljanjePonudomPage() {
             {fotografZaBrisanje && (
                 <div className="management-modal-overlay">
                     <div className="management-confirm-modal">
-                        <div className="management-confirm-icon">
-                            !
-                        </div>
+                        <div className="management-confirm-icon">!</div>
 
                         <h2>Brisanje fotografa</h2>
 
                         <p>
                             Da li ste sigurni da želite da uklonite{' '}
-                            <strong>
-                                {fotografZaBrisanje.naziv}
-                            </strong>{' '}
+                            <strong>{fotografZaBrisanje.naziv}</strong>{' '}
                             iz ponude restorana?
                         </p>
 
@@ -3385,9 +3075,7 @@ function UpravljanjePonudomPage() {
                                 disabled={deleteLoading}
                                 onClick={handleObrisiFotograf}
                             >
-                                {deleteLoading
-                                    ? 'Brisanje...'
-                                    : 'Obriši'}
+                                {deleteLoading ? 'Brisanje...' : 'Obriši'}
                             </button>
                         </div>
                     </div>
@@ -3397,18 +3085,14 @@ function UpravljanjePonudomPage() {
             {muzickiIzvodjacZaBrisanje && (
                 <div className="management-modal-overlay">
                     <div className="management-confirm-modal">
-                        <div className="management-confirm-icon">
-                            !
-                        </div>
+                        <div className="management-confirm-icon">!</div>
 
                         <h2>Brisanje muzičkog izvođača</h2>
 
                         <p>
                             Da li ste sigurni da želite da uklonite{' '}
                             <strong>
-                                {
-                                    muzickiIzvodjacZaBrisanje.naziv
-                                }
+                                {muzickiIzvodjacZaBrisanje.naziv}
                             </strong>{' '}
                             iz ponude restorana?
                         </p>
@@ -3425,9 +3109,7 @@ function UpravljanjePonudomPage() {
                                 className="management-secondary-button"
                                 disabled={deleteLoading}
                                 onClick={() => {
-                                    setMuzickiIzvodjacZaBrisanje(
-                                        null,
-                                    );
+                                    setMuzickiIzvodjacZaBrisanje(null);
                                     setActionError('');
                                 }}
                             >
@@ -3438,13 +3120,9 @@ function UpravljanjePonudomPage() {
                                 type="button"
                                 className="management-danger-button"
                                 disabled={deleteLoading}
-                                onClick={
-                                    handleObrisiMuzickogIzvodjaca
-                                }
+                                onClick={handleObrisiMuzickogIzvodjaca}
                             >
-                                {deleteLoading
-                                    ? 'Brisanje...'
-                                    : 'Obriši'}
+                                {deleteLoading ? 'Brisanje...' : 'Obriši'}
                             </button>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
-﻿import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import { useState } from 'react'; //komponenta pomocu koje pamtimo stanje neko i  mozemo ga menjati
+import { useNavigate } from 'react-router-dom'; //navigacija izmedju stranica
 import { login } from '../api/AuthApi';
 import './LoginPage.css';
 
@@ -25,7 +25,8 @@ function LoginPage() {
         useState(false);
 
     async function handleSubmit(event) {
-        event.preventDefault();
+        event.preventDefault();//html sam kad se stisne dugme hoce da osvezi a u reactu to necemo, jer rucno hoce
+                                // da obavi sta je potrebno
 
         setError('');
 
@@ -62,7 +63,7 @@ function LoginPage() {
                     lozinka,
                 );
 
-            localStorage.setItem(
+            localStorage.setItem( //localStorage-memorija browsera
                 'token',
                 result.token,
             );
