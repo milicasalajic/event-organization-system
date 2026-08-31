@@ -1,5 +1,6 @@
 ﻿import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import './UserMenu.css';
 
 function UserMenu() {
@@ -16,6 +17,8 @@ function UserMenu() {
     }
 
     const korisnik = JSON.parse(korisnikJson);
+
+    const jeKlijent = korisnik.uloga === 'KLIJENT';
 
     const inicijali =
         `${korisnik.ime?.[0] ?? ''}${korisnik.prezime?.[0] ?? ''}`
@@ -49,6 +52,11 @@ function UserMenu() {
         navigate('/profil');
     }
 
+    function handleRezervacije() {
+        setIsOpen(false);
+        navigate('/moje-rezervacije');
+    }
+
     function handleLogout() {
         localStorage.removeItem('token');
         localStorage.removeItem('korisnik');
@@ -80,8 +88,7 @@ function UserMenu() {
                 <div className="user-dropdown">
                     <div className="user-dropdown-header">
                         <strong>
-                            {korisnik.ime}{' '}
-                            {korisnik.prezime}
+                            {korisnik.ime} {korisnik.prezime}
                         </strong>
 
                         <span>
@@ -94,10 +101,17 @@ function UserMenu() {
                             type="button"
                             onClick={handleProfil}
                         >
-                      
-
                             Moj profil
                         </button>
+
+                        {jeKlijent && (
+                            <button
+                                type="button"
+                                onClick={handleRezervacije}
+                            >
+                                Moje rezervacije
+                            </button>
+                        )}
 
                         <button
                             type="button"
@@ -114,7 +128,6 @@ function UserMenu() {
                 </div>
             )}
         </div>
-
     );
 }
 

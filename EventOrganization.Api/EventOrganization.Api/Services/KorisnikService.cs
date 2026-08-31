@@ -174,4 +174,50 @@ public class KorisnikService
             Email = korisnik.Email
         };
     }
+    public async Task IzmeniLozinku(
+    decimal korisnikId,
+    IzmenaLozinkeDto request,
+    CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.TrenutnaLozinka) ||
+            string.IsNullOrWhiteSpace(request.NovaLozinka) ||
+            string.IsNullOrWhiteSpace(request.PonovljenaLozinka))
+        {
+            throw new ArgumentException(
+                "Sva polja za promenu lozinke su obavezna.");
+        }
+
+        if (request.NovaLozinka != request.PonovljenaLozinka)
+        {
+            throw new ArgumentException(
+                "Nova lozinka i ponovljena lozinka se ne podudaraju.");
+        }
+
+        var korisnik = await _korisnikRepository.GetById(
+            korisnikId,
+            cancellationToken);
+
+        if (korisnik is null)
+        {
+            throw new InvalidOperationException(
+                "Korisnik nije pronađen.");
+        }
+
+        var rezultat = _passwordHasher.VerifyHashedPassword(
+            korisnik,
+            korisnik.Lozinka,
+            request.TrenutnaLozinka);
+
+        if (rezultat == PasswordVerificationResult.Failed)
+        {
+            throw new ArgumentException(
+                "Trenutna lozinka nije ispravna.");
+        }
+
+        korisnik.Lozinka = _passwordHasher.HashPassword(
+            korisnik,
+            request.NovaLozinka);
+
+        await _korisnikRepository.SaveChanges(cancellationToken);
+    }
 }

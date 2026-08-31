@@ -99,4 +99,35 @@ public class KorisnikController : ControllerBase
             return BadRequest(exception.Message);
         }
     }
+    [Authorize]
+    [HttpPut("lozinka")]
+    public async Task<IActionResult> IzmeniLozinku(
+    IzmenaLozinkeDto request,
+    CancellationToken cancellationToken)
+    {
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            await _korisnikService.IzmeniLozinku(
+                korisnikId,
+                request,
+                cancellationToken);
+
+            return NoContent();
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+    }
 }
