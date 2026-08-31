@@ -50,9 +50,9 @@ public class RezervacijaService
     }
 
     public async Task<RezervacijaDetaljiDto?> GetDetalji(
-        decimal restoranId,
-        decimal rezervacijaId,
-        CancellationToken cancellationToken = default)
+    decimal restoranId,
+    decimal rezervacijaId,
+    CancellationToken cancellationToken = default)
     {
         var rezervacija = await _rezervacijaRepository.GetDetalji(
             restoranId,
@@ -73,9 +73,11 @@ public class RezervacijaService
             TelefonKlijenta = rezervacija.Korisnik.Korisnik.Telefon,
             PaketId = rezervacija.PaketId,
             NazivPaketa = rezervacija.Paket.Naziv,
+
             TipoviDogadjaja = rezervacija.TipoviDogadjaja
                 .Select(tip => tip.Tip.ToString())
                 .ToList(),
+
             BrGostiju = rezervacija.BrGostiju,
             Opis = rezervacija.Opis,
             Napomena = rezervacija.Napomena,
@@ -83,12 +85,81 @@ public class RezervacijaService
             VremeZavrsetka = rezervacija.VremeZavrsetka,
             VremeKreiranja = rezervacija.VremeKreiranja,
             Status = rezervacija.StatusRez.ToString(),
+
             DodatneUsluge = rezervacija.StavkeRezervacije
-                .Select(stavka => stavka.Usluga.NazivU)
+                .Select(stavka => new RezervacijaUslugaDto
+                {
+                    StavkaId = stavka.StavkaId,
+                    UslugaId = stavka.UslugaId,
+                    Naziv = stavka.Usluga.NazivU,
+                    TipUsluge = stavka.TipStavke.ToString()
+                })
                 .ToList(),
+
             SalaId = rezervacija.SalaId,
             RbrSSale = rezervacija.Sala?.RbrS
         };
+    }
+    public async Task<RezervacijaDetaljiDto?> ZameniUslugu(
+    decimal restoranId,
+    decimal rezervacijaId,
+    decimal stavkaId,
+    decimal novaUslugaId,
+    CancellationToken cancellationToken = default)
+    {
+        var rezervacija = await _rezervacijaRepository.GetForUpdateSaUslugama(
+            restoranId,
+            rezervacijaId,
+            cancellationToken);
+
+        if (rezervacija is null)
+        {
+            return null;
+        }
+
+        if (rezervacija.StatusRez != StatusRez.POSLATA)
+        {
+            throw new InvalidOperationException(
+                "Dodatne usluge je moguće menjati samo dok je rezervacija u statusu poslata.");
+        }
+
+        var stavka = rezervacija.StavkeRezervacije
+            .FirstOrDefault(stavka => stavka.StavkaId == stavkaId);
+
+        if (stavka is null)
+        {
+            throw new ArgumentException(
+                "Izabrana stavka rezervacije nije pronađena.");
+        }
+
+        var noveUsluge = await _uslugaRepository.GetZaRezervaciju(
+            restoranId,
+            rezervacija.PaketId,
+            new List<decimal> { novaUslugaId },
+            cancellationToken);
+
+        var novaUsluga = noveUsluge.FirstOrDefault();
+
+        if (novaUsluga is null)
+        {
+            throw new ArgumentException(
+                "Izabrana usluga ne pripada paketu ove rezervacije.");
+        }
+
+        if (novaUsluga.TipUsluge != stavka.TipStavke)
+        {
+            throw new ArgumentException(
+                "Izabrana usluga mora biti istog tipa kao usluga koju menjate.");
+        }
+
+        stavka.UslugaId = novaUsluga.UslugaId;
+
+        await _rezervacijaRepository.SaveChanges(cancellationToken);
+
+        return await GetDetalji(
+            restoranId,
+            rezervacijaId,
+            cancellationToken);
     }
 
     public async Task<RezervacijaDetaljiDto?> ObradiRezervaciju(

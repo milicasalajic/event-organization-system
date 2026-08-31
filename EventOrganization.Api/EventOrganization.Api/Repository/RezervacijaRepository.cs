@@ -299,4 +299,19 @@ public class RezervacijaRepository
             .ToListAsync(
                 cancellationToken);
     }
+    public Task<Rezervacija?> GetForUpdateSaUslugama(
+    decimal restoranId,
+    decimal rezervacijaId,
+    CancellationToken cancellationToken = default)
+    {
+        return _context.Rezervacije
+            .Include(rezervacija => rezervacija.Paket)
+            .Include(rezervacija => rezervacija.StavkeRezervacije)
+                .ThenInclude(stavka => stavka.Usluga)
+            .FirstOrDefaultAsync(
+                rezervacija =>
+                    rezervacija.RezervacijaId == rezervacijaId &&
+                    rezervacija.Paket.RestoranId == restoranId,
+                cancellationToken);
+    }
 }

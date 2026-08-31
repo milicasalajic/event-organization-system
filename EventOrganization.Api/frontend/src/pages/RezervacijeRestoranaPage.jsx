@@ -2,10 +2,13 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getRestoranById } from '../api/restoranApi';
+import { getUslugeByPaketId } from '../api/uslugaApi';
+
 import {
     getRezervacijeByRestoranId,
     getRezervacijaDetalji,
     obradiRezervaciju,
+    zameniUslugu,
 } from '../api/PregledRezervacijaApi';
 
 import './RezervacijeRestoranaPage.css';
@@ -24,12 +27,12 @@ function formatVreme(value) {
     }
 
     return new Date(value).toLocaleTimeString('sr-RS', {
-        hour: '2-digit', //formatiranje datuma 27.8.2026.
+        hour: '2-digit',
         minute: '2-digit',
     });
 }
 
-function formatDatumIVreme(value) { //istto smamo i vreme
+function formatDatumIVreme(value) {
     if (!value) {
         return '-';
     }
@@ -67,7 +70,18 @@ function formatTipDogadjaja(value) {
     return nazivi[value] ?? formatEnumValue(value);
 }
 
-function getStatusClass(status) { //za css
+function formatTipUsluge(value) {
+    const nazivi = {
+        KETERING: 'Ketering',
+        FOTOGRAF: 'Fotograf',
+        DEKORATER: 'Dekorater',
+        MUZICKI_IZVODJAC: 'Muzički izvođač',
+    };
+
+    return nazivi[value] ?? formatEnumValue(value);
+}
+
+function getStatusClass(status) {
     if (!status) {
         return '';
     }
@@ -89,6 +103,14 @@ function PregledRezervacijaRestoranaPage() {
     const [detaljiLoading, setDetaljiLoading] = useState({});
     const [detaljiError, setDetaljiError] = useState({});
 
+    const [uslugePaketaPoRezervaciji, setUslugePaketaPoRezervaciji] =
+        useState({});
+    const [uslugePaketaLoading, setUslugePaketaLoading] = useState({});
+    const [uslugePaketaError, setUslugePaketaError] = useState({});
+
+    const [zamenaUslugeLoading, setZamenaUslugeLoading] = useState(null);
+    const [zamenaUslugeError, setZamenaUslugeError] = useState({});
+
     const [otvorenaObradaId, setOtvorenaObradaId] = useState(null);
     const [obradaLoadingId, setObradaLoadingId] = useState(null);
     const [obradaError, setObradaError] = useState({});
@@ -102,10 +124,7 @@ function PregledRezervacijaRestoranaPage() {
             setError('');
 
             try {
-                const [
-                    restoranResult,
-                    rezervacijeResult,
-                ] = await Promise.all([//saljes istovremenno dva zahteva
+                const [restoranResult, rezervacijeResult] = await Promise.all([
                     getRestoranById(restoranId),
                     getRezervacijeByRestoranId(restoranId),
                 ]);
@@ -122,8 +141,42 @@ function PregledRezervacijaRestoranaPage() {
         loadPage();
     }, [restoranId]);
 
+    async function ucitajUslugePaketa(rezervacijaId, paketId) {
+        setUslugePaketaLoading((prev) => ({
+            ...prev,
+            [rezervacijaId]: true,
+        }));
+
+        setUslugePaketaError((prev) => ({
+            ...prev,
+            [rezervacijaId]: '',
+        }));
+
+        try {
+            const usluge = await getUslugeByPaketId(
+                restoranId,
+                paketId,
+            );
+
+            setUslugePaketaPoRezervaciji((prev) => ({
+                ...prev,
+                [rezervacijaId]: usluge,
+            }));
+        } catch (error) {
+            setUslugePaketaError((prev) => ({
+                ...prev,
+                [rezervacijaId]: error.message,
+            }));
+        } finally {
+            setUslugePaketaLoading((prev) => ({
+                ...prev,
+                [rezervacijaId]: false,
+            }));
+        }
+    }
+
     async function handleRezervacijaClick(rezervacijaId) {
-        if (aktivnaRezervacijaId === rezervacijaId) {//ako je vec otvorena, zatvori rezervaciju
+        if (aktivnaRezervacijaId === rezervacijaId) {
             setAktivnaRezervacijaId(null);
             setOtvorenaObradaId(null);
             return;
@@ -132,7 +185,19 @@ function PregledRezervacijaRestoranaPage() {
         setAktivnaRezervacijaId(rezervacijaId);
         setOtvorenaObradaId(null);
 
-        if (detaljiPoRezervaciji[rezervacijaId]) {
+        const postojeciDetalji = detaljiPoRezervaciji[rezervacijaId];
+
+        if (postojeciDetalji) {
+            if (
+                postojeciDetalji.status === 'POSLATA' &&
+                !uslugePaketaPoRezervaciji[rezervacijaId]
+            ) {
+                await ucitajUslugePaketa(
+                    rezervacijaId,
+                    postojeciDetalji.paketId,
+                );
+            }
+
             return;
         }
 
@@ -156,6 +221,13 @@ function PregledRezervacijaRestoranaPage() {
                 ...prev,
                 [rezervacijaId]: detalji,
             }));
+
+            if (detalji.status === 'POSLATA') {
+                await ucitajUslugePaketa(
+                    rezervacijaId,
+                    detalji.paketId,
+                );
+            }
         } catch (error) {
             setDetaljiError((prev) => ({
                 ...prev,
@@ -166,6 +238,47 @@ function PregledRezervacijaRestoranaPage() {
                 ...prev,
                 [rezervacijaId]: false,
             }));
+        }
+    }
+
+    async function handleZamenaUsluge(
+        rezervacijaId,
+        stavkaId,
+        trenutnaUslugaId,
+        novaUslugaId,
+    ) {
+        if (Number(trenutnaUslugaId) === Number(novaUslugaId)) {
+            return;
+        }
+
+        const loadingKey = `${rezervacijaId}-${stavkaId}`;
+
+        setZamenaUslugeLoading(loadingKey);
+
+        setZamenaUslugeError((prev) => ({
+            ...prev,
+            [rezervacijaId]: '',
+        }));
+
+        try {
+            const rezultat = await zameniUslugu(
+                restoranId,
+                rezervacijaId,
+                stavkaId,
+                novaUslugaId,
+            );
+
+            setDetaljiPoRezervaciji((prev) => ({
+                ...prev,
+                [rezervacijaId]: rezultat,
+            }));
+        } catch (error) {
+            setZamenaUslugeError((prev) => ({
+                ...prev,
+                [rezervacijaId]: error.message,
+            }));
+        } finally {
+            setZamenaUslugeLoading(null);
         }
     }
 
@@ -237,11 +350,7 @@ function PregledRezervacijaRestoranaPage() {
                 <button
                     type="button"
                     className="nazad-button"
-                    onClick={() =>
-                        navigate(
-                            `/restorani/${restoranId}`,
-                        )
-                    }
+                    onClick={() => navigate(`/restorani/${restoranId}`)}
                 >
                     ← Nazad na restoran
                 </button>
@@ -262,9 +371,7 @@ function PregledRezervacijaRestoranaPage() {
 
                 {rezervacije.length === 0 ? (
                     <div className="rezervacije-empty">
-                        <h2>
-                            Trenutno nema rezervacija
-                        </h2>
+                        <h2>Trenutno nema rezervacija</h2>
 
                         <p>
                             Za ovaj restoran još uvek nije evidentirana nijedna
@@ -298,6 +405,11 @@ function PregledRezervacijaRestoranaPage() {
                                     const obradaUToku =
                                         obradaLoadingId ===
                                         rezervacija.rezervacijaId;
+
+                                    const uslugePaketa =
+                                        uslugePaketaPoRezervaciji[
+                                        rezervacija.rezervacijaId
+                                        ] ?? [];
 
                                     return (
                                         <Fragment key={rezervacija.rezervacijaId}>
@@ -426,15 +538,11 @@ function PregledRezervacijaRestoranaPage() {
                                                                     <div className="rezervacija-detalji-header">
                                                                         <div>
                                                                             <span className="rezervacija-detalji-kicker">
-                                                                                Detalji
-                                                                                rezervacije
+                                                                                Detalji rezervacije
                                                                             </span>
 
                                                                             <h3>
-                                                                                Rezervacija #
-                                                                                {
-                                                                                    detalji.rezervacijaId
-                                                                                }
+                                                                                Rezervacija #{detalji.rezervacijaId}
                                                                             </h3>
                                                                         </div>
 
@@ -463,8 +571,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                                             )
                                                                                         }
                                                                                     >
-                                                                                        Obrada
-                                                                                        rezervacije
+                                                                                        Obrada rezervacije
                                                                                     </button>
                                                                                 )}
 
@@ -473,9 +580,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                                     <button
                                                                                         type="button"
                                                                                         className="otkazi-rezervaciju-button"
-                                                                                        disabled={
-                                                                                            obradaUToku
-                                                                                        }
+                                                                                        disabled={obradaUToku}
                                                                                         onClick={() =>
                                                                                             handlePromenaStatusa(
                                                                                                 detalji.rezervacijaId,
@@ -496,15 +601,12 @@ function PregledRezervacijaRestoranaPage() {
                                                                             <div className="obrada-rezervacije-panel">
                                                                                 <div>
                                                                                     <h4>
-                                                                                        Obrada
-                                                                                        zahteva
+                                                                                        Obrada zahteva
                                                                                     </h4>
 
                                                                                     <p>
-                                                                                        Izaberite
-                                                                                        odluku za
-                                                                                        ovu
-                                                                                        rezervaciju.
+                                                                                        Izaberite odluku
+                                                                                        za ovu rezervaciju.
                                                                                     </p>
                                                                                 </div>
 
@@ -512,9 +614,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                                     <button
                                                                                         type="button"
                                                                                         className="potvrdi-rezervaciju-button"
-                                                                                        disabled={
-                                                                                            obradaUToku
-                                                                                        }
+                                                                                        disabled={obradaUToku}
                                                                                         onClick={() =>
                                                                                             handlePromenaStatusa(
                                                                                                 detalji.rezervacijaId,
@@ -528,9 +628,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                                     <button
                                                                                         type="button"
                                                                                         className="odbij-rezervaciju-button"
-                                                                                        disabled={
-                                                                                            obradaUToku
-                                                                                        }
+                                                                                        disabled={obradaUToku}
                                                                                         onClick={() =>
                                                                                             handlePromenaStatusa(
                                                                                                 detalji.rezervacijaId,
@@ -544,9 +642,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                                     <button
                                                                                         type="button"
                                                                                         className="otkazi-rezervaciju-button"
-                                                                                        disabled={
-                                                                                            obradaUToku
-                                                                                        }
+                                                                                        disabled={obradaUToku}
                                                                                         onClick={() =>
                                                                                             handlePromenaStatusa(
                                                                                                 detalji.rezervacijaId,
@@ -576,42 +672,29 @@ function PregledRezervacijaRestoranaPage() {
 
                                                                     <div className="rezervacija-detalji-grid">
                                                                         <div className="rezervacija-detalji-sekcija">
-                                                                            <h4>
-                                                                                Klijent
-                                                                            </h4>
+                                                                            <h4>Klijent</h4>
 
                                                                             <div className="detalj-item">
                                                                                 <span>
-                                                                                    Ime i
-                                                                                    prezime
+                                                                                    Ime i prezime
                                                                                 </span>
 
                                                                                 <strong>
-                                                                                    {
-                                                                                        detalji.imeKlijenta
-                                                                                    }{' '}
-                                                                                    {
-                                                                                        detalji.prezimeKlijenta
-                                                                                    }
+                                                                                    {detalji.imeKlijenta}{' '}
+                                                                                    {detalji.prezimeKlijenta}
                                                                                 </strong>
                                                                             </div>
 
                                                                             <div className="detalj-item">
-                                                                                <span>
-                                                                                    Email
-                                                                                </span>
+                                                                                <span>Email</span>
 
                                                                                 <strong>
-                                                                                    {
-                                                                                        detalji.emailKlijenta
-                                                                                    }
+                                                                                    {detalji.emailKlijenta}
                                                                                 </strong>
                                                                             </div>
 
                                                                             <div className="detalj-item">
-                                                                                <span>
-                                                                                    Telefon
-                                                                                </span>
+                                                                                <span>Telefon</span>
 
                                                                                 <strong>
                                                                                     {detalji.telefonKlijenta ||
@@ -621,26 +704,18 @@ function PregledRezervacijaRestoranaPage() {
                                                                         </div>
 
                                                                         <div className="rezervacija-detalji-sekcija">
-                                                                            <h4>
-                                                                                Događaj
-                                                                            </h4>
+                                                                            <h4>Događaj</h4>
 
                                                                             <div className="detalj-item">
-                                                                                <span>
-                                                                                    Paket
-                                                                                </span>
+                                                                                <span>Paket</span>
 
                                                                                 <strong>
-                                                                                    {
-                                                                                        detalji.nazivPaketa
-                                                                                    }
+                                                                                    {detalji.nazivPaketa}
                                                                                 </strong>
                                                                             </div>
 
                                                                             <div className="detalj-item">
-                                                                                <span>
-                                                                                    Sala
-                                                                                </span>
+                                                                                <span>Sala</span>
 
                                                                                 <strong>
                                                                                     {detalji.rbrSSale !=
@@ -652,15 +727,13 @@ function PregledRezervacijaRestoranaPage() {
 
                                                                             <div className="detalj-item">
                                                                                 <span>
-                                                                                    Tip
-                                                                                    događaja
+                                                                                    Tip događaja
                                                                                 </span>
 
                                                                                 <strong>
                                                                                     {detalji
                                                                                         .tipoviDogadjaja
-                                                                                        ?.length >
-                                                                                        0
+                                                                                        ?.length > 0
                                                                                         ? detalji.tipoviDogadjaja
                                                                                             .map(
                                                                                                 (
@@ -679,27 +752,20 @@ function PregledRezervacijaRestoranaPage() {
 
                                                                             <div className="detalj-item">
                                                                                 <span>
-                                                                                    Broj
-                                                                                    gostiju
+                                                                                    Broj gostiju
                                                                                 </span>
 
                                                                                 <strong>
-                                                                                    {
-                                                                                        detalji.brGostiju
-                                                                                    }
+                                                                                    {detalji.brGostiju}
                                                                                 </strong>
                                                                             </div>
                                                                         </div>
 
                                                                         <div className="rezervacija-detalji-sekcija">
-                                                                            <h4>
-                                                                                Termin
-                                                                            </h4>
+                                                                            <h4>Termin</h4>
 
                                                                             <div className="detalj-item">
-                                                                                <span>
-                                                                                    Datum
-                                                                                </span>
+                                                                                <span>Datum</span>
 
                                                                                 <strong>
                                                                                     {formatDatum(
@@ -709,17 +775,13 @@ function PregledRezervacijaRestoranaPage() {
                                                                             </div>
 
                                                                             <div className="detalj-item">
-                                                                                <span>
-                                                                                    Vreme
-                                                                                </span>
+                                                                                <span>Vreme</span>
 
                                                                                 <strong>
                                                                                     {formatVreme(
                                                                                         detalji.vremePocetka,
                                                                                     )}
-                                                                                    {
-                                                                                        ' – '
-                                                                                    }
+                                                                                    {' – '}
                                                                                     {formatVreme(
                                                                                         detalji.vremeZavrsetka,
                                                                                     )}
@@ -727,9 +789,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                             </div>
 
                                                                             <div className="detalj-item">
-                                                                                <span>
-                                                                                    Kreirano
-                                                                                </span>
+                                                                                <span>Kreirano</span>
 
                                                                                 <strong>
                                                                                     {formatDatumIVreme(
@@ -741,35 +801,142 @@ function PregledRezervacijaRestoranaPage() {
 
                                                                         <div className="rezervacija-detalji-sekcija">
                                                                             <h4>
-                                                                                Dodatne
-                                                                                usluge
+                                                                                Dodatne usluge
                                                                             </h4>
 
                                                                             {detalji
                                                                                 .dodatneUsluge
-                                                                                ?.length >
-                                                                                0 ? (
-                                                                                <div className="dodatne-usluge-lista">
+                                                                                ?.length > 0 ? (
+                                                                                <div className="dodatne-usluge-izmena-lista">
                                                                                     {detalji.dodatneUsluge.map(
                                                                                         (
                                                                                             usluga,
-                                                                                        ) => (
-                                                                                            <span
-                                                                                                key={
-                                                                                                    usluga
-                                                                                                }
-                                                                                            >
-                                                                                                {
-                                                                                                    usluga
-                                                                                                }
-                                                                                            </span>
-                                                                                        ),
+                                                                                        ) => {
+                                                                                            const moguceUsluge =
+                                                                                                uslugePaketa.filter(
+                                                                                                    (
+                                                                                                        opcija,
+                                                                                                    ) =>
+                                                                                                        opcija.tipUsluge ===
+                                                                                                        usluga.tipUsluge,
+                                                                                                );
+
+                                                                                            const loadingKey = `${detalji.rezervacijaId}-${usluga.stavkaId}`;
+
+                                                                                            return (
+                                                                                                <div
+                                                                                                    key={
+                                                                                                        usluga.stavkaId
+                                                                                                    }
+                                                                                                    className="dodatna-usluga-izmena"
+                                                                                                >
+                                                                                                    <span className="dodatna-usluga-tip">
+                                                                                                        {formatTipUsluge(
+                                                                                                            usluga.tipUsluge,
+                                                                                                        )}
+                                                                                                    </span>
+
+                                                                                                    {detalji.status ===
+                                                                                                        'POSLATA' ? (
+                                                                                                        <select
+                                                                                                            value={
+                                                                                                                usluga.uslugaId
+                                                                                                            }
+                                                                                                            disabled={
+                                                                                                                uslugePaketaLoading[
+                                                                                                                detalji
+                                                                                                                    .rezervacijaId
+                                                                                                                ] ||
+                                                                                                                zamenaUslugeLoading ===
+                                                                                                                loadingKey
+                                                                                                            }
+                                                                                                            onChange={(
+                                                                                                                event,
+                                                                                                            ) =>
+                                                                                                                handleZamenaUsluge(
+                                                                                                                    detalji.rezervacijaId,
+                                                                                                                    usluga.stavkaId,
+                                                                                                                    usluga.uslugaId,
+                                                                                                                    Number(
+                                                                                                                        event
+                                                                                                                            .target
+                                                                                                                            .value,
+                                                                                                                    ),
+                                                                                                                )
+                                                                                                            }
+                                                                                                        >
+                                                                                                            {moguceUsluge.map(
+                                                                                                                (
+                                                                                                                    opcija,
+                                                                                                                ) => (
+                                                                                                                    <option
+                                                                                                                        key={
+                                                                                                                            opcija.uslugaId
+                                                                                                                        }
+                                                                                                                        value={
+                                                                                                                            opcija.uslugaId
+                                                                                                                        }
+                                                                                                                    >
+                                                                                                                        {
+                                                                                                                            opcija.naziv
+                                                                                                                        }
+                                                                                                                    </option>
+                                                                                                                ),
+                                                                                                            )}
+                                                                                                        </select>
+                                                                                                    ) : (
+                                                                                                        <strong>
+                                                                                                            {
+                                                                                                                usluga.naziv
+                                                                                                            }
+                                                                                                        </strong>
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            );
+                                                                                        },
                                                                                     )}
+
+                                                                                    {uslugePaketaLoading[
+                                                                                        detalji
+                                                                                            .rezervacijaId
+                                                                                    ] && (
+                                                                                            <div className="dodatne-usluge-info">
+                                                                                                Učitavanje
+                                                                                                usluga...
+                                                                                            </div>
+                                                                                        )}
+
+                                                                                    {uslugePaketaError[
+                                                                                        detalji
+                                                                                            .rezervacijaId
+                                                                                    ] && (
+                                                                                            <div className="obrada-rezervacije-error">
+                                                                                                {
+                                                                                                    uslugePaketaError[
+                                                                                                    detalji
+                                                                                                        .rezervacijaId
+                                                                                                    ]
+                                                                                                }
+                                                                                            </div>
+                                                                                        )}
+
+                                                                                    {zamenaUslugeError[
+                                                                                        detalji
+                                                                                            .rezervacijaId
+                                                                                    ] && (
+                                                                                            <div className="obrada-rezervacije-error">
+                                                                                                {
+                                                                                                    zamenaUslugeError[
+                                                                                                    detalji
+                                                                                                        .rezervacijaId
+                                                                                                    ]
+                                                                                                }
+                                                                                            </div>
+                                                                                        )}
                                                                                 </div>
                                                                             ) : (
                                                                                 <div className="nema-dodatnih-usluga">
-                                                                                    Nema
-                                                                                    dodatnih
+                                                                                    Nema dodatnih
                                                                                     usluga.
                                                                                 </div>
                                                                             )}
@@ -778,9 +945,7 @@ function PregledRezervacijaRestoranaPage() {
 
                                                                     <div className="rezervacija-tekstualni-detalji">
                                                                         <div>
-                                                                            <span>
-                                                                                Opis
-                                                                            </span>
+                                                                            <span>Opis</span>
 
                                                                             <p>
                                                                                 {detalji.opis ||
@@ -789,9 +954,7 @@ function PregledRezervacijaRestoranaPage() {
                                                                         </div>
 
                                                                         <div>
-                                                                            <span>
-                                                                                Napomena
-                                                                            </span>
+                                                                            <span>Napomena</span>
 
                                                                             <p>
                                                                                 {detalji.napomena ||

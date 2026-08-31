@@ -135,3 +135,47 @@ export async function obradiRezervaciju(
 
     return response.json();
 }
+export async function zameniUslugu(
+    restoranId,
+    rezervacijaId,
+    stavkaId,
+    novaUslugaId,
+) {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(
+        `${API_URL}/api/Rezervacija/restoran/${restoranId}/${rezervacijaId}/usluge/${stavkaId}?novaUslugaId=${novaUslugaId}`,
+        {
+            method: 'PATCH',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    );
+
+    if (response.status === 400) {
+        const message = await response.text();
+        throw new Error(message);
+    }
+
+    if (response.status === 401) {
+        throw new Error('Niste prijavljeni.');
+    }
+
+    if (response.status === 403) {
+        throw new Error('Nemate pravo da menjate ovu rezervaciju.');
+    }
+
+    if (response.status === 404) {
+        const message = await response.text();
+        throw new Error(message);
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            'Došlo je do greške prilikom zamene usluge.',
+        );
+    }
+
+    return response.json();
+}

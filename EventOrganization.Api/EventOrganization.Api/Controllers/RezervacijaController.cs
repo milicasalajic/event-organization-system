@@ -276,4 +276,55 @@ public class RezervacijaController : ControllerBase
             return BadRequest(exception.Message);
         }
     }
+    [Authorize(Roles = "MENADZER,OPERATER")]
+    [HttpPatch("restoran/{restoranId}/{rezervacijaId}/usluge/{stavkaId}")]
+    public async Task<ActionResult<RezervacijaDetaljiDto>> ZameniUslugu(
+    decimal restoranId,
+    decimal rezervacijaId,
+    decimal stavkaId,
+    decimal novaUslugaId,
+    CancellationToken cancellationToken)
+    {
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
+        {
+            return Unauthorized();
+        }
+
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
+
+        if (!korisnikRadiURestoranu)
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            var rezervacija = await _rezervacijaService.ZameniUslugu(
+                restoranId,
+                rezervacijaId,
+                stavkaId,
+                novaUslugaId,
+                cancellationToken);
+
+            if (rezervacija is null)
+            {
+                return NotFound("Rezervacija nije pronađena.");
+            }
+
+            return Ok(rezervacija);
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+    }
 }
