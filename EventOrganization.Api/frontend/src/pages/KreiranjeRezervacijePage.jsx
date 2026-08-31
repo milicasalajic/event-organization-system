@@ -1,14 +1,16 @@
 ﻿import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { getRestoranById } from '../api/restoranApi';
 import { getPaketiByRestoranId } from '../api/paketApi';
 import { getSaleByPaketId } from '../api/salaApi';
 import { getUslugeByPaketId } from '../api/uslugaApi';
+import { getKlijenti } from '../api/korisnikApi';
 
 import {
     getDostupneSale,
     kreirajRezervaciju,
+    kreirajRezervacijuZaKlijenta,
     obracunajRezervaciju,
 } from '../api/rezervacijaApi';
 
@@ -35,7 +37,7 @@ const tipoviDogadjaja = [
 
 const sati = Array.from(
     { length: 24 },
-    (_, sat) => ({//prvi deo ignorisemo npr value 0 naziv 00:00, taj value je _
+    (_, sat) => ({
         value: sat,
         naziv: `${String(sat).padStart(2, '0')}:00`,
     }),
@@ -87,8 +89,20 @@ function grupisiUsluge(usluge) {
 function KreiranjeRezervacijePage() {
     const { restoranId } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    const noviKlijentId = searchParams.get('klijentId');
+
+    const korisnikJson = localStorage.getItem('korisnik');
+    const korisnik = korisnikJson ? JSON.parse(korisnikJson) : null;
+
+    const jeRadnik =
+        korisnik?.uloga === 'MENADZER' ||
+        korisnik?.uloga === 'OPERATER';
 
     const [restoran, setRestoran] = useState(null);
+    const [klijenti, setKlijenti] = useState([]);
+    const [klijentId, setKlijentId] = useState('');
     const [dostupneSale, setDostupneSale] = useState([]);
     const [paketi, setPaketi] = useState([]);
     const [usluge, setUsluge] = useState([]);
@@ -126,6 +140,15 @@ function KreiranjeRezervacijePage() {
             try {
                 const restoranResult = await getRestoranById(restoranId);
                 setRestoran(restoranResult);
+
+                if (jeRadnik) {
+                    const klijentiResult = await getKlijenti();
+                    setKlijenti(klijentiResult);
+
+                    if (noviKlijentId) {
+                        setKlijentId(noviKlijentId);
+                    }
+                }
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -134,7 +157,19 @@ function KreiranjeRezervacijePage() {
         }
 
         loadPage();
-    }, [restoranId]);
+    }, [restoranId, jeRadnik, noviKlijentId]);
+
+    function handleKlijentChange(event) {
+        const value = event.target.value;
+
+        if (value === 'NOVI_KLIJENT') {
+            navigate(`/restorani/${restoranId}/novi-klijent`);
+            return;
+        }
+
+        setKlijentId(value);
+        setError('');
+    }
 
     function handleOsnovniPodatakChange(event) {
         const { name, value } = event.target;
@@ -180,12 +215,17 @@ function KreiranjeRezervacijePage() {
     async function handlePronadjiSale(event) {
         event.preventDefault();
 
+        if (jeRadnik && !klijentId) {
+            setError('Izaberite klijenta.');
+            return;
+        }
+
         if (!osnovniPodaciPopunjeni()) {
             setError('Popunite sva obavezna polja.');
             return;
         }
 
-        const vremePocetka = napraviDatumVreme(//jer su u formi datum  i sat odvojeni a na bekendu zajedno
+        const vremePocetka = napraviDatumVreme(
             formData.datumPocetka,
             formData.satPocetka,
         );
@@ -212,15 +252,12 @@ function KreiranjeRezervacijePage() {
         }));
 
         try {
-            const saleResult = await getDostupneSale(
-                restoranId,
-                {
-                    tipDogadjaja: Number(formData.tipDogadjaja),
-                    brGostiju: Number(formData.brGostiju),
-                    vremePocetka,
-                    vremeZavrsetka,
-                },
-            );
+            const saleResult = await getDostupneSale(restoranId, {
+                tipDogadjaja: Number(formData.tipDogadjaja),
+                brGostiju: Number(formData.brGostiju),
+                vremePocetka,
+                vremeZavrsetka,
+            });
 
             setDostupneSale(saleResult);
             setSaleProverene(true);
@@ -263,21 +300,14 @@ function KreiranjeRezervacijePage() {
                     );
 
                     const paketJeDostupan = salePaketa.some(
-                        (sala) =>
-                            Number(sala.salaId) === Number(salaId),
+                        (sala) => Number(sala.salaId) === Number(salaId),
                     );
 
-                    return paketJeDostupan
-                        ? paket
-                        : null;
+                    return paketJeDostupan ? paket : null;
                 }),
             );
 
-            setPaketi(
-                proverePaketa.filter(
-                    (paket) => paket !== null,
-                ),
-            );
+            setPaketi(proverePaketa.filter((paket) => paket !== null));
         } catch (error) {
             setError(error.message);
         } finally {
@@ -339,17 +369,14 @@ function KreiranjeRezervacijePage() {
             restoranId: Number(restoranId),
             tipDogadjaja: Number(formData.tipDogadjaja),
             brGostiju: Number(formData.brGostiju),
-
             vremePocetka: napraviDatumVreme(
                 formData.datumPocetka,
                 formData.satPocetka,
             ),
-
             vremeZavrsetka: napraviDatumVreme(
                 formData.datumZavrsetka,
                 formData.satZavrsetka,
             ),
-
             salaId: Number(formData.salaId),
             paketId: Number(formData.paketId),
             uslugaIds: formData.uslugaIds,
@@ -373,10 +400,7 @@ function KreiranjeRezervacijePage() {
         setError('');
 
         try {
-            const rezultat = await obracunajRezervaciju(
-                napraviRequest(),
-            );
-
+            const rezultat = await obracunajRezervaciju(napraviRequest());
             setUkupnaCena(rezultat);
         } catch (error) {
             setError(error.message);
@@ -393,13 +417,24 @@ function KreiranjeRezervacijePage() {
             return;
         }
 
+        if (jeRadnik && !klijentId) {
+            setError('Izaberite klijenta.');
+            return;
+        }
+
         setIsSaving(true);
         setError('');
 
         try {
-            await kreirajRezervaciju(
-                napraviRequest(),
-            );
+            if (jeRadnik) {
+                await kreirajRezervacijuZaKlijenta(
+                    restoranId,
+                    klijentId,
+                    napraviRequest(),
+                );
+            } else {
+                await kreirajRezervaciju(napraviRequest());
+            }
 
             setSuccess(true);
         } catch (error) {
@@ -428,41 +463,35 @@ function KreiranjeRezervacijePage() {
                 <button
                     type="button"
                     className="rezervacija-nazad-button"
-                    onClick={() =>
-                        navigate(
-                            `/restorani/${restoranId}`,
-                        )
-                    }
+                    onClick={() => navigate(`/restorani/${restoranId}`)}
                 >
                     ← Nazad na restoran
                 </button>
 
                 <header className="kreiranje-rezervacije-header">
                     <span>Novi zahtev</span>
-
                     <h1>Rezervacija događaja</h1>
-
                     <p>{restoran?.naziv}</p>
                 </header>
 
                 {success ? (
                     <section className="rezervacija-success">
                         <h2>
-                            Zahtev je uspešno poslat
+                            {jeRadnik
+                                ? 'Rezervacija je uspešno kreirana'
+                                : 'Zahtev je uspešno poslat'}
                         </h2>
 
                         <p>
-                            Zahtev za rezervaciju je uspešno kreiran.
+                            {jeRadnik
+                                ? 'Rezervacija za izabranog klijenta je uspešno kreirana.'
+                                : 'Zahtev za rezervaciju je uspešno kreiran.'}
                         </p>
 
                         <button
                             type="button"
                             className="rezervacija-primary-button"
-                            onClick={() =>
-                                navigate(
-                                    `/restorani/${restoranId}`,
-                                )
-                            }
+                            onClick={() => navigate(`/restorani/${restoranId}`)}
                         >
                             Nazad na restoran
                         </button>
@@ -475,6 +504,49 @@ function KreiranjeRezervacijePage() {
                             </div>
                         )}
 
+                        {jeRadnik && (
+                            <section className="rezervacija-card">
+                                <div className="rezervacija-card-heading">
+                                    <span>Klijent</span>
+                                    <h2>Izaberite klijenta</h2>
+                                    <p>
+                                        Izaberite postojećeg klijenta ili
+                                        registrujte novog.
+                                    </p>
+                                </div>
+
+                                <div className="rezervacija-field rezervacija-full-field">
+                                    <label htmlFor="klijentId">
+                                        Klijent{' '}
+                                        <span className="obavezno">*</span>
+                                    </label>
+
+                                    <select
+                                        id="klijentId"
+                                        value={klijentId}
+                                        onChange={handleKlijentChange}
+                                    >
+                                        <option value="">
+                                            Izaberite klijenta
+                                        </option>
+
+                                        <option value="NOVI_KLIJENT">
+                                            + Dodaj novog klijenta
+                                        </option>
+
+                                        {klijenti.map((klijent) => (
+                                            <option
+                                                key={klijent.korisnikId}
+                                                value={klijent.korisnikId}
+                                            >
+                                                {klijent.ime} {klijent.prezime} - {klijent.email}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </section>
+                        )}
+
                         <form
                             className="rezervacija-card"
                             onSubmit={handlePronadjiSale}
@@ -483,9 +555,7 @@ function KreiranjeRezervacijePage() {
                             <div className="rezervacija-card-heading">
                                 <span>Korak 1</span>
 
-                                <h2>
-                                    Podaci o događaju
-                                </h2>
+                                <h2>Podaci o događaju</h2>
 
                                 <p>
                                     Unesite podatke kako bi sistem pronašao
@@ -497,9 +567,7 @@ function KreiranjeRezervacijePage() {
                                 <div className="rezervacija-field">
                                     <label htmlFor="tipDogadjaja">
                                         Tip događaja{' '}
-                                        <span className="obavezno">
-                                            *
-                                        </span>
+                                        <span className="obavezno">*</span>
                                     </label>
 
                                     <select
@@ -526,9 +594,7 @@ function KreiranjeRezervacijePage() {
                                 <div className="rezervacija-field">
                                     <label htmlFor="brGostiju">
                                         Broj gostiju{' '}
-                                        <span className="obavezno">
-                                            *
-                                        </span>
+                                        <span className="obavezno">*</span>
                                     </label>
 
                                     <input
@@ -547,17 +613,13 @@ function KreiranjeRezervacijePage() {
                             <div className="rezervacija-termini">
                                 <div className="rezervacija-termin-card">
                                     <div className="rezervacija-termin-naslov">
-                                        <h3>
-                                            Početak događaja
-                                        </h3>
+                                        <h3>Početak događaja</h3>
                                     </div>
 
                                     <div className="rezervacija-field">
                                         <label htmlFor="datumPocetka">
                                             Datum{' '}
-                                            <span className="obavezno">
-                                                *
-                                            </span>
+                                            <span className="obavezno">*</span>
                                         </label>
 
                                         <input
@@ -572,9 +634,7 @@ function KreiranjeRezervacijePage() {
                                     <div className="rezervacija-field">
                                         <label htmlFor="satPocetka">
                                             Vreme{' '}
-                                            <span className="obavezno">
-                                                *
-                                            </span>
+                                            <span className="obavezno">*</span>
                                         </label>
 
                                         <select
@@ -601,17 +661,13 @@ function KreiranjeRezervacijePage() {
 
                                 <div className="rezervacija-termin-card">
                                     <div className="rezervacija-termin-naslov">
-                                        <h3>
-                                            Završetak događaja
-                                        </h3>
+                                        <h3>Završetak događaja</h3>
                                     </div>
 
                                     <div className="rezervacija-field">
                                         <label htmlFor="datumZavrsetka">
                                             Datum{' '}
-                                            <span className="obavezno">
-                                                *
-                                            </span>
+                                            <span className="obavezno">*</span>
                                         </label>
 
                                         <input
@@ -626,9 +682,7 @@ function KreiranjeRezervacijePage() {
                                     <div className="rezervacija-field">
                                         <label htmlFor="satZavrsetka">
                                             Vreme{' '}
-                                            <span className="obavezno">
-                                                *
-                                            </span>
+                                            <span className="obavezno">*</span>
                                         </label>
 
                                         <select
@@ -667,13 +721,12 @@ function KreiranjeRezervacijePage() {
                             </div>
                         </form>
 
-                        {saleProverene &&
-                            dostupneSale.length === 0 && (
-                                <div className="rezervacija-info">
-                                    Za izabrani broj gostiju i termin trenutno
-                                    nema dostupnih sala.
-                                </div>
-                            )}
+                        {saleProverene && dostupneSale.length === 0 && (
+                            <div className="rezervacija-info">
+                                Za izabrani broj gostiju i termin trenutno
+                                nema dostupnih sala.
+                            </div>
+                        )}
 
                         {dostupneSale.length > 0 && (
                             <section className="rezervacija-card">
@@ -682,9 +735,7 @@ function KreiranjeRezervacijePage() {
 
                                     <h2>
                                         Izaberite salu{' '}
-                                        <span className="obavezno">
-                                            *
-                                        </span>
+                                        <span className="obavezno">*</span>
                                     </h2>
 
                                     <p>
@@ -742,10 +793,7 @@ function KreiranjeRezervacijePage() {
                             <section className="rezervacija-card">
                                 <div className="rezervacija-card-heading">
                                     <span>Korak 3</span>
-
-                                    <h2>
-                                        Izaberite paket
-                                    </h2>
+                                    <h2>Izaberite paket</h2>
 
                                     <p>
                                         Prikazani su paketi dostupni za
@@ -765,9 +813,7 @@ function KreiranjeRezervacijePage() {
                                     <div className="rezervacija-field rezervacija-full-field">
                                         <label htmlFor="paketId">
                                             Paket{' '}
-                                            <span className="obavezno">
-                                                *
-                                            </span>
+                                            <span className="obavezno">*</span>
                                         </label>
 
                                         <select
@@ -798,10 +844,7 @@ function KreiranjeRezervacijePage() {
                             <section className="rezervacija-card">
                                 <div className="rezervacija-card-heading">
                                     <span>Korak 4</span>
-
-                                    <h2>
-                                        Dodatne usluge
-                                    </h2>
+                                    <h2>Dodatne usluge</h2>
 
                                     <p>
                                         Izaberite usluge izabranog paketa.
@@ -833,11 +876,7 @@ function KreiranjeRezervacijePage() {
                                                     className="rezervacija-usluge-grupa"
                                                 >
                                                     <h3>
-                                                        {
-                                                            naziviTipovaUsluga[
-                                                            tip
-                                                            ]
-                                                        }
+                                                        {naziviTipovaUsluga[tip]}
                                                     </h3>
 
                                                     <div className="rezervacija-usluge-lista">
@@ -912,21 +951,13 @@ function KreiranjeRezervacijePage() {
                             <section className="rezervacija-card">
                                 <div className="rezervacija-card-heading">
                                     <span>Korak 5</span>
-
-                                    <h2>
-                                        Opis i napomena
-                                    </h2>
-
-                                    <p>
-                                        Oba polja su opciona.
-                                    </p>
+                                    <h2>Opis i napomena</h2>
+                                    <p>Oba polja su opciona.</p>
                                 </div>
 
                                 <div className="rezervacija-form-grid">
                                     <div className="rezervacija-field rezervacija-full-field">
-                                        <label htmlFor="opis">
-                                            Opis
-                                        </label>
+                                        <label htmlFor="opis">Opis</label>
 
                                         <textarea
                                             id="opis"
@@ -973,16 +1004,11 @@ function KreiranjeRezervacijePage() {
                             <section className="rezervacija-card rezervacija-obracun">
                                 <div className="rezervacija-card-heading">
                                     <span>Korak 6</span>
-
-                                    <h2>
-                                        Ukupna cena
-                                    </h2>
+                                    <h2>Ukupna cena</h2>
                                 </div>
 
                                 <div className="obracun-ukupno">
-                                    <span>
-                                        Ukupna cena rezervacije
-                                    </span>
+                                    <span>Ukupna cena rezervacije</span>
 
                                     <strong>
                                         {formatCena(ukupnaCena)}
@@ -997,8 +1023,10 @@ function KreiranjeRezervacijePage() {
                                         onClick={handleSubmit}
                                     >
                                         {isSaving
-                                            ? 'Slanje zahteva...'
-                                            : 'Pošalji zahtev za rezervaciju'}
+                                            ? 'Slanje...'
+                                            : jeRadnik
+                                                ? 'Kreiraj rezervaciju'
+                                                : 'Pošalji zahtev za rezervaciju'}
                                     </button>
                                 </div>
                             </section>

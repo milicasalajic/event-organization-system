@@ -221,7 +221,7 @@ public class CenovnikService
                     Vrsta = cena.Usluga.TipUsluge.ToString(),
                     Iznos = cena.Iznos,
                     DatumIzmene = cena.DatumIzmene,
-                    Vazeca = vazecaCena is not null &&
+                    Vazeca = vazecaCena is not null &&//true ako je ona vazeca, false ako nije
                              vazecaCena.CenovnikId == cena.CenovnikId
                 });
             }

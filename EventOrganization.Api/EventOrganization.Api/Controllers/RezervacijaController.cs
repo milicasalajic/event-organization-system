@@ -135,7 +135,7 @@ public class RezervacijaController : ControllerBase
         }
     }
 
-    [Authorize(Roles = "KLIJENT")]
+    [Authorize(Roles = "KLIJENT,MENADZER,OPERATER")]
     [HttpPost("restoran/{restoranId}/dostupne-sale")]
     public async Task<ActionResult<List<DostupnaSalaDto>>> GetDostupneSale(
         decimal restoranId,
@@ -157,7 +157,7 @@ public class RezervacijaController : ControllerBase
         }
     }
 
-    [Authorize(Roles = "KLIJENT")]
+    [Authorize(Roles = "KLIJENT,MENADZER,OPERATER")]
     [HttpPost("obracun")]
     public async Task<ActionResult<decimal>> Obracun(
         KreiranjeRezervacijeDto request,
@@ -232,5 +232,48 @@ public class RezervacijaController : ControllerBase
             cancellationToken);
 
         return Ok(rezervacije);
+    }
+    [Authorize(Roles = "MENADZER,OPERATER")]
+    [HttpPost("restoran/{restoranId}/za-klijenta/{klijentId}")]
+    public async Task<ActionResult<KreiranjeRezervacijeResponseDto>> KreirajRezervacijuZaKlijenta(
+    decimal restoranId,
+    decimal klijentId,
+    KreiranjeRezervacijeDto request,
+    CancellationToken cancellationToken)
+    {
+        var korisnikIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!decimal.TryParse(korisnikIdClaim, out var korisnikId))
+        {
+            return Unauthorized();
+        }
+
+        var korisnikRadiURestoranu = await _restoranService.KorisnikRadiURestoranu(
+            korisnikId,
+            restoranId,
+            cancellationToken);
+
+        if (!korisnikRadiURestoranu)
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            var rezervacija = await _rezervacijaService.KreirajRezervaciju(
+                klijentId,
+                request,
+                cancellationToken);
+
+            return Ok(rezervacija);
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 }

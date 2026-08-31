@@ -1,0 +1,149 @@
+.registracija-klijenta-page {
+    min-height: 100vh;
+    background: #f8f5f0;
+    padding: 40px 20px;
+    color: #2c2c2c;
+}
+
+.registracija-klijenta-container {
+    width: min(760px, 100%);
+    margin: 0 auto;
+}
+
+.registracija-klijenta-nazad {
+    border: none;
+    background: transparent;
+    color: #3f5c4a;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 28px;
+}
+
+    .registracija-klijenta-nazad:hover {
+        text-decoration: underline;
+    }
+
+.registracija-klijenta-header {
+    margin-bottom: 28px;
+}
+
+    .registracija-klijenta-header > span {
+        display: block;
+        margin-bottom: 6px;
+        color: #c8a96b;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .registracija-klijenta-header h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+        font-weight: 600;
+    }
+
+    .registracija-klijenta-header p {
+        margin: 0;
+        color: #77736d;
+        line-height: 1.5;
+    }
+
+.registracija-klijenta-card {
+    background: #ffffff;
+    border: 1px solid #e4ded5;
+    border-radius: 14px;
+    padding: 28px;
+}
+
+.registracija-klijenta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.registracija-klijenta-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.registracija-klijenta-full {
+    grid-column: 1 / -1;
+}
+
+.registracija-klijenta-field label {
+    color: #5d5954;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.registracija-klijenta-field input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #e4ded5;
+    border-radius: 8px;
+    padding: 11px 12px;
+    background: #ffffff;
+    color: #2c2c2c;
+    font-size: 14px;
+    outline: none;
+}
+
+    .registracija-klijenta-field input:focus {
+        border-color: #3f5c4a;
+    }
+
+.registracija-klijenta-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 26px;
+}
+
+    .registracija-klijenta-actions button {
+        border: none;
+        border-radius: 8px;
+        padding: 11px 20px;
+        background: #3f5c4a;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .registracija-klijenta-actions button:hover:not(:disabled) {
+            background: #31483a;
+        }
+
+        .registracija-klijenta-actions button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+.registracija-klijenta-error {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #fdf2f2;
+    color: #a94442;
+    font-size: 14px;
+}
+
+.obavezno {
+    color: #a94442;
+}
+
+@media (max-width: 600px) {
+    .registracija-klijenta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .registracija-klijenta-full {
+        grid-column: auto;
+    }
+
+    .registracija-klijenta-card {
+        padding: 20px;
+    }
+}

@@ -72,4 +72,31 @@ public class KorisnikController : ControllerBase
             return BadRequest(exception.Message);
         }
     }
+    [Authorize(Roles = "MENADZER,OPERATER")]
+    [HttpGet("klijenti")]
+    public async Task<ActionResult<List<KlijentPregledDto>>> GetKlijenti(
+    CancellationToken cancellationToken)
+    {
+        var klijenti = await _korisnikService.GetKlijenti(cancellationToken);
+        return Ok(klijenti);
+    }
+    [Authorize(Roles = "MENADZER,OPERATER")]
+    [HttpPost("klijenti")]
+    public async Task<ActionResult<KreiranjeKlijentaResponseDto>> KreirajKlijenta(
+    KreiranjeKlijentaDto request,
+    CancellationToken cancellationToken)
+    {
+        try
+        {
+            var klijent = await _korisnikService.KreirajKlijenta(
+                request,
+                cancellationToken);
+
+            return Ok(klijent);
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+    }
 }

@@ -1,3 +1,4 @@
+using EventOrganization.Api.Enums;
 using EventOrganization.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,5 +45,57 @@ public class KorisnikRepository
     {
         return _context.SaveChangesAsync(
             cancellationToken);
+    }
+    public async Task<List<Klijent>> GetKlijenti(
+      CancellationToken cancellationToken = default)
+    {
+        return await _context.Klijenti
+            .AsNoTracking()
+            .Include(klijent => klijent.Korisnik)
+            .OrderBy(klijent => klijent.Korisnik.Prezime)
+            .ThenBy(klijent => klijent.Korisnik.Ime)
+            .ToListAsync(cancellationToken);
+    }
+    public async Task<bool> EmailPostoji(
+    string email,
+    CancellationToken cancellationToken = default)
+    {
+        var pronadjenKorisnikId = await _context.Korisnici
+            .AsNoTracking()
+            .Where(korisnik => korisnik.Email == email)
+            .Select(korisnik => (decimal?)korisnik.KorisnikId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return pronadjenKorisnikId.HasValue;
+    }
+
+    public async Task<decimal?> GetKlijentUlogaId(
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Uloge
+            .AsNoTracking()
+            .Where(uloga => uloga.TipUloge == TipUloge.KLIJENT)
+            .Select(uloga => (decimal?)uloga.UlogaId)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<decimal> GetNextKorisnikId(
+        CancellationToken cancellationToken = default)
+    {
+        var poslednjiKorisnikId = await _context.Korisnici
+            .AsNoTracking()
+            .OrderByDescending(korisnik => korisnik.KorisnikId)
+            .Select(korisnik => (decimal?)korisnik.KorisnikId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return (poslednjiKorisnikId ?? 0) + 1;
+    }
+
+    public void AddKlijent(
+        Korisnik korisnik,
+        Klijent klijent)
+    {
+        _context.Korisnici.Add(korisnik);
+        _context.Klijenti.Add(klijent);
     }
 }

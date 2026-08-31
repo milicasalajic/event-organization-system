@@ -22,7 +22,7 @@ const redosledTipovaUsluga = [
     'MUZICKI_IZVODJAC',
 ];
 
-const linkPreviewCache = new Map(); // kljuc vrednost, url sajta->preview sajta
+const linkPreviewCache = new Map();
 
 function grupisiUslugePoTipu(usluge) {
     const grupe = {
@@ -33,7 +33,7 @@ function grupisiUslugePoTipu(usluge) {
     };
 
     usluge.forEach((usluga) => {
-        if (grupe[usluga.tipUsluge]) {//npr ako je tip usluge fotograf i taj t.u. postoji dodaj uslugu
+        if (grupe[usluga.tipUsluge]) {
             grupe[usluga.tipUsluge].push(usluga);
         }
     });
@@ -41,7 +41,7 @@ function grupisiUslugePoTipu(usluge) {
     return grupe;
 }
 
-function formatEnumValue(value) { //regex, sredjuje enume, npr fotografija_snimanje Fotogr Snimanje
+function formatEnumValue(value) {
     if (!value) {
         return '';
     }
@@ -64,12 +64,9 @@ function getLinkTekst() {
     return 'Pogledaj ponudu';
 }
 
-function getDomen(url) { //lep domen da prikazes na stranici
-    //ne ovako h ttps://www.instagram.com/neki_fotograf nego www.instagram.com
+function getDomen(url) {
     try {
-        return new URL(url)
-            .hostname
-            .replace('www.', '');
+        return new URL(url).hostname.replace('www.', '');
     } catch {
         return url;
     }
@@ -81,7 +78,7 @@ function getGoogleMapsLink(adresa, grad) {
     return (
         'https://www.google.com/maps/search/' +
         '?api=1&query=' +
-        encodeURIComponent(lokacija) //pretvara tekst da bude pogodan za url
+        encodeURIComponent(lokacija)
     );
 }
 
@@ -93,19 +90,14 @@ async function getLinkPreview(url) {
     const response = await fetch(
         `https://api.microlink.io/?url=${encodeURIComponent(url)}&meta=true`,
     );
-    //mikrolink pokusava sa stranice da izvuce stvari-sliku, opis...
+
     if (!response.ok) {
-        throw new Error(
-            'Nije moguće učitati pregled linka.',
-        );
+        throw new Error('Nije moguće učitati pregled linka.');
     }
 
     const result = await response.json();
 
-    if (
-        result.status !== 'success' ||
-        !result.data
-    ) {
+    if (result.status !== 'success' || !result.data) {
         return null;
     }
 
@@ -140,9 +132,7 @@ function PortfolioPreview({ usluga }) {
 
         async function loadPreview() {
             try {
-                const result = await getLinkPreview(
-                    usluga.portfolio,
-                );
+                const result = await getLinkPreview(usluga.portfolio);
 
                 if (aktivno) {
                     setPreview(result);
@@ -166,7 +156,7 @@ function PortfolioPreview({ usluga }) {
     return (
         <a
             href={usluga.portfolio}
-            target="_blank" //otvori link u novom tabu
+            target="_blank"
             rel="noreferrer"
             className={
                 imaSliku
@@ -197,14 +187,10 @@ function PortfolioPreview({ usluga }) {
                     </p>
                 )}
 
-                <small>
-                    {getDomen(usluga.portfolio)}
-                </small>
+                <small>{getDomen(usluga.portfolio)}</small>
             </div>
 
-            <span className="portfolio-arrow">
-                ↗
-            </span>
+            <span className="portfolio-arrow">↗</span>
         </a>
     );
 }
@@ -214,10 +200,7 @@ function RestoranDetaljiPage() {
     const navigate = useNavigate();
 
     const korisnikJson = localStorage.getItem('korisnik');
-
-    const korisnik = korisnikJson
-        ? JSON.parse(korisnikJson)
-        : null;
+    const korisnik = korisnikJson ? JSON.parse(korisnikJson) : null;
 
     const jeRadnik =
         korisnik?.uloga === 'MENADZER' ||
@@ -243,10 +226,7 @@ function RestoranDetaljiPage() {
             setError('');
 
             try {
-                const [
-                    restoranResult,
-                    paketiResult,
-                ] = await Promise.all([
+                const [restoranResult, paketiResult] = await Promise.all([
                     getRestoranById(restoranId),
                     getPaketiByRestoranId(restoranId),
                 ]);
@@ -258,7 +238,6 @@ function RestoranDetaljiPage() {
                     const prviPaketId = paketiResult[0].paketId;
 
                     setAktivanPaketId(prviPaketId);
-
                     await loadPaketDetalje(prviPaketId);
                 }
             } catch (error) {
@@ -290,18 +269,9 @@ function RestoranDetaljiPage() {
         }));
 
         try {
-            const [
-                saleResult,
-                uslugeResult,
-            ] = await Promise.all([
-                getSaleByPaketId(
-                    restoranId,
-                    paketId,
-                ),
-                getUslugeByPaketId(
-                    restoranId,
-                    paketId,
-                ),
+            const [saleResult, uslugeResult] = await Promise.all([
+                getSaleByPaketId(restoranId, paketId),
+                getUslugeByPaketId(restoranId, paketId),
             ]);
 
             setSalePoPaketu((prev) => ({
@@ -414,9 +384,7 @@ function RestoranDetaljiPage() {
                             {restoran.adresa}, {restoran.grad}
                         </a>
 
-                        <span className="restoran-dot">
-                            •
-                        </span>
+                        <span className="restoran-dot">•</span>
 
                         <a
                             href={`tel:${restoran.telefon}`}
@@ -451,6 +419,17 @@ function RestoranDetaljiPage() {
 
                 {jeRadnik && (
                     <div className="restoran-radnik-akcije">
+                        <button
+                            type="button"
+                            onClick={() =>
+                                navigate(
+                                    `/restorani/${restoranId}/nova-rezervacija`,
+                                )
+                            }
+                        >
+                            Kreiraj rezervaciju
+                        </button>
+
                         <button
                             type="button"
                             onClick={() =>
@@ -514,9 +493,7 @@ function RestoranDetaljiPage() {
                                                     : 'paket-dugme'
                                             }
                                             onClick={() =>
-                                                handlePaketClick(
-                                                    paket.paketId,
-                                                )
+                                                handlePaketClick(paket.paketId)
                                             }
                                         >
                                             {paket.naziv}
@@ -526,14 +503,10 @@ function RestoranDetaljiPage() {
 
                                 {aktivanPaket && (
                                     <div className="izabrani-paket">
-                                        <h3>
-                                            {aktivanPaket.naziv}
-                                        </h3>
+                                        <h3>{aktivanPaket.naziv}</h3>
 
                                         {aktivanPaket.opis && (
-                                            <p>
-                                                {aktivanPaket.opis}
-                                            </p>
+                                            <p>{aktivanPaket.opis}</p>
                                         )}
                                     </div>
                                 )}
@@ -562,10 +535,7 @@ function RestoranDetaljiPage() {
 
                                     <section className="sale-sekcija">
                                         <div className="ponuda-podnaslov">
-                                            <span>
-                                                Dostupni prostor
-                                            </span>
-
+                                            <span>Dostupni prostor</span>
                                             <h3>Sale</h3>
                                         </div>
 
@@ -618,13 +588,8 @@ function RestoranDetaljiPage() {
 
                                     <section className="usluge-sekcija">
                                         <div className="ponuda-podnaslov">
-                                            <span>
-                                                Dodatna ponuda
-                                            </span>
-
-                                            <h3>
-                                                Dodatne usluge
-                                            </h3>
+                                            <span>Dodatna ponuda</span>
+                                            <h3>Dodatne usluge</h3>
                                         </div>
 
                                         {uslugeAktivnogPaketa.length === 0 ? (

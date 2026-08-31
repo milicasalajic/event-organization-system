@@ -5,12 +5,14 @@ import HomePage from './pages/HomePage.jsx';
 import RestoraniPage from './pages/RestoraniPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RestoranDetaljiPage from './pages/RestoranDetaljiPage.jsx';
-import ProfilPage from './pages/ProfilPage';
+import ProfilPage from './pages/ProfilPage.jsx';
 import RezervacijeRestoranaPage from './pages/RezervacijeRestoranaPage.jsx';
-import UpravljanjePonudomPage from './pages/UpravljanjePonudomPage';
-import CenovnikPage from './pages/CenovnikPage';
-import KreiranjeRezervacijePage from './pages/KreiranjeRezervacijePage';
+import UpravljanjePonudomPage from './pages/UpravljanjePonudomPage.jsx';
+import CenovnikPage from './pages/CenovnikPage.jsx';
+import KreiranjeRezervacijePage from './pages/KreiranjeRezervacijePage.jsx';
 import MojeRezervacijePage from './pages/MojeRezervacijePage.jsx';
+import RegistracijaKlijentaPage from './pages/RegistracijaKlijentaPage.jsx';
+
 function App() {
     return (
         <Routes>
@@ -39,12 +41,6 @@ function App() {
                 }
             />
 
-            
-
-            <Route
-                path="*"
-                element={<Navigate to="/" replace />}
-            />
             <Route
                 path="/restorani/:restoranId"
                 element={
@@ -53,6 +49,7 @@ function App() {
                     </ProtectedRoute>
                 }
             />
+
             <Route
                 path="/profil"
                 element={
@@ -61,54 +58,62 @@ function App() {
                     </ProtectedRoute>
                 }
             />
+
             <Route
                 path="/restorani/:restoranId/rezervacije"
                 element={
                     <ProtectedRoute
-                        allowedRoles={[
-                            'MENADZER',
-                            'OPERATER',
-                        ]}
+                        allowedRoles={['MENADZER', 'OPERATER']}
                     >
                         <RezervacijeRestoranaPage />
                     </ProtectedRoute>
                 }
             />
+
             <Route
                 path="/restorani/:restoranId/upravljanje-ponudom"
                 element={
                     <ProtectedRoute
-                        allowedRoles={[
-                            'MENADZER',
-                        ]}
+                        allowedRoles={['MENADZER']}
                     >
                         <UpravljanjePonudomPage />
                     </ProtectedRoute>
                 }
             />
+
             <Route
                 path="/restorani/:restoranId/cenovnik"
                 element={
                     <ProtectedRoute
-                        allowedRoles={[
-                            'MENADZER',
-                            'OPERATER',
-                        ]}
+                        allowedRoles={['MENADZER', 'OPERATER']}
                     >
                         <CenovnikPage />
                     </ProtectedRoute>
                 }
             />
+
             <Route
                 path="/restorani/:restoranId/nova-rezervacija"
                 element={
                     <ProtectedRoute
-                        allowedRoles={['KLIJENT']}
+                        allowedRoles={['KLIJENT', 'MENADZER', 'OPERATER']}
                     >
                         <KreiranjeRezervacijePage />
                     </ProtectedRoute>
                 }
             />
+
+            <Route
+                path="/restorani/:restoranId/novi-klijent"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={['MENADZER', 'OPERATER']}
+                    >
+                        <RegistracijaKlijentaPage />
+                    </ProtectedRoute>
+                }
+            />
+
             <Route
                 path="/moje-rezervacije"
                 element={
@@ -118,6 +123,11 @@ function App() {
                         <MojeRezervacijePage />
                     </ProtectedRoute>
                 }
+            />
+
+            <Route
+                path="*"
+                element={<Navigate to="/" replace />}
             />
         </Routes>
     );
