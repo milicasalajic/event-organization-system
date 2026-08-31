@@ -253,13 +253,20 @@ public class RezervacijaService
     }
 
     public async Task<List<DostupnaSalaDto>> GetDostupneSale(
-        decimal restoranId,
-        PretragaDostupnihSalaDto request,
-        CancellationToken cancellationToken = default)
+    decimal restoranId,
+    PretragaDostupnihSalaDto request,
+    CancellationToken cancellationToken = default)
     {
+        if (request.PaketId <= 0)
+        {
+            throw new ArgumentException(
+                "Paket nije ispravno izabran.");
+        }
+
         if (request.BrGostiju <= 0)
         {
-            throw new ArgumentException("Broj gostiju mora biti veći od nule.");
+            throw new ArgumentException(
+                "Broj gostiju mora biti veći od nule.");
         }
 
         if (request.VremePocetka >= request.VremeZavrsetka)
@@ -276,6 +283,7 @@ public class RezervacijaService
 
         var sale = await _rezervacijaRepository.GetDostupneSale(
             restoranId,
+            request.PaketId,
             request.BrGostiju,
             request.VremePocetka,
             request.VremeZavrsetka,

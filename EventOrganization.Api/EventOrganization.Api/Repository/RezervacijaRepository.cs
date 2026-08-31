@@ -91,46 +91,37 @@ public class RezervacijaRepository
     }
 
     public async Task<List<Sala>> GetDostupneSale(
-     decimal restoranId,
-     decimal brGostiju,
-     DateTime vremePocetka,
-     DateTime vremeZavrsetka,
-     CancellationToken cancellationToken = default)
+    decimal restoranId,
+    decimal paketId,
+    decimal brGostiju,
+    DateTime vremePocetka,
+    DateTime vremeZavrsetka,
+    CancellationToken cancellationToken = default)
     {
-        var zauzeteSalaIds =
-            await _context.Rezervacije
-                .AsNoTracking()
-                .Where(rezervacija =>
-                    rezervacija.SalaId != null &&
-                    rezervacija.StatusRez ==
-                        StatusRez.POTVRDJENA &&
-                    rezervacija.VremePocetka <
-                        vremeZavrsetka &&
-                    rezervacija.VremeZavrsetka >
-                        vremePocetka)
-                .Select(rezervacija =>
-                    rezervacija.SalaId!.Value)
-                .Distinct()
-                .ToListAsync(
-                    cancellationToken);
-
-        return await _context.Sale
+        var zauzeteSalaIds = await _context.Rezervacije
             .AsNoTracking()
-            .Include(sala =>
-                sala.Cenovnici)
+            .Where(rezervacija =>
+                rezervacija.SalaId != null &&
+                rezervacija.StatusRez == StatusRez.POTVRDJENA &&
+                rezervacija.VremePocetka < vremeZavrsetka &&
+                rezervacija.VremeZavrsetka > vremePocetka)
+            .Select(rezervacija => rezervacija.SalaId!.Value)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        return await _context.Paketi
+            .AsNoTracking()
+            .Where(paket =>
+                paket.PaketId == paketId &&
+                paket.RestoranId == restoranId &&
+                paket.Status == Status.AKTIVNO)
+            .SelectMany(paket => paket.Sale)
             .Where(sala =>
-                sala.RestoranId ==
-                    restoranId &&
-                sala.Status ==
-                    Status.AKTIVNO &&
-                sala.Kapacitet >=
-                    brGostiju &&
-                !zauzeteSalaIds.Contains(
-                    sala.SalaId))
-            .OrderBy(sala =>
-                sala.RbrS)
-            .ToListAsync(
-                cancellationToken);
+                sala.Status == Status.AKTIVNO &&
+                sala.Kapacitet >= brGostiju &&
+                !zauzeteSalaIds.Contains(sala.SalaId))
+            .OrderBy(sala => sala.RbrS)
+            .ToListAsync(cancellationToken);
     }
 
     public Task<Paket?> GetPaketZaRezervaciju(

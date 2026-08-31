@@ -3,7 +3,6 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { getRestoranById } from '../api/restoranApi';
 import { getPaketiByRestoranId } from '../api/paketApi';
-import { getSaleByPaketId } from '../api/salaApi';
 import { getUslugeByPaketId } from '../api/uslugaApi';
 import { getKlijenti } from '../api/korisnikApi';
 
@@ -103,8 +102,8 @@ function KreiranjeRezervacijePage() {
     const [restoran, setRestoran] = useState(null);
     const [klijenti, setKlijenti] = useState([]);
     const [klijentId, setKlijentId] = useState('');
-    const [dostupneSale, setDostupneSale] = useState([]);
     const [paketi, setPaketi] = useState([]);
+    const [dostupneSale, setDostupneSale] = useState([]);
     const [usluge, setUsluge] = useState([]);
     const [ukupnaCena, setUkupnaCena] = useState(null);
 
@@ -115,8 +114,8 @@ function KreiranjeRezervacijePage() {
         satPocetka: '',
         datumZavrsetka: '',
         satZavrsetka: '',
-        salaId: '',
         paketId: '',
+        salaId: '',
         uslugaIds: [],
         opis: '',
         napomena: '',
@@ -125,7 +124,6 @@ function KreiranjeRezervacijePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [saleLoading, setSaleLoading] = useState(false);
     const [saleProverene, setSaleProverene] = useState(false);
-    const [paketiLoading, setPaketiLoading] = useState(false);
     const [uslugeLoading, setUslugeLoading] = useState(false);
     const [obracunLoading, setObracunLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -138,8 +136,13 @@ function KreiranjeRezervacijePage() {
             setError('');
 
             try {
-                const restoranResult = await getRestoranById(restoranId);
+                const [restoranResult, paketiResult] = await Promise.all([
+                    getRestoranById(restoranId),
+                    getPaketiByRestoranId(restoranId),
+                ]);
+
                 setRestoran(restoranResult);
+                setPaketi(paketiResult);
 
                 if (jeRadnik) {
                     const klijentiResult = await getKlijenti();
@@ -177,13 +180,12 @@ function KreiranjeRezervacijePage() {
         setFormData((prev) => ({
             ...prev,
             [name]: value,
-            salaId: '',
             paketId: '',
+            salaId: '',
             uslugaIds: [],
         }));
 
         setDostupneSale([]);
-        setPaketi([]);
         setUsluge([]);
         setUkupnaCena(null);
         setSaleProverene(false);
@@ -198,6 +200,7 @@ function KreiranjeRezervacijePage() {
             [name]: value,
         }));
 
+        setUkupnaCena(null);
         setError('');
     }
 
@@ -212,16 +215,28 @@ function KreiranjeRezervacijePage() {
         );
     }
 
-    async function handlePronadjiSale(event) {
-        event.preventDefault();
+    async function handlePaketChange(event) {
+        const paketId = event.target.value;
 
-        if (jeRadnik && !klijentId) {
-            setError('Izaberite klijenta.');
+        setFormData((prev) => ({
+            ...prev,
+            paketId,
+            salaId: '',
+            uslugaIds: [],
+        }));
+
+        setDostupneSale([]);
+        setUsluge([]);
+        setUkupnaCena(null);
+        setSaleProverene(false);
+        setError('');
+
+        if (!paketId) {
             return;
         }
 
         if (!osnovniPodaciPopunjeni()) {
-            setError('Popunite sva obavezna polja.');
+            setError('Pre izbora paketa popunite podatke o događaju.');
             return;
         }
 
@@ -236,23 +251,10 @@ function KreiranjeRezervacijePage() {
         );
 
         setSaleLoading(true);
-        setSaleProverene(false);
-        setError('');
-
-        setDostupneSale([]);
-        setPaketi([]);
-        setUsluge([]);
-        setUkupnaCena(null);
-
-        setFormData((prev) => ({
-            ...prev,
-            salaId: '',
-            paketId: '',
-            uslugaIds: [],
-        }));
 
         try {
             const saleResult = await getDostupneSale(restoranId, {
+                paketId: Number(paketId),
                 tipDogadjaja: Number(formData.tipDogadjaja),
                 brGostiju: Number(formData.brGostiju),
                 vremePocetka,
@@ -274,11 +276,9 @@ function KreiranjeRezervacijePage() {
         setFormData((prev) => ({
             ...prev,
             salaId,
-            paketId: '',
             uslugaIds: [],
         }));
 
-        setPaketi([]);
         setUsluge([]);
         setUkupnaCena(null);
         setError('');
@@ -287,57 +287,12 @@ function KreiranjeRezervacijePage() {
             return;
         }
 
-        setPaketiLoading(true);
-
-        try {
-            const sviPaketi = await getPaketiByRestoranId(restoranId);
-
-            const proverePaketa = await Promise.all(
-                sviPaketi.map(async (paket) => {
-                    const salePaketa = await getSaleByPaketId(
-                        restoranId,
-                        paket.paketId,
-                    );
-
-                    const paketJeDostupan = salePaketa.some(
-                        (sala) => Number(sala.salaId) === Number(salaId),
-                    );
-
-                    return paketJeDostupan ? paket : null;
-                }),
-            );
-
-            setPaketi(proverePaketa.filter((paket) => paket !== null));
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setPaketiLoading(false);
-        }
-    }
-
-    async function handlePaketChange(event) {
-        const paketId = event.target.value;
-
-        setFormData((prev) => ({
-            ...prev,
-            paketId,
-            uslugaIds: [],
-        }));
-
-        setUsluge([]);
-        setUkupnaCena(null);
-        setError('');
-
-        if (!paketId) {
-            return;
-        }
-
         setUslugeLoading(true);
 
         try {
             const uslugeResult = await getUslugeByPaketId(
                 restoranId,
-                paketId,
+                formData.paketId,
             );
 
             setUsluge(uslugeResult);
@@ -377,8 +332,8 @@ function KreiranjeRezervacijePage() {
                 formData.datumZavrsetka,
                 formData.satZavrsetka,
             ),
-            salaId: Number(formData.salaId),
             paketId: Number(formData.paketId),
+            salaId: Number(formData.salaId),
             uslugaIds: formData.uslugaIds,
             opis: formData.opis.trim() || null,
             napomena: formData.napomena.trim() || null,
@@ -386,13 +341,13 @@ function KreiranjeRezervacijePage() {
     }
 
     async function handleObracun() {
-        if (!formData.salaId) {
-            setError('Izaberite salu.');
+        if (!formData.paketId) {
+            setError('Izaberite paket.');
             return;
         }
 
-        if (!formData.paketId) {
-            setError('Izaberite paket.');
+        if (!formData.salaId) {
+            setError('Izaberite salu.');
             return;
         }
 
@@ -509,6 +464,7 @@ function KreiranjeRezervacijePage() {
                                 <div className="rezervacija-card-heading">
                                     <span>Klijent</span>
                                     <h2>Izaberite klijenta</h2>
+
                                     <p>
                                         Izaberite postojećeg klijenta ili
                                         registrujte novog.
@@ -547,19 +503,14 @@ function KreiranjeRezervacijePage() {
                             </section>
                         )}
 
-                        <form
-                            className="rezervacija-card"
-                            onSubmit={handlePronadjiSale}
-                            noValidate
-                        >
+                        <section className="rezervacija-card">
                             <div className="rezervacija-card-heading">
                                 <span>Korak 1</span>
-
                                 <h2>Podaci o događaju</h2>
 
                                 <p>
-                                    Unesite podatke kako bi sistem pronašao
-                                    dostupne sale.
+                                    Unesite tip događaja, broj gostiju i
+                                    željeni termin.
                                 </p>
                             </div>
 
@@ -707,31 +658,58 @@ function KreiranjeRezervacijePage() {
                                     </div>
                                 </div>
                             </div>
+                        </section>
 
-                            <div className="rezervacija-form-actions">
-                                <button
-                                    type="submit"
-                                    className="rezervacija-primary-button"
-                                    disabled={saleLoading}
-                                >
-                                    {saleLoading
-                                        ? 'Provera dostupnosti...'
-                                        : 'Prikaži dostupne sale'}
-                                </button>
-                            </div>
-                        </form>
-
-                        {saleProverene && dostupneSale.length === 0 && (
-                            <div className="rezervacija-info">
-                                Za izabrani broj gostiju i termin trenutno
-                                nema dostupnih sala.
-                            </div>
-                        )}
-
-                        {dostupneSale.length > 0 && (
+                        {osnovniPodaciPopunjeni() && (
                             <section className="rezervacija-card">
                                 <div className="rezervacija-card-heading">
                                     <span>Korak 2</span>
+
+                                    <h2>
+                                        Izaberite paket{' '}
+                                        <span className="obavezno">*</span>
+                                    </h2>
+
+                                    <p>
+                                        Na osnovu izabranog paketa biće
+                                        prikazane sale koje pripadaju tom
+                                        paketu i dostupne su u željenom terminu.
+                                    </p>
+                                </div>
+
+                                <div className="rezervacija-field rezervacija-full-field">
+                                    <label htmlFor="paketId">
+                                        Paket{' '}
+                                        <span className="obavezno">*</span>
+                                    </label>
+
+                                    <select
+                                        id="paketId"
+                                        name="paketId"
+                                        value={formData.paketId}
+                                        onChange={handlePaketChange}
+                                    >
+                                        <option value="">
+                                            Izaberite paket
+                                        </option>
+
+                                        {paketi.map((paket) => (
+                                            <option
+                                                key={paket.paketId}
+                                                value={paket.paketId}
+                                            >
+                                                {paket.naziv}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </section>
+                        )}
+
+                        {formData.paketId && (
+                            <section className="rezervacija-card">
+                                <div className="rezervacija-card-heading">
+                                    <span>Korak 3</span>
 
                                     <h2>
                                         Izaberite salu{' '}
@@ -739,116 +717,80 @@ function KreiranjeRezervacijePage() {
                                     </h2>
 
                                     <p>
-                                        Prikazane su samo sale dovoljnog
-                                        kapaciteta koje nisu zauzete u
-                                        izabranom terminu.
+                                        Prikazane su sale izabranog paketa
+                                        dovoljnog kapaciteta koje nisu zauzete
+                                        u izabranom terminu.
                                     </p>
                                 </div>
 
-                                <div className="rezervacija-sale-grid">
-                                    {dostupneSale.map((sala) => {
-                                        const izabrana =
-                                            Number(formData.salaId) ===
-                                            Number(sala.salaId);
+                                {saleLoading ? (
+                                    <div className="rezervacija-info">
+                                        Provera dostupnosti sala...
+                                    </div>
+                                ) : saleProverene &&
+                                    dostupneSale.length === 0 ? (
+                                    <div className="rezervacija-info">
+                                        Za izabrani paket, broj gostiju i
+                                        termin trenutno nema dostupnih sala.
+                                    </div>
+                                ) : (
+                                    <div className="rezervacija-sale-grid">
+                                        {dostupneSale.map((sala) => {
+                                            const izabrana =
+                                                Number(formData.salaId) ===
+                                                Number(sala.salaId);
 
-                                        return (
-                                            <label
-                                                key={sala.salaId}
-                                                className={
-                                                    izabrana
-                                                        ? 'rezervacija-sala-card aktivna'
-                                                        : 'rezervacija-sala-card'
-                                                }
-                                            >
-                                                <input
-                                                    type="radio"
-                                                    name="salaId"
-                                                    value={sala.salaId}
-                                                    checked={izabrana}
-                                                    onChange={handleSalaChange}
-                                                />
+                                            return (
+                                                <label
+                                                    key={sala.salaId}
+                                                    className={
+                                                        izabrana
+                                                            ? 'rezervacija-sala-card aktivna'
+                                                            : 'rezervacija-sala-card'
+                                                    }
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="salaId"
+                                                        value={sala.salaId}
+                                                        checked={izabrana}
+                                                        onChange={
+                                                            handleSalaChange
+                                                        }
+                                                    />
 
-                                                <strong>
-                                                    Sala {sala.rbrS}
-                                                </strong>
+                                                    <strong>
+                                                        Sala {sala.rbrS}
+                                                    </strong>
 
-                                                <span>
-                                                    Kapacitet: {sala.kapacitet}
-                                                </span>
+                                                    <span>
+                                                        Kapacitet:{' '}
+                                                        {sala.kapacitet}
+                                                    </span>
 
-                                                <span>
-                                                    Cena stolice:{' '}
-                                                    {formatCena(
-                                                        sala.cenaStolice,
-                                                    )}
-                                                </span>
-                                            </label>
-                                        );
-                                    })}
-                                </div>
+                                                    <span>
+                                                        Cena stolice:{' '}
+                                                        {formatCena(
+                                                            sala.cenaStolice,
+                                                        )}
+                                                    </span>
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </section>
                         )}
 
                         {formData.salaId && (
                             <section className="rezervacija-card">
                                 <div className="rezervacija-card-heading">
-                                    <span>Korak 3</span>
-                                    <h2>Izaberite paket</h2>
-
-                                    <p>
-                                        Prikazani su paketi dostupni za
-                                        izabranu salu.
-                                    </p>
-                                </div>
-
-                                {paketiLoading ? (
-                                    <div className="rezervacija-info">
-                                        Učitavanje paketa...
-                                    </div>
-                                ) : paketi.length === 0 ? (
-                                    <div className="rezervacija-info">
-                                        Za izabranu salu nema dostupnih paketa.
-                                    </div>
-                                ) : (
-                                    <div className="rezervacija-field rezervacija-full-field">
-                                        <label htmlFor="paketId">
-                                            Paket{' '}
-                                            <span className="obavezno">*</span>
-                                        </label>
-
-                                        <select
-                                            id="paketId"
-                                            name="paketId"
-                                            value={formData.paketId}
-                                            onChange={handlePaketChange}
-                                        >
-                                            <option value="">
-                                                Izaberite paket
-                                            </option>
-
-                                            {paketi.map((paket) => (
-                                                <option
-                                                    key={paket.paketId}
-                                                    value={paket.paketId}
-                                                >
-                                                    {paket.naziv}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
-                            </section>
-                        )}
-
-                        {formData.paketId && (
-                            <section className="rezervacija-card">
-                                <div className="rezervacija-card-heading">
                                     <span>Korak 4</span>
                                     <h2>Dodatne usluge</h2>
 
                                     <p>
-                                        Izaberite usluge izabranog paketa.
-                                        Usluge nisu obavezne.
+                                        Izaberite dodatne usluge izabranog
+                                        paketa. Usluge nisu obavezne.
                                     </p>
                                 </div>
 
@@ -876,7 +818,11 @@ function KreiranjeRezervacijePage() {
                                                     className="rezervacija-usluge-grupa"
                                                 >
                                                     <h3>
-                                                        {naziviTipovaUsluga[tip]}
+                                                        {
+                                                            naziviTipovaUsluga[
+                                                            tip
+                                                            ]
+                                                        }
                                                     </h3>
 
                                                     <div className="rezervacija-usluge-lista">
@@ -947,7 +893,7 @@ function KreiranjeRezervacijePage() {
                             </section>
                         )}
 
-                        {formData.paketId && (
+                        {formData.salaId && (
                             <section className="rezervacija-card">
                                 <div className="rezervacija-card-heading">
                                     <span>Korak 5</span>
@@ -957,7 +903,9 @@ function KreiranjeRezervacijePage() {
 
                                 <div className="rezervacija-form-grid">
                                     <div className="rezervacija-field rezervacija-full-field">
-                                        <label htmlFor="opis">Opis</label>
+                                        <label htmlFor="opis">
+                                            Opis
+                                        </label>
 
                                         <textarea
                                             id="opis"
@@ -1008,7 +956,9 @@ function KreiranjeRezervacijePage() {
                                 </div>
 
                                 <div className="obracun-ukupno">
-                                    <span>Ukupna cena rezervacije</span>
+                                    <span>
+                                        Ukupna cena rezervacije
+                                    </span>
 
                                     <strong>
                                         {formatCena(ukupnaCena)}

@@ -11,4 +11,5 @@ public class PretragaDostupnihSalaDto
     public DateTime VremePocetka { get; set; }
 
     public DateTime VremeZavrsetka { get; set; }
+    public decimal PaketId { get; set; }
 }
